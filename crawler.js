@@ -6,60 +6,97 @@ var app     = express();
 
 app.get('/scrape', function(req, res){
 
-    // The URL we will scrape from - in our example Anchorman 2.
-
     url = 'https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=0';
 
-    // The structure of our request call
-    // The first parameter is our URL
-    // The callback function takes 3 parameters, an error, response status code and the html
-
     request(url, function(error, response, html){
-
-        // First we'll check to make sure no errors occurred when making the request
-
         if(!error){
             var $ = cheerio.load(html);
 
             var departments;
 
-            // We'll use the unique header class as a starting point.
-
-            $('.table-striped').filter(function(){
-
-                // Let's store the data we filter into a variable so we can easily see what's going on.
-
+            $('#mainTable').filter(function(){
                 var data = $(this);
-
-                // In examining the DOM we notice that the title rests within the first child element of the header tag.
-                // Utilizing jQuery we can easily navigate and get the text by writing the following code:
-
                 departments = data.children().last().children();
-
-                var links = [];
-
                 for (var depIndex in departments) {
                     if (departments.hasOwnProperty(depIndex)) {
                         var department = departments.eq(depIndex);
-                        var code = department.children().eq(0).children().eq(0).text();
+                        var department_code = department.children().eq(0).children().eq(0).text();
                         var link = department.children().eq(0).children().eq(0).attr('href');
-                        links.push(link);
-                        console.log(code + ": " + link);
+                        link = 'https://courses.students.ubc.ca' + link;
+                        request(link, function(error, response, html) {
+                            if(!error) {
+                                var $ = cheerio.load(html);
+                                var courses;
+                                $('.table-striped').filter(function() {
+                                    var data = $(this);
+                                    courses = data.children().last().children();
+                                    for(var courseIndex in courses) {
+                                        if(courses.hasOwnProperty(courseIndex)) {
+                                            var course = courses.eq(courseIndex);
+                                            var course_code = course.children().eq(0).children().eq(0).text().trim();
+                                            var course_link = course.children().eq(0).children().eq(0).attr('href');
+                                            course_link = 'https://courses.students.ubc.ca' + course_link;                                          
+                                            request(course_link, function(error, response, html) {
+                                                if(!error) {
+                                                    var $ = cheerio.load(html);
+                                                    var sections;
+                                                    $('.table-striped').filter(function() {
+                                                        var data = $(this);
+                                                        sections = data.children().last().children();
+                                                        for(var secIndex in sections) {
+                                                            if(sections.hasOwnProperty(secIndex)) {
+                                                                var section = sections.eq(secIndex);
+                                                                var course_page = section.children().eq(1).children().eq(0);                                                    
+                                                                if(course_page.attr('href')) {
+                                                                    var sec_code = section.children().eq(1).children().eq(0).text().trim();
+                                                                    var page_link = section.children().eq(1).children().eq(0).attr('href');
+                                                                    page_link = 'https://courses.students.ubc.ca' + page_link;
+                                                                    request(page_link, function(error, response, html) {                                                   
+                                                                        if(!error) {
+                                                                            var $ = cheerio.load(html);
+                                                                            var json = { prof : "", section_code : "", title: "", description: ""};
+                                                                            
+                                                                            $('tr:has(td:contains("Instructor:  "))').filter(function() {
+                                                                                var data = $(this);
+                                                                                var prof = data.children().last().text();
+                                                                                json.prof = prof;
+                                                                                json.section_code = sec_code;                                                                                                                   
+                                                                            })
+                                                                            $('.content').filter(function() {
+                                                                                var data = $(this);
+                                                                                var title = data.children().eq(2).text();
+                                                                                json.title = title;
+                                                                                var description = data.children().eq(3).text();
+                                                                                json.description = description;
+                                                                            })
+                                                                            fs.appendFile('message.json', JSON.stringify(json, null, 4), function (err) {
+                                                                                    if (err) throw err;
+                                                                                    console.log('Saved!');
+                                                                            });
+                                                                            
+                                                                        }
+                                                                    })
+                                                                }
+                                                                
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                            })
+
+                                        }
+                                    }
+                                })
+                            }
+                        })
                     }
                 }
 
+                // fs.writeFile('output.json', JSON.stringify(links, null, 4), function(err){
 
-                // To write to the system we will use the built in 'fs' library.
-                // In this example we will pass 3 parameters to the writeFile function
-                // Parameter 1 :  output.json - this is what the created filename will be called
-                // Parameter 2 :  JSON.stringify(json, null, 4) - the data to write, here we do an extra step by calling JSON.stringify to make our JSON easier to read
-                // Parameter 3 :  callback function - a callback function to let us know the status of our function
+                //     console.log('File successfully written! - Check your project directory for the output.json file');
 
-                fs.writeFile('output.json', JSON.stringify(links, null, 4), function(err){
-
-                    console.log('File successfully written! - Check your project directory for the output.json file');
-
-                });
+                // });
 
                 // Finally, we'll just send out a message to the browser reminding you that this app does not have a UI.
                 res.send('Check your console!');

@@ -1,4 +1,16 @@
 var fs = require('fs');
+var firebase = require("firebase");
+
+var config = {
+  apiKey: "AIzaSyDvkcVSUHsvf0rPW529sVBUbcOgLy2mOs0",
+  authDomain: "dataimport-c2359.firebaseapp.com",
+  databaseURL: "https://dataimport-c2359.firebaseio.com",
+  projectId: "dataimport-c2359",
+  storageBucket: "dataimport-c2359.appspot.com",
+  messagingSenderId: "138846803809"
+};
+
+firebase.initializeApp(config);
 
 fs.readFile('message.json', "utf8", function(err, data){
   if(err){ throw err;}
@@ -36,6 +48,21 @@ function processData(content){
       course[key] = val;
     }
   }
-  console.log(allCourses);
-  console.log(allCourses.length);
+  //console.log(allCourses);
+  //console.log(allCourses.length);
+  writeCourseData(allCourses);
+}
+
+function writeCourseData(allCourses){
+  var database = firebase.database();
+  var ref = database.ref("dataimport-c2359");
+  var course_one = allCourses[0];
+
+  var courseRef = ref.child("courses");
+  courseRef.set({
+    abcd:{
+      key: 1,
+      val: 2
+    }
+  });
 }

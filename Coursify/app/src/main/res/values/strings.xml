@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Coursify</string>
+    <string name="prompt_password">Enter password</string>
+    <string name="prompt_email">Enter email</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="error_invalid_password">Invalid Password</string>
+    <string name="error_invalid_email">Invalid Email</string>
+    <string name="aerror_field_required">This field is required</string>
+    <string name="error_field_required">This email is invalid</string>
+    <string name="facebook_app_id">949392238547975</string>
+    <string name="fb_login_protocol_scheme">fb949392238547975</string>
+    <string name="recently_opened">RECENTLY OPENED</string>
+    <string name="recommended">RECOMMENDED</string>
+    <string name="popular">POPULAR</string>
+    <string name="easiness">EASINESS</string>
+    <string name="usefulness">USEFULNESS</string>
+    <string name="title_activity_main2">Main2Activity</string>
+</resources>

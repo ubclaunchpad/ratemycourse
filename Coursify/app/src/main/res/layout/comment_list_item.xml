@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtCommenterName"
+        android:text="Arts Student"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="300dp"
+        android:text="Not really a GPA booster, but fun course if credit D failing."
+        android:padding="10dp"
+        android:id="@+id/txtCommentBody"
+        android:layout_below="@id/txtCommenterName"
+        android:background="@drawable/rounded"
+        android:layout_height="75dp" />
+</RelativeLayout>

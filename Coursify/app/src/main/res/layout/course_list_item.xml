@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:background="@drawable/background_border"
+    android:layout_width="160dp" android:layout_height="160dp">
+
+    <TextView
+        android:id="@+id/txtCourseTitle"
+        android:layout_marginTop="10dp"
+        android:text="Test Course: Introduction to a test course"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtCourseCode"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:text="TEST 101"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

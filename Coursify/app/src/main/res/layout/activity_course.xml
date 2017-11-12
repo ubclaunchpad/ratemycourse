@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<android.support.design.widget.FloatingActionButton
+    android:id="@+id/btnAddComment"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentBottom="true"
+    android:layout_margin="@dimen/fab_margin"
+    app:srcCompat="@mipmap/ic_add" />
+
+<RelativeLayout
+    android:id="@+id/div_courseName"
+    android:layout_width="match_parent"
+    android:background="@color/colorGray"
+    android:padding="10dp"
+    android:layout_height="105dp">
+
+    <TextView
+        android:id="@+id/txtCourseTitle"
+        android:text="Introduction to Wine Science"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtCourseCode"
+        android:padding="5dp"
+        android:layout_below="@id/txtCourseTitle"
+        android:text="FNH 330"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
+
+<RelativeLayout
+    android:id="@+id/div_courseRating"
+    android:layout_width="match_parent"
+    android:layout_below="@id/div_courseName"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:layout_height="105dp">
+
+    <TextView
+        android:id="@+id/txtEasiness"
+        android:text="@string/easiness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/imgEasinessRating"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:background="@drawable/background_border"
+        android:layout_below="@id/txtEasiness"
+        android:layout_alignLeft="@id/txtEasiness"
+        android:layout_alignStart="@id/txtEasiness" />
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:id="@+id/imgEasinessRatingBackground"
+        android:layout_alignLeft="@id/imgEasinessRating"
+        android:layout_alignStart="@id/imgEasinessRating"
+        android:background="@color/colorDarkGray"
+        android:layout_alignTop="@id/imgEasinessRating" />
+
+    <TextView
+        android:id="@+id/txtEasinessRating"
+        android:text="100%"
+        android:layout_alignTop="@id/imgEasinessRatingBackground"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtUsefulness"
+        android:text="@string/usefulness"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/imgEasinessRatingBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/imgUsefulnessRating"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:background="@drawable/background_border"
+        android:layout_below="@id/txtUsefulness"
+        android:layout_alignLeft="@id/txtUsefulness"
+        android:layout_alignStart="@id/txtUsefulness" />
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:id="@+id/imgUsefulnessRatingBackground"
+        android:layout_alignLeft="@id/imgUsefulnessRating"
+        android:layout_alignStart="@id/imgUsefulnessRating"
+        android:background="@color/colorDarkGray"
+        android:layout_alignTop="@id/imgUsefulnessRating" />
+
+    <TextView
+        android:id="@+id/txtUsefulnessRating"
+        android:text="100%"
+        android:layout_alignTop="@id/imgUsefulnessRatingBackground"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
+
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/listCourseComments"
+    android:layout_below="@id/div_courseRating"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+</android.support.v7.widget.RecyclerView>
+</RelativeLayout>

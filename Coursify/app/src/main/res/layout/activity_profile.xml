@@ -4,7 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_profile"
+
     tools:context="com.example.coursify.ProfileActivity">
+
+    <fragment android:name="com.example.coursify.ProfileActivity$FBFriendsFragment"
+        android:id="@+id/activity_profile"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+
+    <com.facebook.login.widget.LoginButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnFBLogin"/>
 
 </android.support.constraint.ConstraintLayout>

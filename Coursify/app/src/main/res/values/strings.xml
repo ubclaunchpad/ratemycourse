@@ -16,4 +16,5 @@
     <string name="easiness">EASINESS</string>
     <string name="usefulness">USEFULNESS</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="alert_dialog_title">Please login to facebook</string>
 </resources>

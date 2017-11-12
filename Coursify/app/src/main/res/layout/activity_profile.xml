@@ -7,11 +7,11 @@
 
     tools:context="com.example.coursify.ProfileActivity">
 
-    <fragment android:name="com.example.coursify.ProfileActivity$FBFriendsFragment"
+    <RelativeLayout
         android:id="@+id/activity_profile"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </RelativeLayout>
 
     <com.facebook.login.widget.LoginButton
         android:layout_width="wrap_content"

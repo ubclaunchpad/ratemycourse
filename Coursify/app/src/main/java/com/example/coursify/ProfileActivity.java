@@ -53,7 +53,6 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String FIREBASE_USERS_FRIENDS_ENDPOINT = "facebookFriends";
 
     CallbackManager mCallBackManager;
-    DialogFragment fbFragment;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -88,23 +87,6 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.v(TAG, error.getMessage());
             }
         });
-        LoginManager.getInstance().registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.v(TAG, "Successfully connected to FaceBook.");
-            }
-
-            @Override
-            public void onCancel() {
-                Log.v(TAG, "Cancelled login to FaceBook.");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.v(TAG, "Error logging in to FaceBook");
-                Log.v(TAG, error.getMessage());
-            }
-        });
 
         FBFriendsFragment friendsFragment = new FBFriendsFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -115,70 +97,6 @@ public class ProfileActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "ON RESUME");
-        FBFriendsFragment friendsFragment = new FBFriendsFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack if needed
-        transaction.add(R.id.activity_profile, friendsFragment);
-        transaction.commit();
-    }
-
-    void showDialog() {
-        fbFragment = MyAlertDialogFragment.newInstance(
-                R.string.alert_dialog_title);
-        fbFragment.show(getFragmentManager(), "dialog");
-    }
-
-    public void doPositiveClick() {
-        // Do stuff here.
-        Log.i("FragmentAlertDialog", "Positive click!");
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("user_friends", "email"));
-    }
-
-    public void doNegativeClick() {
-        // Do stuff here.
-        Log.i("FragmentAlertDialog", "Negative click!");
-        fbFragment.dismiss();
-    }
-
-    public static class MyAlertDialogFragment extends DialogFragment {
-
-        public static MyAlertDialogFragment newInstance(int title) {
-            MyAlertDialogFragment frag = new MyAlertDialogFragment();
-            Bundle args = new Bundle();
-            args.putInt("title", title);
-            frag.setArguments(args);
-            return frag;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            int title = getArguments().getInt("title");
-
-            return new AlertDialog.Builder(getActivity())
-                    .setTitle(title)
-                    .setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    ((ProfileActivity)getActivity()).doPositiveClick();
-                                }
-                            }
-                    )
-                    .setNegativeButton("CANCEL",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    ((ProfileActivity)getActivity()).doNegativeClick();
-                                }
-                            }
-                    )
-                    .create();
-        }
-    }
 
     public static class FBFriendsFragment extends Fragment {
         List<User> userList = new ArrayList<>();
@@ -196,8 +114,6 @@ public class ProfileActivity extends AppCompatActivity {
                 protected void onCurrentAccessTokenChanged (
                         AccessToken oldAccessToken,
                         AccessToken currentAccessToken) {
-                    // Set the access token using
-                    // currentAccessToken when it's loaded or set.
                     Log.v(TAG, "access token changed");
                     accessToken = currentAccessToken;
                 }
@@ -299,8 +215,7 @@ public class ProfileActivity extends AppCompatActivity {
          */
         private void getFBFriends(String mFBUserId) {
             if(accessToken == null) {
-       //         Toast.makeText(getActivity(), "please login to facebook", Toast.LENGTH_LONG).show();
-                ((ProfileActivity)getActivity()).showDialog();
+                Toast.makeText(getActivity(), "please login to facebook", Toast.LENGTH_LONG).show();
             }
             else {
                 new GraphRequest(

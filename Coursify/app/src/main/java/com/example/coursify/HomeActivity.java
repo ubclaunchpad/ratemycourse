@@ -89,4 +89,8 @@ public class HomeActivity extends Activity {
         listRecentlyOpened.add(c2);
         listRecentlyOpened.add(c3);
     }
+
+    public void showProfilePage(View view) {
+        startActivity(new Intent(this, ProfileActivity.class));
+    }
 }

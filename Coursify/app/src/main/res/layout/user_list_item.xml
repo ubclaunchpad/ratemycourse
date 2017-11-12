@@ -2,38 +2,47 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/imgCircle"
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:background="@drawable/user_circle"
-        android:layout_alignTop="@+id/txtFBUserName"
-        android:layout_alignBottom="@+id/txtMajor" />
-
-    <TextView
-        android:id="@+id/txtFBUserName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_toEndOf="@id/imgCircle"
-        android:layout_toRightOf="@id/imgCircle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:text="User 1" />
+        android:background="@drawable/user_circle"
+        android:padding="10dp" />
 
-    <TextView
-        android:id="@+id/txtMajor"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/txtUserInfo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtFBUserName"
-        android:layout_alignLeft="@+id/txtFBUserName"
-        android:layout_alignStart="@+id/txtFBUserName"
-        android:text="Computer Science" />
+        android:layout_toEndOf="@id/imgCircle"
+        android:orientation="vertical"
+        android:paddingStart="15dp">
 
+        <TextView
+            android:id="@+id/txtFBUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User 1"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txtMajor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Computer Science"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgArrow"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/ic_navigate_next_black_24dp" />
 
 </RelativeLayout>

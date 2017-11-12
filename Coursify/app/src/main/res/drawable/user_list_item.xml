@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imgCircle"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@drawable/user_circle"
+        android:layout_alignTop="@+id/txtFBUserName"
+        android:layout_alignBottom="@+id/txtMajor" />
+
+    <TextView
+        android:id="@+id/txtFBUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_toEndOf="@id/imgCircle"
+        android:layout_toRightOf="@id/imgCircle"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:text="User 1" />
+
+    <TextView
+        android:id="@+id/txtMajor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtFBUserName"
+        android:layout_alignLeft="@+id/txtFBUserName"
+        android:layout_alignStart="@+id/txtFBUserName"
+        android:text="Computer Science" />
+
+
+</RelativeLayout>

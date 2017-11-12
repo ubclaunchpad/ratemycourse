@@ -44,6 +44,9 @@
         </activity>
         <activity android:name=".CourseActivity" />
         <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".ProfileActivity">
+
+        </activity>
     </application>
 
 </manifest>

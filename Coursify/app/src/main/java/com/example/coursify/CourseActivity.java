@@ -1,10 +1,16 @@
 package com.example.coursify;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +43,7 @@ public class CourseActivity extends Activity {
     private RecyclerView.LayoutManager mCommentsManager;
 
     private DatabaseReference mDatabase;
+    private DatabaseReference mCourseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +56,7 @@ public class CourseActivity extends Activity {
         courseDept = courseCode.split(" ")[0];
         courseId = courseCode.split(" ")[1];
 
-        Toast.makeText(this, "Course dept: " + courseDept +  "  course id: " + courseId, Toast.LENGTH_SHORT).show();
-
+        getCourseReferenceToDatabase();
         populateUIFromDatabaseInfo();
         txtCourseCode.setText(courseCode);
     }
@@ -64,18 +70,25 @@ public class CourseActivity extends Activity {
         mListComments.setHasFixedSize(true);
         mCommentsManager = new LinearLayoutManager(this);
         mListComments.setLayoutManager(mCommentsManager);
-        mCommentsAdapter = new CommentAdapter(initializeComments());
         mListComments.setAdapter(mCommentsAdapter);
         btnAddComment = (FloatingActionButton) findViewById(R.id.btnAddComment);
+        btnAddComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addComment();
+            }
+        });
     }
 
-    private void populateUIFromDatabaseInfo() {
+    private void getCourseReferenceToDatabase() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference subjectRef = mDatabase.child("Courses").child(courseDept);
         DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));
-        DatabaseReference courseRef = yearRef.child(courseDept + courseId);
+        mCourseReference = yearRef.child(courseDept + courseId);
+    }
 
-        courseRef.child("Description").addValueEventListener(new ValueEventListener() {
+    private void populateUIFromDatabaseInfo() {
+        mCourseReference.child("Description").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 String s = snapshot.getValue().toString();
@@ -87,16 +100,60 @@ public class CourseActivity extends Activity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
+        mCourseReference.child("Comments").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Comment> comments = new LinkedList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String comment = snapshot.getValue().toString();
+                    comments.add(new Comment("Some student", comment));
+                }
+                mCommentsAdapter = new CommentAdapter(comments);
+                mListComments.setAdapter(mCommentsAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
-    private List<Comment> initializeComments() {
-        List<Comment> comments = new LinkedList<>();
-        Comment c1 = new Comment("Annie Zhou", "This course is pretty good, it's super relevant to everything.");
-        Comment c2 = new Comment("Sam Veloso", "It's a good course. ");
-        Comment c3 = new Comment("Lucy Zhao", "It's not a good course.");
-        comments.add(c1);
-        comments.add(c2);
-        comments.add(c3);
-        return comments;
+    private void addComment() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add an ingredient");
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.add_comment, (ViewGroup) findViewById(R.id.add_comment), false);
+
+        final EditText editTxtCommentBody = (EditText) viewInflated.findViewById(R.id.editTxtCommentBody);
+
+        builder.setView(viewInflated);
+        builder.setPositiveButton("Post Comment", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String commentBody = editTxtCommentBody.getText().toString();
+
+                if (commentBody.equals("")) {
+                    Toast.makeText(CourseActivity.this, "Please enter a comment before submitting.", Toast.LENGTH_SHORT).show();
+                    dialog.cancel();
+                    addComment();
+                } else {
+                    addCommentToDatabase(commentBody);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void addCommentToDatabase (String commentBody) {
+        DatabaseReference commentsRef = mCourseReference.child("Comments");
+
+        commentsRef.push().setValue(commentBody);
     }
 }

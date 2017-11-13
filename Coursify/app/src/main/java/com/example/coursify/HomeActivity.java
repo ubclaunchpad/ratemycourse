@@ -82,7 +82,7 @@ public class HomeActivity extends Activity {
 
     private void initializeCourses() {
         Course c1 = new Course("MATH 100", "Differential Calculus with Applications to Physical Sciences and Engineering");
-        Course c2 = new Course("CPSC 210", "Software Construction");
+        Course c2 = new Course("CPSC 110", "Computation, Programs, and Programming");
         Course c3 = new Course("CPSC 304", "Introduction to Relational Databases");
         listRecentlyOpened = new ArrayList<>();
         listRecentlyOpened.add(c1);

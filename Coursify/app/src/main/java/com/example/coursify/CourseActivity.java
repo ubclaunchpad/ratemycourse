@@ -121,7 +121,7 @@ public class CourseActivity extends Activity {
 
     private void addComment() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add an ingredient");
+        builder.setTitle("Add a comment");
         View viewInflated = LayoutInflater.from(this).inflate(R.layout.add_comment, (ViewGroup) findViewById(R.id.add_comment), false);
 
         final EditText editTxtCommentBody = (EditText) viewInflated.findViewById(R.id.editTxtCommentBody);

@@ -157,6 +157,4 @@ public class ProfileSettings extends AppCompatActivity {
             userReference.setValue(new User(name, major, gradDate, facebookID));
         }
     }
-
-
 }

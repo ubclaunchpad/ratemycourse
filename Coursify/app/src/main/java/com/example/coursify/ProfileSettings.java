@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.facebook.FacebookSdk;
+import com.google.android.gms.common.UserRecoverableException;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +22,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.example.coursify.Utils.processEmail;
@@ -32,7 +34,12 @@ public class ProfileSettings extends AppCompatActivity {
     private CallbackManager mCallBackManager;
     private AccessToken mAccessToken;
     private String mUserId;
-
+    EditText mEmail;
+    EditText mName;
+    EditText mMajor;
+    EditText mGradDate;
+    Button mSubmit;
+    boolean found = false;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -56,7 +63,6 @@ public class ProfileSettings extends AppCompatActivity {
                 Log.v(TAG, "Successfully connected to FaceBook.");
                 mAccessToken = loginResult.getAccessToken();
                 mUserId = loginResult.getAccessToken().getUserId();
-                Log.v(TAG, "HERE IS MY USERID" + mUserId);
                 setFacebookUserId(email, mUserId);
                 collectInformation(email, mUserId);
             }
@@ -86,11 +92,11 @@ public class ProfileSettings extends AppCompatActivity {
     }
 
     protected void collectInformation(final String email, final String mUserId){
-        final EditText mEmail = (EditText)findViewById(R.id.emailInput);
-        final EditText mName = (EditText)findViewById(R.id.nameInput);
-        final EditText mMajor = (EditText)findViewById(R.id.majorInput);
-        final EditText mGradDate = (EditText)findViewById(R.id.gradInput);
-        Button mSubmit = (Button)findViewById(R.id.submit);
+        mEmail = (EditText)findViewById(R.id.emailInput);
+        mName = (EditText)findViewById(R.id.nameInput);
+        mMajor = (EditText)findViewById(R.id.majorInput);
+        mGradDate = (EditText)findViewById(R.id.gradInput);
+        mSubmit = (Button)findViewById(R.id.submit);
         mEmail.setText(email.trim());
         mEmail.setFocusable(false);
 
@@ -102,15 +108,14 @@ public class ProfileSettings extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     if(ds.getKey().toString().equals(processEmail(email))) {
-                        Log.v(TAG, "found user");
                         HashMap<String, String> currUser = (HashMap)ds.getValue();
-                        Log.v(TAG, "i WAS HERE");
                         String showName = currUser.get("name");
                         String showGradDate = currUser.get("gradDate");
                         String showMajor = currUser.get("major");
                         mName.setText(showName);
                         mMajor.setText(showMajor);
                         mGradDate.setText(showGradDate);
+                        found = true;
                         break;
                     }
                 }
@@ -126,12 +131,14 @@ public class ProfileSettings extends AppCompatActivity {
                 final String name = mName.getText().toString();
                 final String major = mMajor.getText().toString();
                 final String gradDate = mGradDate.getText().toString();
-                updateProfile(email, name, major, gradDate, mUserId);
+                updateProfile(email, name, major, gradDate, mUserId, found);
             }
         });
     }
 
-    protected void updateProfile(String email, String name, String major, String gradDate, String facebookID){
+    protected void updateProfile(String email, String name, String major, String gradDate,
+                                 String facebookID, boolean found){
+        Log.v(TAG, "found is " + found);
         DatabaseReference firebasereference, userReference;
         firebasereference = FirebaseDatabase.getInstance().getReference();
         String processedEmail = processEmail(email);
@@ -139,7 +146,20 @@ public class ProfileSettings extends AppCompatActivity {
         if(name.length() == 0 || major.length() == 0 || gradDate.length() == 0){
             Log.v(TAG, "You need to fill out all of name, major and gradDate fields");
         }else{
-            userReference.setValue(new User(name, major, gradDate, facebookID));
+            if(found){
+                userReference.child("email").setValue(email);
+                userReference.child("name").setValue(name);
+                userReference.child("gradDate").setValue(gradDate);
+                userReference.child("facebookID").setValue(facebookID);
+                userReference.child("major").setValue(major);
+                return;
+            }
+            ArrayList<String> test = new ArrayList<String>();
+            test.add("hello");
+            userReference.setValue(new User(name, major, gradDate, facebookID, new ArrayList<String>(),
+                    "", test, new ArrayList<String>(), new ArrayList<String>(),
+                    new ArrayList<String>(), new ArrayList<Notes>()));
+            userReference.child("bookmarks").setValue(test);
         }
     }
 

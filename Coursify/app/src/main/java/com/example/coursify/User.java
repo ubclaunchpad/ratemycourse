@@ -18,10 +18,10 @@ public class User {
     private List<String> coursesGoing;
     private List<String> coursesInterested;
     private List<String> bookmarks;
-    private List<Notes> notes;
+    public List<Note> notes;
 
     public User(String name, String major, String gradDate, String facebookID, List<String> facebookFriends, String interest, List<String> searchHistory,
-                List<String> coursesTaken, List<String> coursesGoing, List<String> bookmarks, List<Notes> notes){
+                List<String> coursesTaken, List<String> coursesGoing, List<String> bookmarks, List<Note> notes){
         this.major = major;
         this.name = name;
         this.gradDate = gradDate;

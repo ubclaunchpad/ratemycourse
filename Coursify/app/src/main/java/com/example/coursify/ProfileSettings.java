@@ -154,12 +154,7 @@ public class ProfileSettings extends AppCompatActivity {
                 userReference.child("major").setValue(major);
                 return;
             }
-            ArrayList<String> test = new ArrayList<String>();
-            test.add("hello");
-            userReference.setValue(new User(name, major, gradDate, facebookID, new ArrayList<String>(),
-                    "", test, new ArrayList<String>(), new ArrayList<String>(),
-                    new ArrayList<String>(), new ArrayList<Notes>()));
-            userReference.child("bookmarks").setValue(test);
+            userReference.setValue(new User(name, major, gradDate, facebookID));
         }
     }
 

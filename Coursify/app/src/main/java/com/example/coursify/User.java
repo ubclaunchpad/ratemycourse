@@ -45,6 +45,8 @@ public class User {
     public User(String name, String major, String gradDate, String facebookID){
         this.name = name;
         this.major = major;
+        this.gradDate = gradDate;
+        this.facebookID = facebookID;
     }
 
     public User() {

@@ -101,7 +101,7 @@ public class CourseActivity extends Activity {
             }
         });
 
-        mCourseReference.child("Comments").addValueEventListener(new ValueEventListener() {
+        mCourseReference.child("comments").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Comment> comments = new LinkedList<>();
@@ -152,7 +152,7 @@ public class CourseActivity extends Activity {
     }
 
     private void addCommentToDatabase (String commentBody) {
-        DatabaseReference commentsRef = mCourseReference.child("Comments");
+        DatabaseReference commentsRef = mCourseReference.child("comments");
 
         commentsRef.push().setValue(commentBody);
     }

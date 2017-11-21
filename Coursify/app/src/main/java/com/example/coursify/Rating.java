@@ -14,5 +14,5 @@ class Rating {
         this.easiness = easiness;
         this.usefulness = usefulness;
     }
-    
+
 }

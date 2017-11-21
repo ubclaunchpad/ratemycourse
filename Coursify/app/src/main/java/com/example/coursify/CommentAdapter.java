@@ -57,7 +57,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         TextView txtCommenterName = (TextView) holder.mLayout.findViewById(R.id.txtCommenterName);
         TextView txtCommentBody = (TextView) holder.mLayout.findViewById(R.id.txtCommentBody);
 
-        txtCommenterName.setText(currComment.commenterName);
+        txtCommenterName.setText(currComment.author);
         txtCommentBody.setText(currComment.commentBody);
     }
 

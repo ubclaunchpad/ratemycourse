@@ -10,7 +10,6 @@ public class Course {
 
     String courseTitle;
     String courseCode;
-    String description;
     List<String> takenUsers;
     List<String> goingUsers;
     List<String> interestedUsers;
@@ -19,11 +18,12 @@ public class Course {
     double easiness;
     double usefulness;
 
-    public Course (String code, String title, String description) {
+    public Course (String code, String title) {
         courseTitle = title;
         courseCode = code;
         easiness = -1;
         usefulness = -1;
     }
+
 
 }

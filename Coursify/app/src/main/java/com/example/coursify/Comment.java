@@ -6,11 +6,14 @@ package com.example.coursify;
 
 public class Comment {
 
-    String commenterName;
+    String author;
     String commentBody;
+    boolean anonymity;
+
+
 
     public Comment (String commenterName, String commentBody) {
-        this.commenterName = commenterName;
+        this.author = commenterName;
         this.commentBody = commentBody;
     }
 

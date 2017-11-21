@@ -5,4 +5,14 @@ package com.example.coursify;
  */
 
 class Rating {
+    String author;
+    double easiness;
+    double usefulness;
+
+    public Rating(String author, double easiness, double usefulness){
+        this.author = author;
+        this.easiness = easiness;
+        this.usefulness = usefulness;
+    }
+    
 }

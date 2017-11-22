@@ -87,7 +87,7 @@ public class ProfileSettings extends AppCompatActivity {
         DatabaseReference firebasereference, userReference;
         firebasereference = FirebaseDatabase.getInstance().getReference();
         String processedEmail = processEmail(email);
-        userReference = firebasereference.child("FacebookUsers").child(mUserId);
+        userReference = firebasereference.child(FirebaseEndpoint.FACEBOOK_USERS).child(mUserId);
         userReference.setValue(processedEmail);
     }
 
@@ -102,7 +102,7 @@ public class ProfileSettings extends AppCompatActivity {
 
         DatabaseReference firebasereference, userReference;
         firebasereference = FirebaseDatabase.getInstance().getReference();
-        userReference = firebasereference.child("Users");
+        userReference = firebasereference.child(FirebaseEndpoint.USERS);
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -142,7 +142,7 @@ public class ProfileSettings extends AppCompatActivity {
         DatabaseReference firebasereference, userReference;
         firebasereference = FirebaseDatabase.getInstance().getReference();
         String processedEmail = processEmail(email);
-        userReference = firebasereference.child("Users").child(processedEmail);
+        userReference = firebasereference.child(FirebaseEndpoint.USERS).child(processedEmail);
         if(name.length() == 0 || major.length() == 0 || gradDate.length() == 0){
             Log.v(TAG, "You need to fill out all of name, major and gradDate fields");
         }else{

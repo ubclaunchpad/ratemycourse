@@ -82,13 +82,13 @@ public class CourseActivity extends Activity {
 
     private void getCourseReferenceToDatabase() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference subjectRef = mDatabase.child("Courses").child(courseDept);
+        DatabaseReference subjectRef = mDatabase.child(FirebaseEndpoint.COURSES).child(courseDept);
         DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));
         mCourseReference = yearRef.child(courseDept + courseId);
     }
 
     private void populateUIFromDatabaseInfo() {
-        mCourseReference.child("Description").addValueEventListener(new ValueEventListener() {
+        mCourseReference.child(FirebaseEndpoint.DESCRIPTION).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 String s = snapshot.getValue().toString();
@@ -101,7 +101,7 @@ public class CourseActivity extends Activity {
             }
         });
 
-        mCourseReference.child("comments").addValueEventListener(new ValueEventListener() {
+        mCourseReference.child(FirebaseEndpoint.COMMENTS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Comment> comments = new LinkedList<>();
@@ -152,7 +152,7 @@ public class CourseActivity extends Activity {
     }
 
     private void addCommentToDatabase (String commentBody) {
-        DatabaseReference commentsRef = mCourseReference.child("comments");
+        DatabaseReference commentsRef = mCourseReference.child(FirebaseEndpoint.COMMENTS);
 
         commentsRef.push().setValue(commentBody);
     }

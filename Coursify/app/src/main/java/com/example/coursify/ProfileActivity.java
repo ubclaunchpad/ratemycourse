@@ -45,10 +45,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.coursify.Utils.processEmail;
+
 
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
     CallbackManager mCallBackManager;
+
+    private AccessToken mAccessToken;
+    private String mUserId;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -70,6 +75,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.v(TAG, "Successfully connected to FaceBook.");
+                mAccessToken = loginResult.getAccessToken();
+                mUserId = loginResult.getAccessToken().getUserId();
+                setFacebookUserId(email, mUserId);
             }
 
             @Override
@@ -91,6 +99,15 @@ public class ProfileActivity extends AppCompatActivity {
         // and add the transaction to the back stack if needed
         transaction.replace(R.id.activity_profile, friendsFragment);
         transaction.commit();
+    }
+
+    protected void setFacebookUserId(final String email, final String mUserId){
+        Log.v(TAG, "and my facebook user id in set Facebook UserId is:" + mUserId);
+        DatabaseReference firebasereference, userReference;
+        firebasereference = FirebaseDatabase.getInstance().getReference();
+        String processedEmail = processEmail(email);
+        userReference = firebasereference.child(FirebaseEndpoint.FACEBOOK_USERS).child(mUserId);
+        userReference.setValue(processedEmail);
     }
 
 

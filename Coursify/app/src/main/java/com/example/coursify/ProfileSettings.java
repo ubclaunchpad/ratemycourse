@@ -52,8 +52,8 @@ public class ProfileSettings extends AppCompatActivity {
         setContentView(R.layout.activity_profile_settings);
         Bundle bundle = getIntent().getExtras();
         final String email = bundle.getString("Email");
+        findViewsById();
 
-        mLoginButton = (LoginButton) findViewById(R.id.login_button);
         mLoginButton.setReadPermissions("user_friends", "email");
         mCallBackManager = CallbackManager.Factory.create();
 
@@ -81,6 +81,14 @@ public class ProfileSettings extends AppCompatActivity {
 
         collectInformation(email, mUserId);
     }
+    protected void findViewsById(){
+        mLoginButton = (LoginButton) findViewById(R.id.login_button);
+        mEmail = (EditText)findViewById(R.id.emailInput);
+        mName = (EditText)findViewById(R.id.nameInput);
+        mMajor = (EditText)findViewById(R.id.majorInput);
+        mGradDate = (EditText)findViewById(R.id.gradInput);
+        mSubmit = (Button)findViewById(R.id.submit);
+    }
 
     protected void setFacebookUserId(final String email, final String mUserId){
         Log.v(TAG, "and my facebook user id in set Facebook UserId is:" + mUserId);
@@ -92,14 +100,10 @@ public class ProfileSettings extends AppCompatActivity {
     }
 
     protected void collectInformation(final String email, final String mUserId){
-        mEmail = (EditText)findViewById(R.id.emailInput);
-        mName = (EditText)findViewById(R.id.nameInput);
-        mMajor = (EditText)findViewById(R.id.majorInput);
-        mGradDate = (EditText)findViewById(R.id.gradInput);
-        mSubmit = (Button)findViewById(R.id.submit);
         mEmail.setText(email.trim());
         mEmail.setFocusable(false);
 
+        // shows user information in form if user has registered before
         DatabaseReference firebasereference, userReference;
         firebasereference = FirebaseDatabase.getInstance().getReference();
         userReference = firebasereference.child(FirebaseEndpoint.USERS);

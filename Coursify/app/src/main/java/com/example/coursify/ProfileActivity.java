@@ -215,6 +215,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                     }
                                                 }
                                                 userList.add(new User(friendName, friendMajor));
+                                                Log.v(TAG, "the size is: " + userList.size());
                                                 friendListAdapter.notifyItemInserted(userList.size() - 1);
                                             }
 

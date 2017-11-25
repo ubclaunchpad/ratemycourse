@@ -14,7 +14,7 @@ public class User {
     private String facebookID;
     private List<String> facebookFriends;
     private String interest;
-    //private List<String> searchHistory; //maybe better to be a Priorityqueue with a maxsize (LRU cache idea)
+    //having a PriorityQueue is better for LRU
     private PriorityQueue<String> searchHistory;
     private List<String> coursesTaken;
     private List<String> coursesGoing;

@@ -31,6 +31,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private AccessToken mAccessToken;
     private String mUserId;
+    private String email;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -65,6 +67,16 @@ public class ProfileActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null){
+            Log.v(TAG, "Please sign in");
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }else if(!user.isEmailVerified()){
+            Log.v(TAG, "Please verify your email");
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }
+        email = user.getEmail();
 
         LoginButton mLoginButton;
         mLoginButton = (LoginButton) findViewById(R.id.btnFBLogin);

@@ -48,10 +48,6 @@ import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
-    private static final String FIREBASE_FBUSERS_ENDPOINT = "FacebookUsers";
-    private static final String FIREBASE_USERS_ENDPOINT = "Users";
-    private static final String FIREBASE_USERS_FRIENDS_ENDPOINT = "facebookFriends";
-
     CallbackManager mCallBackManager;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,14 +133,13 @@ public class ProfileActivity extends AppCompatActivity {
             this.friendListAdapter = new FriendListAdapter(userList);
             recyclerView.setAdapter(friendListAdapter);
 
-            ref.child(FIREBASE_USERS_ENDPOINT)
+            ref.child(FirebaseEndpoint.USERS)
                     .child(Utils.processEmail(mAuth.getCurrentUser().getEmail()))
-                    .child("facebookID")
+                    .child(FirebaseEndpoint.FACEBOOK_ID)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             String fbID = dataSnapshot.getValue(String.class);
-                            Log.v(TAG, "fb id is: " + fbID);
                             getFBFriends(fbID);
                         }
 
@@ -164,7 +159,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         private void getFriendInfo(String fbID) {
-            ref.child(FIREBASE_FBUSERS_ENDPOINT)
+            ref.child(FirebaseEndpoint.FACEBOOK_USERS)
                     .child(fbID)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -172,7 +167,7 @@ public class ProfileActivity extends AppCompatActivity {
                             String email = dataSnapshot.getValue(String.class);
                             Log.v(TAG, "email is " + email);
                             if(email != null) {
-                                ref.child(FIREBASE_USERS_ENDPOINT)
+                                ref.child(FirebaseEndpoint.USERS)
                                         .child(email)
                                         .addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
@@ -180,10 +175,10 @@ public class ProfileActivity extends AppCompatActivity {
                                                 String friendName = "";
                                                 String friendMajor = "";
                                                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                    if(snapshot.getKey().equals("major")) {
+                                                    if(snapshot.getKey().equals(FirebaseEndpoint.MAJOR)) {
                                                         friendMajor = snapshot.getValue(String.class);
                                                     }
-                                                    else if (snapshot.getKey().equals("name")) {
+                                                    else if (snapshot.getKey().equals(FirebaseEndpoint.NAME)) {
                                                         friendName = snapshot.getValue(String.class);
                                                     }
                                                 }
@@ -239,9 +234,9 @@ public class ProfileActivity extends AppCompatActivity {
                                         getFriendInfo(userId);
                                         fbFriends.add(userId);
                                     }
-                                    ref.child(FIREBASE_USERS_ENDPOINT)
+                                    ref.child(FirebaseEndpoint.USERS)
                                             .child(Utils.processEmail(mAuth.getCurrentUser().getEmail()))
-                                            .child(FIREBASE_USERS_FRIENDS_ENDPOINT)
+                                            .child(FirebaseEndpoint.FACEBOOK_FRIENDS)
                                             .setValue(fbFriends);
 
                                 } catch (JSONException e) {

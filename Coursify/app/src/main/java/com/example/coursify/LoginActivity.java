@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                             final String processedEmail = processString(email);
                             DatabaseReference firebasereference, userReference;
                             firebasereference = FirebaseDatabase.getInstance().getReference();
-                            userReference = firebasereference.child("Users");
+                            userReference = firebasereference.child(FirebaseEndpoint.USERS);
                             userReference.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {

@@ -1,6 +1,7 @@
 package com.example.coursify;
 
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * Created by LucyZhao on 2017/11/11.
@@ -13,14 +14,15 @@ public class User {
     private String facebookID;
     private List<String> facebookFriends;
     private String interest;
-    private List<String> searchHistory;
+    //having a PriorityQueue is better for LRU
+    private PriorityQueue<String> searchHistory;
     private List<String> coursesTaken;
     private List<String> coursesGoing;
     private List<String> coursesInterested;
     private List<String> bookmarks;
     public List<Note> notes;
 
-    public User(String name, String major, String gradDate, String facebookID, List<String> facebookFriends, String interest, List<String> searchHistory,
+    public User(String name, String major, String gradDate, String facebookID, List<String> facebookFriends, String interest, PriorityQueue<String> searchHistory,
                 List<String> coursesTaken, List<String> coursesGoing, List<String> bookmarks, List<Note> notes){
         this.major = major;
         this.name = name;

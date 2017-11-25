@@ -24,12 +24,18 @@ public class RegisterActivity extends AppCompatActivity {
 
         final EditText emailInput = (EditText)findViewById(R.id.emailInput);
         final EditText passwordInput = (EditText)findViewById(R.id.passwordInput);
+        final EditText verifyPasswordInput = (EditText)findViewById(R.id.verifyPasswordInput);
         Button verifyEmailBtn = (Button)findViewById(R.id.registerButton);
         verifyEmailBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String email = emailInput.getText().toString();
                 String password = passwordInput.getText().toString();
-                createUser(email, password);
+                String verifyPassword = verifyPasswordInput.getText().toString();
+                if(password.equals(verifyPassword)){
+                    createUser(email, password);
+                }else{
+                    Log.v(TAG, "Invalid password, please enter again");
+                }
             }
         });
     }

@@ -7,17 +7,17 @@ package com.example.coursify;
 // Strings are ordered alphabetically; capital letters come first
 
 public class FirebaseEndpoint {
-    public static String COURSES = "Courses";
-    public static String DESCRIPTION = "Description"; //course description
-    public static String FACEBOOK_USERS = "FacebookUsers";
-    public static String RATING = "Rating"; //course rating
-    public static String TITLE = "Title"; //course title
-    public static String USERS = "Users";
+    public static final String COURSES = "Courses";
+    public static final String DESCRIPTION = "Description"; //course description
+    public static final String FACEBOOK_USERS = "FacebookUsers";
+    public static final String RATING = "Rating"; //course rating
+    public static final String TITLE = "Title"; //course title
+    public static final String USERS = "Users";
 
-    public static String COMMENTS = "comments"; // course comments
-    public static String FACEBOOK_FRIENDS = "facebookFriends";
-    public static String FACEBOOK_ID = "facebookID";
-    public static String GRAD_DATE = "gradDate";
-    public static String MAJOR = "major";
-    public static String NAME = "name";
+    public static final String COMMENTS = "comments"; // course comments
+    public static final String FACEBOOK_FRIENDS = "facebookFriends";
+    public static final String FACEBOOK_ID = "facebookID";
+    public static final String GRAD_DATE = "gradDate";
+    public static final String MAJOR = "major";
+    public static final String NAME = "name";
 }

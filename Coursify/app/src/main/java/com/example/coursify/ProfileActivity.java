@@ -115,11 +115,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     protected void setFacebookUserId(final String email, final String mUserId){
         Log.v(TAG, "and my facebook user id in set Facebook UserId is:" + mUserId);
-        DatabaseReference firebasereference, userReference;
+        DatabaseReference firebasereference, fbUserReference, userFbIdReference;
         firebasereference = FirebaseDatabase.getInstance().getReference();
         String processedEmail = processEmail(email);
-        userReference = firebasereference.child(FirebaseEndpoint.FACEBOOK_USERS).child(mUserId);
-        userReference.setValue(processedEmail);
+        fbUserReference = firebasereference.child(FirebaseEndpoint.FACEBOOK_USERS).child(mUserId);
+        fbUserReference.setValue(processedEmail);
+        userFbIdReference = firebasereference.child(FirebaseEndpoint.USERS).child(processedEmail)
+                .child(FirebaseEndpoint.FACEBOOK_ID);
+        userFbIdReference.setValue(mUserId);
     }
 
 

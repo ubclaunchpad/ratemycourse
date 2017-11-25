@@ -6,10 +6,10 @@ package com.example.coursify;
 
 class Rating {
     String author;
-    double easiness;
-    double usefulness;
+    long easiness;
+    long usefulness;
 
-    public Rating(String author, double easiness, double usefulness){
+    public Rating(String author, long easiness, long usefulness){
         this.author = author;
         this.easiness = easiness;
         this.usefulness = usefulness;

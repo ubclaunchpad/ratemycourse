@@ -100,7 +100,7 @@ public class HomeActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        getRecentlyOpenedFromDatabase();
+        getRecentlyOpenedFromDatabase(); //TODO move it somewhere else, this is causing duplicate entries
     }
 
     private void initializeCourses() {
@@ -142,6 +142,7 @@ public class HomeActivity extends Activity {
                     /* Find the corresponding course description */
                     for(int i  = 0; i < recentlyOpened.size(); i++) {
                         String courseCode = recentlyOpened.get(i);
+                        // Assumes the course code exists
                         final String processedCourseCode = Utils.processCourseCode(courseCode);
                         DatabaseReference courseRef = getCourseReferenceToDatabase(processedCourseCode);
                         courseRef.child(FirebaseEndpoint.DESCRIPTION)

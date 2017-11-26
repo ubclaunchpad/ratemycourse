@@ -20,4 +20,5 @@ public class FirebaseEndpoint {
     public static final String GRAD_DATE = "gradDate";
     public static final String MAJOR = "major";
     public static final String NAME = "name";
+    public static final String RECENTLY_OPENED_COURSES = "recentlyOpened";
 }

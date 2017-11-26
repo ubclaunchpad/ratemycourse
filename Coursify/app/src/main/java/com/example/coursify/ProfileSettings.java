@@ -34,10 +34,8 @@ public class ProfileSettings extends AppCompatActivity {
     private CallbackManager mCallBackManager;
     private AccessToken mAccessToken;
     private String mUserId;
-    EditText mEmail;
-    EditText mName;
-    EditText mMajor;
-    EditText mGradDate;
+    EditText mEmail, mName, mMajor, mGradDate, mInterest;
+    String email, name, major, gradDate, interest;
     Button mSubmit;
     boolean found = false;
 
@@ -51,7 +49,7 @@ public class ProfileSettings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_settings);
         Bundle bundle = getIntent().getExtras();
-        final String email = bundle.getString("Email");
+        email = bundle.getString("Email");
         findViewsById();
 
         mLoginButton.setReadPermissions("user_friends", "email");
@@ -87,6 +85,7 @@ public class ProfileSettings extends AppCompatActivity {
         mName = (EditText)findViewById(R.id.nameInput);
         mMajor = (EditText)findViewById(R.id.majorInput);
         mGradDate = (EditText)findViewById(R.id.gradInput);
+        mInterest = (EditText) findViewById(R.id.interestInput);
         mSubmit = (Button)findViewById(R.id.submit);
     }
 
@@ -118,9 +117,8 @@ public class ProfileSettings extends AppCompatActivity {
                         String showName = currUser.get("name");
                         String showGradDate = currUser.get("gradDate");
                         String showMajor = currUser.get("major");
-                        mName.setText(showName);
-                        mMajor.setText(showMajor);
-                        mGradDate.setText(showGradDate);
+                        String showInterest = currUser.get("interest");
+
                         found = true;
                         break;
                     }
@@ -130,20 +128,22 @@ public class ProfileSettings extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String email = mEmail.getText().toString();
-                final String name = mName.getText().toString();
-                final String major = mMajor.getText().toString();
-                final String gradDate = mGradDate.getText().toString();
-                updateProfile(email, name, major, gradDate, mUserId, found);
+            name = mName.getText().toString();
+            major = mMajor.getText().toString();
+            gradDate = mGradDate.getText().toString();
+            interest = mInterest.getText().toString();
+            Log.v(TAG, "my interest is:" + interest);
+            updateProfile(email, name, major, gradDate, interest, found);
             }
         });
     }
 
     protected void updateProfile(String email, String name, String major, String gradDate,
-                                 String facebookID, boolean found){
+                                 String interest, boolean found){
         Log.v(TAG, "found is " + found);
         DatabaseReference firebasereference, userReference;
         firebasereference = FirebaseDatabase.getInstance().getReference();
@@ -152,15 +152,12 @@ public class ProfileSettings extends AppCompatActivity {
         if(name.length() == 0 || major.length() == 0 || gradDate.length() == 0){
             Log.v(TAG, "You need to fill out all of name, major and gradDate fields");
         }else{
-            if(found){
-                userReference.child("email").setValue(email);
-                userReference.child("name").setValue(name);
-                userReference.child("gradDate").setValue(gradDate);
-                userReference.child("facebookID").setValue(facebookID);
-                userReference.child("major").setValue(major);
-                return;
-            }
-            userReference.setValue(new User(name, major, gradDate, facebookID));
+            userReference.child("email").setValue(email);
+            userReference.child("name").setValue(name);
+            userReference.child("gradDate").setValue(gradDate);
+            userReference.child("major").setValue(major);
+            userReference.child("interest").setValue(interest);
+            return;
         }
     }
 }

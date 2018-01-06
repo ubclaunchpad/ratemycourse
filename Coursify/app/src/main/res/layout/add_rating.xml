@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="10dp"
+    android:id="@+id/add_rating"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/div_easiness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/txtEasiness"
+            android:text="Easiness"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <NumberPicker
+            android:id="@+id/numPickerEasiness"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/txtEasiness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </NumberPicker>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/div_usefulness"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/txtUsefulness"
+            android:text="Usefulness"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <NumberPicker
+            android:id="@+id/numPickerUsefulness"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/txtUsefulness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </NumberPicker>
+    </RelativeLayout>
+
+</RelativeLayout>

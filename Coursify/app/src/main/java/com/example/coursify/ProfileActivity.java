@@ -31,6 +31,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,10 +46,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.coursify.Utils.processEmail;
+
 
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
     CallbackManager mCallBackManager;
+
+    private AccessToken mAccessToken;
+    private String mUserId;
+    private String email;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -61,6 +68,16 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null){
+            Log.v(TAG, "Please sign in");
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }else if(!user.isEmailVerified()){
+            Log.v(TAG, "Please verify your email");
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        }
+        email = user.getEmail();
+
         LoginButton mLoginButton;
         mLoginButton = (LoginButton) findViewById(R.id.btnFBLogin);
         mLoginButton.setReadPermissions("user_friends", "email");
@@ -70,6 +87,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.v(TAG, "Successfully connected to FaceBook.");
+                mAccessToken = loginResult.getAccessToken();
+                mUserId = loginResult.getAccessToken().getUserId();
+                setFacebookUserId(email, mUserId);
             }
 
             @Override
@@ -91,6 +111,18 @@ public class ProfileActivity extends AppCompatActivity {
         // and add the transaction to the back stack if needed
         transaction.replace(R.id.activity_profile, friendsFragment);
         transaction.commit();
+    }
+
+    protected void setFacebookUserId(final String email, final String mUserId){
+        Log.v(TAG, "and my facebook user id in set Facebook UserId is:" + mUserId);
+        DatabaseReference firebasereference, fbUserReference, userFbIdReference;
+        firebasereference = FirebaseDatabase.getInstance().getReference();
+        String processedEmail = processEmail(email);
+        fbUserReference = firebasereference.child(FirebaseEndpoint.FACEBOOK_USERS).child(mUserId);
+        fbUserReference.setValue(processedEmail);
+        userFbIdReference = firebasereference.child(FirebaseEndpoint.USERS).child(processedEmail)
+                .child(FirebaseEndpoint.FACEBOOK_ID);
+        userFbIdReference.setValue(mUserId);
     }
 
 
@@ -183,6 +215,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                     }
                                                 }
                                                 userList.add(new User(friendName, friendMajor));
+                                                Log.v(TAG, "the size is: " + userList.size());
                                                 friendListAdapter.notifyItemInserted(userList.size() - 1);
                                             }
 

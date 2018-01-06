@@ -52,9 +52,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         @Override
         public void onClick(View v) {
             addToRecent();
-//            Intent intent = new Intent(context, CourseActivity.class);
-//            TextView txtCourseCode = (TextView) mLayout.findViewById(R.id.txtCourseCode);
-//            courseCode = txtCourseCode.getText().toString();
+            Intent intent = new Intent(context, CourseActivity.class);
+            TextView txtCourseCode = (TextView) mLayout.findViewById(R.id.txtCourseCode);
+            courseCode = txtCourseCode.getText().toString();
 //            intent.putExtra("COURSE_CODE", courseCode);
 //            context.startActivity(intent);
         }
@@ -75,9 +75,14 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                         List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
                         if(!recentlyOpened.contains(courseCode)) {
                             recentlyOpened.add(courseCode);
-                            Log.v(TAG, "courseadapter: " + courseCode); // todo fix coursecode is null
                         }
-
+                        else {
+                            recentlyOpened.remove(courseCode);
+                            recentlyOpened.add(courseCode);
+                        }
+                        while(recentlyOpened.size() > Utils.RECENTLY_OPENE_LIMIT) {
+                            recentlyOpened.remove(0);
+                        }
 
                         recentlyOpenedRef.setValue(recentlyOpened);
                     }

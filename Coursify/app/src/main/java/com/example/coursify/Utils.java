@@ -9,6 +9,8 @@ import java.util.ArrayList;
  */
 
 public class Utils {
+
+    public static final int RECENTLY_OPENE_LIMIT = 4;
     private static final String TAG = Utils.class.getSimpleName();
 
     protected static String processEmail(String email){

@@ -104,12 +104,17 @@ public class HomeActivity extends Activity {
 
     private void initializeCourses() {
         Course c1 = new Course("CPSC 110", "Differential Calculus with Applications to Physical Sciences and Engineering");
-        Course c2 = new Course("ONCO 649", "Computation, Programs, and Programming");
+        Course c2 = new Course("ONCO 649", "Doctoral Dissertation");
         Course c3 = new Course("CPSC 210", "CPSC 210 L1K (Laboratory)");
+        Course c4 = new Course("PLAN 425", "Urban Planning Issues and Concepts");
+        Course c5 = new Course("PLAN 523", "The Profession of Planning");
         listRecentlyOpened = new ArrayList<>();
         listRecommended = new ArrayList<>();
         listRecommended.add(c1);
+        listRecommended.add(c3);
         listRecommended.add(c2);
+        listRecommended.add(c4);
+        listRecommended.add(c5);
 //        listRecentlyOpened.add(c3);
 
 

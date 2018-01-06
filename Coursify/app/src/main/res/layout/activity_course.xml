@@ -48,9 +48,10 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/imgEasinessRating"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="20dp"
-        android:background="@drawable/background_border"
+        android:maxWidth="250dp"
+        android:background="@color/colorDarkGray"
         android:layout_below="@id/txtEasiness"
         android:layout_alignLeft="@id/txtEasiness"
         android:layout_alignStart="@id/txtEasiness" />
@@ -61,12 +62,12 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         android:id="@+id/imgEasinessRatingBackground"
         android:layout_alignLeft="@id/imgEasinessRating"
         android:layout_alignStart="@id/imgEasinessRating"
-        android:background="@color/colorDarkGray"
+        android:background="@drawable/background_border"
         android:layout_alignTop="@id/imgEasinessRating" />
 
     <TextView
         android:id="@+id/txtEasinessRating"
-        android:text="100%"
+        android:text="No rating"
         android:layout_alignTop="@id/imgEasinessRatingBackground"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
@@ -82,25 +83,26 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/imgUsefulnessRating"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="20dp"
-        android:background="@drawable/background_border"
+        android:maxWidth="250dp"
+        android:background="@color/colorDarkGray"
         android:layout_below="@id/txtUsefulness"
         android:layout_alignLeft="@id/txtUsefulness"
         android:layout_alignStart="@id/txtUsefulness" />
 
     <ImageView
+        android:id="@+id/imgUsefulnessRatingBackground"
         android:layout_width="250dp"
         android:layout_height="20dp"
-        android:id="@+id/imgUsefulnessRatingBackground"
+        android:background="@drawable/background_border"
         android:layout_alignLeft="@id/imgUsefulnessRating"
         android:layout_alignStart="@id/imgUsefulnessRating"
-        android:background="@color/colorDarkGray"
         android:layout_alignTop="@id/imgUsefulnessRating" />
 
     <TextView
         android:id="@+id/txtUsefulnessRating"
-        android:text="100%"
+        android:text="No rating"
         android:layout_alignTop="@id/imgUsefulnessRatingBackground"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"

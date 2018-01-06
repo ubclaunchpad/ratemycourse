@@ -1,11 +1,16 @@
 package com.example.coursify;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -16,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button loginBtn = (Button) findViewById(R.id.login_button);
         Button registerBtn = (Button) findViewById(R.id.register_button);
+        Button forgotPassBtn = (Button) findViewById(R.id.forgotPass);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -30,6 +36,22 @@ public class MainActivity extends AppCompatActivity {
                 Intent mIntent = new Intent(getApplicationContext(), RegisterActivity.class);
                 Log.v(TAG, "Proceeding to RegisterActivity");
                 startActivity(mIntent);
+            }
+        });
+
+        forgotPassBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                String emailAddress = "user@example.com";
+                auth.sendPasswordResetEmail(emailAddress)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "Email sent.");
+                                }
+                            }
+                        });
             }
         });
     }

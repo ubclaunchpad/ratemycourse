@@ -139,6 +139,8 @@ public class HomeActivity extends Activity {
                     GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
                     List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
                     Collections.reverse(recentlyOpened);
+
+                    listRecentlyOpened.clear();
                     /* Find the corresponding course description */
                     for(int i  = 0; i < recentlyOpened.size(); i++) {
                         String courseCode = recentlyOpened.get(i);

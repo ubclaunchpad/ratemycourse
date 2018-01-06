@@ -53,11 +53,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Comment currComment = mComments.get(position);
+        TextView txtCommenterName = holder.mLayout.findViewById(R.id.txtCommenterName);
+        TextView txtCommentBody = holder.mLayout.findViewById(R.id.txtCommentBody);
 
-        TextView txtCommenterName = (TextView) holder.mLayout.findViewById(R.id.txtCommenterName);
-        TextView txtCommentBody = (TextView) holder.mLayout.findViewById(R.id.txtCommentBody);
+        if (currComment.anonymity) {
+            txtCommenterName.setText("Anonymous");
+        } else {
+            txtCommenterName.setText(currComment.author);
+        }
 
-        txtCommenterName.setText(currComment.author);
         txtCommentBody.setText(currComment.commentBody);
     }
 

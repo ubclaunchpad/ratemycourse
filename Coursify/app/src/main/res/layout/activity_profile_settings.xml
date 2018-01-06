@@ -24,9 +24,7 @@
         app:layout_constraintBottom_toTopOf="parent"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="17dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/nameInput"
@@ -62,32 +60,25 @@
         android:layout_height="42dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:layout_marginEnd="19dp"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
-        android:layout_marginEnd="19dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="31dp"
-        app:layout_constraintTop_toBottomOf="@+id/emailInput"
-        android:layout_marginRight="19dp" />
+        app:layout_constraintTop_toBottomOf="@+id/emailInput" />
 
     <EditText
         android:id="@+id/gradInput"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="42dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="date"
-        android:layout_marginEnd="22dp"
-        android:layout_marginStart="12dp"
-        tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/interestInput"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/textView4"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="22dp" />
+        android:layout_marginBottom="37dp" />
 
     <Button
         android:id="@+id/submit"
@@ -100,7 +91,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="38dp"
+        android:layout_marginBottom="6dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
@@ -114,8 +105,7 @@
         android:layout_marginTop="30dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="34dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
@@ -126,13 +116,12 @@
         android:layout_marginStart="34dp"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="@+id/majorInput"
+        app:layout_constraintBottom_toBottomOf="@+id/textView7"
         android:layout_marginTop="81dp"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="81dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/nameInput"
-        android:layout_marginLeft="34dp" />
+        app:layout_constraintTop_toTopOf="@+id/nameInput" />
 
     <TextView
         android:id="@+id/textView3"
@@ -144,9 +133,8 @@
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/textView7"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="3dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView7"
-        android:layout_marginLeft="7dp" />
+        android:layout_marginBottom="1dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textView7" />
 
     <TextView
         android:id="@+id/textView4"
@@ -156,11 +144,10 @@
         android:text="Graduate Year:"
         android:textSize="18sp"
         tools:layout_constraintTop_creator="1"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="9dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gradInput"
-        android:layout_marginLeft="16dp" />
+        app:layout_constraintTop_toTopOf="@+id/gradInput" />
 
     <TextView
         android:id="@+id/textView5"
@@ -172,8 +159,7 @@
         android:layout_marginTop="17dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/textView4"
-        android:layout_marginLeft="34dp" />
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView7"
@@ -183,13 +169,12 @@
         android:layout_marginStart="27dp"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        android:layout_marginTop="64dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/textView8"
+        android:layout_marginTop="124dp"
+        app:layout_constraintTop_toBottomOf="@+id/nameInput"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="64dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="27dp" />
+        android:layout_marginBottom="124dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
@@ -197,15 +182,41 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="17dp"
-        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/submit"
-        android:layout_marginTop="67dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="68dp"
-        app:layout_constraintLeft_toRightOf="@+id/textView5"
-        android:layout_marginLeft="17dp" />
+        android:layout_marginBottom="22dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Interests:"
+        android:textSize="18sp"
+        android:layout_marginStart="34dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="166dp"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="165dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/majorInput" />
+
+    <EditText
+        android:id="@+id/interestInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/gradInput"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView8"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="@+id/gradInput" />
 
 </android.support.constraint.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ import java.util.List;
  * Created by sveloso on 2017-11-11.
  */
 public class CourseActivity extends Activity {
-
+    
     private LinearLayout layoutFabComment;
     private LinearLayout layoutFabRating;
     private boolean fabExpanded = false;

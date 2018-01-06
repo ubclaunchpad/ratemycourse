@@ -16,6 +16,7 @@ import com.dgreenhalgh.android.simpleitemdecoration.linear.StartOffsetItemDecora
 import com.example.coursify.Course;
 import com.example.coursify.CourseAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -95,16 +96,14 @@ public class HomeActivity extends Activity {
         mListPopular.addItemDecoration(itemDivider);
         mListPopular.addItemDecoration(new StartOffsetItemDecoration(30));
         mListPopular.addItemDecoration(new EndOffsetItemDecoration(30));
+
+        getRecentlyOpenedFromDatabase();
+
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getRecentlyOpenedFromDatabase(); //TODO move it somewhere else, this is causing duplicate entries
-    }
 
     private void initializeCourses() {
-        Course c1 = new Course("MATH 100", "Differential Calculus with Applications to Physical Sciences and Engineering");
+        Course c1 = new Course("CPSC 110", "Differential Calculus with Applications to Physical Sciences and Engineering");
         Course c2 = new Course("CPSC 110", "Computation, Programs, and Programming");
         Course c3 = new Course("CPSC 210", "CPSC 210 L1K (Laboratory)");
         listRecentlyOpened = new ArrayList<>();
@@ -140,7 +139,6 @@ public class HomeActivity extends Activity {
                     List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
                     Collections.reverse(recentlyOpened);
 
-                    listRecentlyOpened.clear();
                     /* Find the corresponding course description */
                     for(int i  = 0; i < recentlyOpened.size(); i++) {
                         String courseCode = recentlyOpened.get(i);
@@ -154,7 +152,7 @@ public class HomeActivity extends Activity {
                                 String description = dataSnapshot.getValue(String.class);
                                 Course course = new Course(processedCourseCode, description);
                                 listRecentlyOpened.add(course);
-                                mRecentlyOpenedAdapter.notifyItemInserted(listRecentlyOpened.size() - 1);
+                                mRecentlyOpenedAdapter.notifyDataSetChanged();
                             }
 
                             @Override

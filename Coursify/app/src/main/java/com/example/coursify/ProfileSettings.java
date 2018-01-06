@@ -28,7 +28,7 @@ import java.util.HashMap;
 import static com.example.coursify.Utils.processEmail;
 
 public class ProfileSettings extends AppCompatActivity {
-    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final String TAG = ProfileSettings.class.getSimpleName();
 
     private LoginButton mLoginButton;
     private CallbackManager mCallBackManager;
@@ -36,7 +36,7 @@ public class ProfileSettings extends AppCompatActivity {
     private String mUserId;
     EditText mEmail, mName, mMajor, mGradDate, mInterest;
     String email, name, major, gradDate, interest;
-    Button mSubmit;
+    Button mSubmit, mChangePass;
     boolean found = false;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -50,7 +50,7 @@ public class ProfileSettings extends AppCompatActivity {
         setContentView(R.layout.activity_profile_settings);
         Bundle bundle = getIntent().getExtras();
         email = bundle.getString("Email");
-        findViewsById();
+        findViewsByIds();
 
         mLoginButton.setReadPermissions("user_friends", "email");
         mCallBackManager = CallbackManager.Factory.create();
@@ -79,7 +79,7 @@ public class ProfileSettings extends AppCompatActivity {
 
         collectInformation(email, mUserId);
     }
-    protected void findViewsById(){
+    protected void findViewsByIds(){
         mLoginButton = (LoginButton) findViewById(R.id.login_button);
         mEmail = (EditText)findViewById(R.id.emailInput);
         mName = (EditText)findViewById(R.id.nameInput);
@@ -87,6 +87,7 @@ public class ProfileSettings extends AppCompatActivity {
         mGradDate = (EditText)findViewById(R.id.gradInput);
         mInterest = (EditText) findViewById(R.id.interestInput);
         mSubmit = (Button)findViewById(R.id.submit);
+        mChangePass = (Button)findViewById(R.id.changePass);
     }
 
     protected void setFacebookUserId(final String email, final String mUserId){
@@ -119,6 +120,11 @@ public class ProfileSettings extends AppCompatActivity {
                         String showMajor = currUser.get("major");
                         String showInterest = currUser.get("interest");
 
+                        mName.setText(showName.trim());
+                        mGradDate.setText(showGradDate.trim());
+                        mMajor.setText(showMajor.trim());
+                        mInterest.setText(showInterest.trim());
+
                         found = true;
                         break;
                     }
@@ -138,6 +144,15 @@ public class ProfileSettings extends AppCompatActivity {
             interest = mInterest.getText().toString();
             Log.v(TAG, "my interest is:" + interest);
             updateProfile(email, name, major, gradDate, interest, found);
+            }
+        });
+
+        mChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mIntent = new Intent(getApplicationContext(), changePassword.class);
+                Log.v(TAG, "Proceeding to changePassword");
+                startActivity(mIntent);
             }
         });
     }

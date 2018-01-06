@@ -31,7 +31,7 @@ import java.util.List;
  * Created by sveloso on 2017-11-11.
  */
 public class CourseActivity extends Activity {
-    
+
     private LinearLayout layoutFabComment;
     private LinearLayout layoutFabRating;
     private boolean fabExpanded = false;

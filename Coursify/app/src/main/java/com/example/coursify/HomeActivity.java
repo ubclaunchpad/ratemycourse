@@ -104,12 +104,12 @@ public class HomeActivity extends Activity {
 
     private void initializeCourses() {
         Course c1 = new Course("CPSC 110", "Differential Calculus with Applications to Physical Sciences and Engineering");
-        Course c2 = new Course("CPSC 110", "Computation, Programs, and Programming");
+        Course c2 = new Course("ONCO 649", "Computation, Programs, and Programming");
         Course c3 = new Course("CPSC 210", "CPSC 210 L1K (Laboratory)");
         listRecentlyOpened = new ArrayList<>();
         listRecommended = new ArrayList<>();
         listRecommended.add(c1);
-//        listRecentlyOpened.add(c2);
+        listRecommended.add(c2);
 //        listRecentlyOpened.add(c3);
 
 
@@ -141,16 +141,15 @@ public class HomeActivity extends Activity {
 
                     /* Find the corresponding course description */
                     for(int i  = 0; i < recentlyOpened.size(); i++) {
-                        String courseCode = recentlyOpened.get(i);
+                        final String courseCode = recentlyOpened.get(i);
                         // Assumes the course code exists
-                        final String processedCourseCode = Utils.processCourseCode(courseCode);
-                        DatabaseReference courseRef = getCourseReferenceToDatabase(processedCourseCode);
+                        DatabaseReference courseRef = getCourseReferenceToDatabase(courseCode);
                         courseRef.child(FirebaseEndpoint.DESCRIPTION)
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 String description = dataSnapshot.getValue(String.class);
-                                Course course = new Course(processedCourseCode, description);
+                                Course course = new Course(courseCode, description);
                                 listRecentlyOpened.add(course);
                                 mRecentlyOpenedAdapter.notifyDataSetChanged();
                             }

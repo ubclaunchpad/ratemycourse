@@ -22,25 +22,4 @@ public class Utils {
         }
         return email;
     }
-
-    /**
-     * Takes in a course code in the format "CPSC110" and
-     * convert to "CPSC 110"
-     * @param courseCode
-     * @return
-     */
-    static String processCourseCode(String courseCode) {
-        int firstNumIndex = 0;
-        for(int i = 0; i < courseCode.length(); i++) {
-            if(Character.isDigit(courseCode.charAt(i))) {
-                firstNumIndex = i;
-                break;
-            }
-        }
-        Log.v(TAG, "index of the first number is: " + firstNumIndex);
-        String courseDept = courseCode.substring(0, firstNumIndex);
-        String courseId = courseCode.substring(firstNumIndex);
-        Log.v(TAG, "processed course code is " + courseDept + " " + courseId);
-        return courseDept + " " + courseId;
-    }
 }

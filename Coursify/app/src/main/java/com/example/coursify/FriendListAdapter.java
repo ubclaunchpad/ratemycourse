@@ -1,6 +1,7 @@
 package com.example.coursify;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
     private final List<User> userList;
+    private static final String TAG = FriendListAdapter.class.getSimpleName();
 
     public FriendListAdapter(List<User> userList) {
         this.userList = userList;
@@ -36,6 +38,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 
     @Override
     public int getItemCount() {
+        Log.v(TAG, "Userlist size is in FriendListAdapter:" + userList.size());
         return userList.size();
     }
 

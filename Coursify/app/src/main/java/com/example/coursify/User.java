@@ -35,6 +35,7 @@ public class User {
         this.coursesGoing = coursesGoing;
         this.bookmarks = bookmarks;
         this.notes = notes;
+        this.interest = interest;
     }
 
     //why do we need this? Is it okay to remove afterwards? lol
@@ -44,11 +45,11 @@ public class User {
     }
 
     //From profile settings
-    public User(String name, String major, String gradDate, String facebookID){
+    public User(String name, String major, String gradDate, String interest){
         this.name = name;
         this.major = major;
         this.gradDate = gradDate;
-        this.facebookID = facebookID;
+        this.interest = interest;
     }
 
     public User() {

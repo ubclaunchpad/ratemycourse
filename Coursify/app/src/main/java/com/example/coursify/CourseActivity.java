@@ -10,7 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +31,15 @@ import java.util.List;
  */
 public class CourseActivity extends Activity {
 
+    private LinearLayout layoutFabComment;
+    private LinearLayout layoutFabRating;
+    private boolean fabExpanded = false;
+
     private TextView txtCourseTitle;
     private TextView txtCourseCode;
     private TextView txtEasinessRating;
     private TextView txtUsefulnessRating;
-    private FloatingActionButton btnAddComment;
+    private FloatingActionButton btnAddCommentOrRating;
 
     private String courseCode;
     private String courseDept;
@@ -59,6 +66,8 @@ public class CourseActivity extends Activity {
         getCourseReferenceToDatabase();
         populateUIFromDatabaseInfo();
         txtCourseCode.setText(courseCode);
+
+        closeSubMenusFab();
     }
 
     private void findViewsById() {
@@ -67,15 +76,37 @@ public class CourseActivity extends Activity {
         txtEasinessRating = (TextView) findViewById(R.id.txtEasinessRating);
         txtUsefulnessRating = (TextView) findViewById(R.id.txtUsefulnessRating);
         mListComments = (RecyclerView) findViewById(R.id.listCourseComments);
+        layoutFabComment = (LinearLayout) findViewById(R.id.layoutFabComment);
+        layoutFabRating = (LinearLayout) findViewById(R.id.layoutFabRating);
         mListComments.setHasFixedSize(true);
         mCommentsManager = new LinearLayoutManager(this);
         mListComments.setLayoutManager(mCommentsManager);
         mListComments.setAdapter(mCommentsAdapter);
-        btnAddComment = (FloatingActionButton) findViewById(R.id.btnAddComment);
+        btnAddCommentOrRating = (FloatingActionButton) findViewById(R.id.fabCommentOrRating);
+        btnAddCommentOrRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fabExpanded){
+                    closeSubMenusFab();
+                } else {
+                    openSubMenusFab();
+                }
+            }
+        });
+        FloatingActionButton btnAddComment = (FloatingActionButton) findViewById(R.id.fabComment);
         btnAddComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addComment();
+                closeSubMenusFab();
+            }
+        });
+        FloatingActionButton btnAddRating = (FloatingActionButton) findViewById(R.id.fabRating);
+        btnAddRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addRating();
+                closeSubMenusFab();
             }
         });
     }
@@ -111,6 +142,31 @@ public class CourseActivity extends Activity {
                 }
                 mCommentsAdapter = new CommentAdapter(comments);
                 mListComments.setAdapter(mCommentsAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        mCourseReference.child(FirebaseEndpoint.RATINGS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int totalEasiness = 0;
+                int totalUsefulness = 0;
+                int count = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Long longEasiness = (Long) snapshot.child("easiness").getValue();
+                    Long longUsefulness = (Long) snapshot.child("usefulness").getValue();
+
+                    totalEasiness += longEasiness.intValue();
+                    totalUsefulness += longUsefulness.intValue();
+                    count++;
+                }
+                double easinessRating = (totalEasiness / count) * 10;
+                double usefulnessRating = (totalUsefulness / count) * 10;
+                txtEasinessRating.setText(easinessRating + "%");
+                txtUsefulnessRating.setText(usefulnessRating + "%");
             }
 
             @Override
@@ -155,5 +211,59 @@ public class CourseActivity extends Activity {
         DatabaseReference commentsRef = mCourseReference.child(FirebaseEndpoint.COMMENTS);
 
         commentsRef.push().setValue(commentBody);
+    }
+
+    private void addRating() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add a rating");
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.add_rating, (ViewGroup) findViewById(R.id.add_rating), false);
+
+        final NumberPicker npEasiness = (NumberPicker) viewInflated.findViewById(R.id.numPickerEasiness);
+        npEasiness.setMinValue(0);
+        npEasiness.setMaxValue(10);
+        final NumberPicker npUsefulness = (NumberPicker) viewInflated.findViewById(R.id.numPickerUsefulness);
+        npUsefulness.setMinValue(0);
+        npUsefulness.setMaxValue(10);
+
+        builder.setView(viewInflated);
+        builder.setPositiveButton("Add Rating", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int easinessRating = npEasiness.getValue();
+                int usefulnessRating = npUsefulness.getValue();
+                addRatingToDatabase(easinessRating, usefulnessRating);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void addRatingToDatabase (int easinessRating, int usefulnessRating) {
+        Rating rating = new Rating("Some person", easinessRating, usefulnessRating);    // no author name for now
+        DatabaseReference commentsRef = mCourseReference.child(FirebaseEndpoint.RATINGS);
+
+        commentsRef.push().setValue(rating);
+    }
+
+    // Closes FAB submenus
+    private void closeSubMenusFab(){
+        layoutFabComment.setVisibility(View.INVISIBLE);
+        layoutFabRating.setVisibility(View.INVISIBLE);
+        btnAddCommentOrRating.setImageResource(R.mipmap.ic_add);
+        fabExpanded = false;
+    }
+
+    // Opens FAB submenus
+    private void openSubMenusFab(){
+        layoutFabComment.setVisibility(View.VISIBLE);
+        layoutFabRating.setVisibility(View.VISIBLE);
+        btnAddCommentOrRating.setImageResource(R.mipmap.ic_close);
+        fabExpanded = true;
     }
 }

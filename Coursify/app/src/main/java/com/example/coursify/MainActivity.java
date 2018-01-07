@@ -41,17 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
         forgotPassBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                String emailAddress = "user@example.com";
-                auth.sendPasswordResetEmail(emailAddress)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "Email sent.");
-                                }
-                            }
-                        });
+                Intent mIntent = new Intent(getApplicationContext(), ResendEmailActivity.class);
+                Log.v(TAG, "Proceeding to ResendEmailActivity");
+                startActivity(mIntent);
             }
         });
     }

@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,9 +78,9 @@ public class CourseActivity extends Activity {
         courseId = courseCode.split(" ")[1];
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mCourseReference = Utils.getCourseReferenceToDatabase(courseCode, mDatabase);
 
         getCurrentUserName();
-        getCourseReferenceToDatabase();
         populateUIFromDatabaseInfo();
         txtCourseCode.setText(courseCode);
 
@@ -120,7 +119,7 @@ public class CourseActivity extends Activity {
                     recentlyOpened.remove(courseCode);
                     recentlyOpened.add(courseCode);
                 }
-                while(recentlyOpened.size() > Utils.RECENTLY_OPENE_LIMIT) {
+                while(recentlyOpened.size() > Utils.RECENTLY_OPENED_LIMIT) {
                     recentlyOpened.remove(0);
                 }
                 recentlyOpenedList = recentlyOpened;
@@ -212,12 +211,12 @@ public class CourseActivity extends Activity {
         });
     }
 
-    private void getCourseReferenceToDatabase() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference subjectRef = mDatabase.child(FirebaseEndpoint.COURSES).child(courseDept);
-        DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));
-        mCourseReference = yearRef.child(courseDept + courseId);
-    }
+//    private void getCourseReferenceToDatabase() {
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
+//        DatabaseReference subjectRef = mDatabase.child(FirebaseEndpoint.COURSES).child(courseDept);
+//        DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));
+//        mCourseReference = yearRef.child(courseDept + courseId);
+//    }
 
     // Load Firebase course information
     private void populateUIFromDatabaseInfo() {

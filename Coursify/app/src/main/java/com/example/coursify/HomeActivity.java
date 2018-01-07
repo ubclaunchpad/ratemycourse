@@ -120,14 +120,19 @@ public class HomeActivity extends Activity {
 
 
     /**
-     * todo remove this after implementing recommended and popular 
+     * todo remove this after implementing recommended and popular
      */
     private void initializeCourses() {
         Course c1 = new Course("CPSC 110", "Differential Calculus with Applications to Physical Sciences and Engineering");
         Course c2 = new Course("ONCO 649", "Doctoral Dissertation");
         Course c3 = new Course("CPSC 210", "CPSC 210 L1K (Laboratory)");
         Course c4 = new Course("PLAN 425", "Urban Planning Issues and Concepts");
-        Course c5 = new Course("PLAN 523", "The Profession of Planning");
+        Course c5 = new Course("LARC 415", "The Profession of Planning");
+        Course c6 = new Course("LASO 204", "The Profession of Planning");
+        Course c7 = new Course("LATN 102", "The Profession of Planning");
+        Course c8 = new Course("LIBE 465", "The Profession of Planning");
+        Course c9 = new Course("OBST 430", "The Profession of Planning");
+        Course c10 = new Course("OBST 649", "The Profession of Planning");
         listRecentlyOpened = new ArrayList<>();
         listRecommended = new ArrayList<>();
         listRecommended.add(c1);
@@ -135,7 +140,12 @@ public class HomeActivity extends Activity {
         listRecommended.add(c2);
         listRecommended.add(c4);
         listRecommended.add(c5);
-//        listRecentlyOpened.add(c3);
+
+        listRecommended.add(c6);
+        listRecommended.add(c7);
+        listRecommended.add(c8);
+        listRecommended.add(c9);
+        listRecommended.add(c10);
 
 
     }
@@ -150,7 +160,40 @@ public class HomeActivity extends Activity {
     }
 
     /**
+     *
+     * @param recentlyOpened a list that contains at least one item
+     * @param coursePos
+     */
+    private void getRecentlyOpenedHelper(final List<String> recentlyOpened, final int coursePos) {
+        if(coursePos == recentlyOpened.size()) {
+            return;
+        }
+
+        final String courseCode = recentlyOpened.get(coursePos);
+        // Assumes the course code exists
+        DatabaseReference courseRef = Utils.getCourseReferenceToDatabase(courseCode, mDatabase);
+        courseRef.child(FirebaseEndpoint.DESCRIPTION)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String description = dataSnapshot.getValue(String.class);
+                        Course course = new Course(courseCode, description);
+                        listRecentlyOpened.add(course);
+                        mRecentlyOpenedAdapter.notifyDataSetChanged();
+                        getRecentlyOpenedHelper(recentlyOpened, coursePos + 1);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    /**
      * Retrieve recently opened list from Firebase and display it on UI
+     * NOTE: retrieving each course's information is asynchronous, but
+     * usually produces correct order in testing
      */
     private void getRecentlyOpenedFromDatabase() {
         listRecentlyOpened.clear();
@@ -162,33 +205,32 @@ public class HomeActivity extends Activity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    Log.v(TAG, "in get recently opened from database");
                     /* Gets a list of course code strings */
                     GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
                     List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
                     Collections.reverse(recentlyOpened);
-
+                    getRecentlyOpenedHelper(recentlyOpened, 0);
                     /* Find the corresponding course description */
-                    for(int i  = 0; i < recentlyOpened.size(); i++) {
-                        final String courseCode = recentlyOpened.get(i);
-                        // Assumes the course code exists
-                        DatabaseReference courseRef = getCourseReferenceToDatabase(courseCode);
-                        courseRef.child(FirebaseEndpoint.DESCRIPTION)
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String description = dataSnapshot.getValue(String.class);
-                                Course course = new Course(courseCode, description);
-                                listRecentlyOpened.add(course);
-                                mRecentlyOpenedAdapter.notifyDataSetChanged();
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
+                    //for(int i  = 0; i < recentlyOpened.size(); i++) {
+//                        final String courseCode = recentlyOpened.get(i);
+//                        // Assumes the course code exists
+//                        DatabaseReference courseRef = getCourseReferenceToDatabase(courseCode);
+//                        courseRef.child(FirebaseEndpoint.DESCRIPTION)
+//                                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                String description = dataSnapshot.getValue(String.class);
+//                                Course course = new Course(courseCode, description);
+//                                listRecentlyOpened.add(course);
+//                                mRecentlyOpenedAdapter.notifyDataSetChanged();
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//
+//                            }
+//                        });
+                    //}
                 }
             }
 
@@ -199,21 +241,6 @@ public class HomeActivity extends Activity {
         });
 
 
-    }
-
-    /**
-     * Given a course code, return reference to it in Firebase
-     * @param courseCode in the format of "CPSC 110"
-     * @return
-     */
-    private DatabaseReference getCourseReferenceToDatabase(String courseCode) {
-        String courseDept = courseCode.split(" ")[0];
-        String courseId = courseCode.split(" ")[1];
-
-        DatabaseReference subjectRef = mDatabase.child(FirebaseEndpoint.COURSES).child(courseDept);
-        DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));
-        Log.v(TAG, "getting course reference, course code is: " + courseDept + courseId);
-        return yearRef.child(courseDept + courseId);
     }
 
     public void showProfileSettings(View view){

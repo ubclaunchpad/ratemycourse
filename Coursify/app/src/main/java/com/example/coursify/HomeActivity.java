@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseUser;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,9 +54,18 @@ public class HomeActivity extends Activity {
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            // User is not signed in
+            return;
+        }
+        email = user.getEmail();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -101,6 +112,12 @@ public class HomeActivity extends Activity {
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getRecentlyOpenedFromDatabase();
+    }
+
 
     private void initializeCourses() {
         Course c1 = new Course("CPSC 110", "Differential Calculus with Applications to Physical Sciences and Engineering");
@@ -131,6 +148,7 @@ public class HomeActivity extends Activity {
 
 
     private void getRecentlyOpenedFromDatabase() {
+        listRecentlyOpened.clear();
         DatabaseReference recentlyOpenedRef =
                 mDatabase.child(FirebaseEndpoint.USERS)
                         .child(Utils.processEmail(mAuth.getCurrentUser().getEmail()))
@@ -139,6 +157,7 @@ public class HomeActivity extends Activity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
+                    Log.v(TAG, "in get recently opened from database");
                     /* Gets a list of course code strings */
                     GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
                     List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
@@ -190,5 +209,15 @@ public class HomeActivity extends Activity {
         DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));
         Log.v(TAG, "getting course reference, course code is: " + courseDept + courseId);
         return yearRef.child(courseDept + courseId);
+    }
+
+    public void showProfileSettings(View view){
+        Intent profSetting = new Intent(getApplicationContext(), ProfileSettings.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("Email", email);
+        profSetting.putExtras(bundle);
+        Log.v(TAG, "proceeding to profile settings activity");
+        startActivity(profSetting);
+
     }
 }

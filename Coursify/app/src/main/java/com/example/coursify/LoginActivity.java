@@ -42,6 +42,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.example.coursify.Utils.processEmail;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -53,7 +55,7 @@ import static android.provider.ContactsContract.Intents.Insert.EMAIL;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final String TAG = LoginActivity.class.getSimpleName();
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -146,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                             // the following checks if user is already present in the database
                             // if user is already present, it means user had signed in before, thus proceed to homepage
                             // if user is not present, then user either hasn't verified email, or is signing in for first time
-                            final String processedEmail = processString(email);
+                            final String processedEmail = processEmail(email);
                             DatabaseReference firebasereference, userReference;
                             firebasereference = FirebaseDatabase.getInstance().getReference();
                             userReference = firebasereference.child(FirebaseEndpoint.USERS);
@@ -234,17 +236,5 @@ public class LoginActivity extends AppCompatActivity {
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
-    protected String processString(String email){
-        int i = email.indexOf('@');
-        email = email.substring(0, i) + ";at;" + email.substring(i+1);
-        ArrayList<Integer> indeces = new ArrayList<Integer>();
-        for(int k = 0; k < email.length(); k++){
-            if(email.charAt(k) == '.'){
-                email = email.substring(0, k) + ";dot;" + email.substring(k+1);
-            }
-        }
-        return email;
-    }
-}
+ }
 

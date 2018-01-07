@@ -12,18 +12,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +37,8 @@ import java.util.List;
  * Created by sveloso on 2017-11-11.
  */
 public class CourseActivity extends Activity {
+
+    public static final int IMGVIEW_MAX_WIDTH = 250;
 
     private LinearLayout layoutFabComment;
     private LinearLayout layoutFabRating;
@@ -46,9 +54,15 @@ public class CourseActivity extends Activity {
     private String courseDept;
     private String courseId;
 
+    private String currUserName;
+
+    private List<Comment> comments = new ArrayList<>();
     private RecyclerView mListComments;
     private RecyclerView.Adapter mCommentsAdapter;
     private RecyclerView.LayoutManager mCommentsManager;
+
+    private ImageView imgEasinessRating;
+    private ImageView imgUsefulnessRating;
 
     private DatabaseReference mDatabase;
     private DatabaseReference mCourseReference;
@@ -64,26 +78,75 @@ public class CourseActivity extends Activity {
         courseDept = courseCode.split(" ")[0];
         courseId = courseCode.split(" ")[1];
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        getCurrentUserName();
         getCourseReferenceToDatabase();
         populateUIFromDatabaseInfo();
         txtCourseCode.setText(courseCode);
 
         closeSubMenusFab();
+
+        saveToRecentlyOpened(courseCode);
+    }
+
+    private void saveToRecentlyOpened(final String courseCode) {
+        Log.v("courseactivity", "in save to recently opened");
+        final DatabaseReference recentlyOpenedRef =
+                mDatabase.child(FirebaseEndpoint.USERS)
+                        .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                        .child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
+        recentlyOpenedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                        /* Gets a list of course code strings */
+                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {
+                    };
+
+                    List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
+                    if(!recentlyOpened.contains(courseCode)) {
+                        recentlyOpened.add(courseCode);
+                    }
+                    else {
+                        recentlyOpened.remove(courseCode);
+                        recentlyOpened.add(courseCode);
+                    }
+                    while(recentlyOpened.size() > Utils.RECENTLY_OPENE_LIMIT) {
+                        recentlyOpened.remove(0);
+                    }
+
+                    recentlyOpenedRef.setValue(recentlyOpened);
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void findViewsById() {
-        txtCourseTitle = (TextView) findViewById(R.id.txtCourseTitle);
-        txtCourseCode = (TextView) findViewById(R.id.txtCourseCode);
-        txtEasinessRating = (TextView) findViewById(R.id.txtEasinessRating);
-        txtUsefulnessRating = (TextView) findViewById(R.id.txtUsefulnessRating);
-        mListComments = (RecyclerView) findViewById(R.id.listCourseComments);
-        layoutFabComment = (LinearLayout) findViewById(R.id.layoutFabComment);
-        layoutFabRating = (LinearLayout) findViewById(R.id.layoutFabRating);
+        txtCourseTitle = findViewById(R.id.txtCourseTitle);
+        txtCourseCode = findViewById(R.id.txtCourseCode);
+        txtEasinessRating = findViewById(R.id.txtEasinessRating);
+        txtUsefulnessRating = findViewById(R.id.txtUsefulnessRating);
+        mListComments = findViewById(R.id.listCourseComments);
+        layoutFabComment = findViewById(R.id.layoutFabComment);
+        layoutFabRating = findViewById(R.id.layoutFabRating);
+        imgEasinessRating = findViewById(R.id.imgEasinessRating);
+        imgUsefulnessRating = findViewById(R.id.imgUsefulnessRating);
         mListComments.setHasFixedSize(true);
         mCommentsManager = new LinearLayoutManager(this);
         mListComments.setLayoutManager(mCommentsManager);
+
+        mCommentsAdapter = new CommentAdapter(comments);
         mListComments.setAdapter(mCommentsAdapter);
-        btnAddCommentOrRating = (FloatingActionButton) findViewById(R.id.fabCommentOrRating);
+
+        btnAddCommentOrRating = findViewById(R.id.fabCommentOrRating);
         btnAddCommentOrRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +157,7 @@ public class CourseActivity extends Activity {
                 }
             }
         });
-        FloatingActionButton btnAddComment = (FloatingActionButton) findViewById(R.id.fabComment);
+        FloatingActionButton btnAddComment = findViewById(R.id.fabComment);
         btnAddComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,12 +165,34 @@ public class CourseActivity extends Activity {
                 closeSubMenusFab();
             }
         });
-        FloatingActionButton btnAddRating = (FloatingActionButton) findViewById(R.id.fabRating);
+        FloatingActionButton btnAddRating = findViewById(R.id.fabRating);
         btnAddRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addRating();
                 closeSubMenusFab();
+            }
+        });
+    }
+
+    private void getCurrentUserName() {
+        // Get current user email
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userEmail = user.getEmail();
+
+        // Get current user name from database using current user email
+        mDatabase.child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (userEmail.equals(snapshot.child("email").getValue().toString())) {
+                        currUserName = snapshot.child("name").getValue().toString();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
@@ -119,7 +204,9 @@ public class CourseActivity extends Activity {
         mCourseReference = yearRef.child(courseDept + courseId);
     }
 
+    // Load Firebase course information
     private void populateUIFromDatabaseInfo() {
+        // Get course title from Firebase
         mCourseReference.child(FirebaseEndpoint.DESCRIPTION).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -133,16 +220,20 @@ public class CourseActivity extends Activity {
             }
         });
 
+        // Load comments from Firebase
         mCourseReference.child(FirebaseEndpoint.COMMENTS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Comment> comments = new LinkedList<>();
+                //List<Comment> comments = new LinkedList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String comment = snapshot.getValue().toString();
-                    comments.add(new Comment("Some student", comment));
+                    String author = snapshot.child("author").getValue().toString();
+                    String comment = snapshot.child("commentBody").getValue().toString();
+                    boolean anonymity = (boolean) snapshot.child("anonymity").getValue();
+                    comments.add(new Comment(author, comment, anonymity));
                 }
-                mCommentsAdapter = new CommentAdapter(comments);
-                mListComments.setAdapter(mCommentsAdapter);
+//                mCommentsAdapter = new CommentAdapter(comments);
+//                mListComments.setAdapter(mCommentsAdapter);
+                mCommentsAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -150,24 +241,38 @@ public class CourseActivity extends Activity {
             }
         });
 
+        // Load easiness and usefulness ratings from Firebase
         mCourseReference.child(FirebaseEndpoint.RATINGS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int totalEasiness = 0;
-                int totalUsefulness = 0;
+                double totalEasiness = 0;
+                double totalUsefulness = 0;
                 int count = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Long longEasiness = (Long) snapshot.child("easiness").getValue();
                     Long longUsefulness = (Long) snapshot.child("usefulness").getValue();
 
-                    totalEasiness += longEasiness.intValue();
-                    totalUsefulness += longUsefulness.intValue();
+                    totalEasiness += longEasiness.doubleValue();
+                    totalUsefulness += longUsefulness.doubleValue();
                     count++;
                 }
-                double easinessRating = (totalEasiness / count) * 10;
-                double usefulnessRating = (totalUsefulness / count) * 10;
-                txtEasinessRating.setText(easinessRating + "%");
-                txtUsefulnessRating.setText(usefulnessRating + "%");
+
+                if (count != 0) {
+                    double averageEasiness = totalEasiness / count;
+                    double averageUsefulness = totalUsefulness / count;
+
+                    // Find percent easiness out of 10 to set ImageView width as pixels
+                    double percentEasiness = averageEasiness / 10;
+                    double percentUsefulness = averageUsefulness / 10;
+                    imgEasinessRating.getLayoutParams().width = Utils.convertDpToPx (CourseActivity.this, IMGVIEW_MAX_WIDTH * percentEasiness);
+                    imgUsefulnessRating.getLayoutParams().width = Utils.convertDpToPx (CourseActivity.this, IMGVIEW_MAX_WIDTH * percentUsefulness);
+
+                    // Find percent easiness out of 100 to show course ratings
+                    double easinessRating = (averageEasiness) * 10;
+                    double usefulnessRating = (averageUsefulness) * 10;
+                    txtEasinessRating.setText(Math.round(easinessRating) + "%");
+                    txtUsefulnessRating.setText(Math.round(usefulnessRating) + "%");
+                }
             }
 
             @Override
@@ -181,7 +286,8 @@ public class CourseActivity extends Activity {
         builder.setTitle("Add a comment");
         View viewInflated = LayoutInflater.from(this).inflate(R.layout.add_comment, (ViewGroup) findViewById(R.id.add_comment), false);
 
-        final EditText editTxtCommentBody = (EditText) viewInflated.findViewById(R.id.editTxtCommentBody);
+        final EditText editTxtCommentBody = viewInflated.findViewById(R.id.editTxtCommentBody);
+        final CheckBox chkBoxAnon = viewInflated.findViewById(R.id.chkBoxAnon);
 
         builder.setView(viewInflated);
         builder.setPositiveButton("Post Comment", new DialogInterface.OnClickListener() {
@@ -194,7 +300,7 @@ public class CourseActivity extends Activity {
                     dialog.cancel();
                     addComment();
                 } else {
-                    addCommentToDatabase(commentBody);
+                    addCommentToDatabase(commentBody, chkBoxAnon.isChecked());
                 }
             }
         });
@@ -208,10 +314,11 @@ public class CourseActivity extends Activity {
         builder.show();
     }
 
-    private void addCommentToDatabase (String commentBody) {
+    private void addCommentToDatabase (String commentBody, boolean anonymous) {
+        Comment comment = new Comment(currUserName, commentBody, anonymous);
         DatabaseReference commentsRef = mCourseReference.child(FirebaseEndpoint.COMMENTS);
 
-        commentsRef.push().setValue(commentBody);
+        commentsRef.push().setValue(comment);
     }
 
     private void addRating() {

@@ -3,11 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-<<<<<<< HEAD
-    buildToolsVersion "25.0.2"
-=======
     buildToolsVersion "27.0.1"
->>>>>>> c92a5adfd3112fcaf47dec9cb86fed294d9cd9c5
     defaultConfig {
         applicationId "com.example.coursify"
         minSdkVersion 20

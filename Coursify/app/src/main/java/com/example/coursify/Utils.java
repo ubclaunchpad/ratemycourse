@@ -1,5 +1,7 @@
 package com.example.coursify;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 /**
@@ -17,5 +19,9 @@ public class Utils {
             }
         }
         return email;
+    }
+
+    protected static int convertDpToPx (Context context, double dp) {
+        return (int) ((dp * context.getResources().getDisplayMetrics().density) + 0.5);
     }
 }

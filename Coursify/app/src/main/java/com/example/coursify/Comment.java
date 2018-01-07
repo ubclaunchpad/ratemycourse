@@ -3,7 +3,6 @@ package com.example.coursify;
 /**
  * Created by sveloso on 2017-11-11.
  */
-
 public class Comment {
 
     String author;

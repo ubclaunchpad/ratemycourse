@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.dgreenhalgh.android.simpleitemdecoration.linear.DividerItemDecoration;
@@ -13,6 +14,8 @@ import com.dgreenhalgh.android.simpleitemdecoration.linear.EndOffsetItemDecorati
 import com.dgreenhalgh.android.simpleitemdecoration.linear.StartOffsetItemDecoration;
 import com.example.coursify.Course;
 import com.example.coursify.CourseAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +39,19 @@ public class HomeActivity extends Activity {
     private RecyclerView.Adapter mPopularAdapter;
     private RecyclerView.LayoutManager mPopularManager;
 
+    String email;
+    private static final String TAG = RegisterActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            // User is not signed in
+            return;
+        }
+        email = user.getEmail();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -92,5 +106,14 @@ public class HomeActivity extends Activity {
 
     public void showProfilePage(View view) {
         startActivity(new Intent(this, ProfileActivity.class));
+    }
+
+    public void showProfileSettings(View view){
+        Intent profSetting = new Intent(getApplicationContext(), ProfileSettings.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("Email", email);
+        profSetting.putExtras(bundle);
+        Log.v(TAG, "proceeding to profile settings activity");
+        startActivity(profSetting);
     }
 }

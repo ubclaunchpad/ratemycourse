@@ -30,6 +30,12 @@
             android:imeOptions="actionDone"
             android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+        <CheckBox
+            android:id="@+id/chkBoxAnon"
+            android:text="Anonymous"
+            android:layout_below="@id/editTxtCommentBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
+    </RelativeLayout>
 </RelativeLayout>

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,7 +55,6 @@ public class CourseActivity extends Activity {
 
     private String currUserName;
 
-    private List<Comment> comments = new ArrayList<>();
     private RecyclerView mListComments;
     private RecyclerView.Adapter mCommentsAdapter;
     private RecyclerView.LayoutManager mCommentsManager;
@@ -66,6 +64,8 @@ public class CourseActivity extends Activity {
 
     private DatabaseReference mDatabase;
     private DatabaseReference mCourseReference;
+
+    private List<String> recentlyOpenedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,39 +87,44 @@ public class CourseActivity extends Activity {
 
         closeSubMenusFab();
 
-        saveToRecentlyOpened(courseCode);
+        getRecentlyOpened(courseCode);
     }
 
-    private void saveToRecentlyOpened(final String courseCode) {
-        Log.v("courseactivity", "in save to recently opened");
-        final DatabaseReference recentlyOpenedRef =
+    /**
+     * Retrieve recently opened list from Firebase and update it locally
+     * @param courseCode
+     */
+    private void getRecentlyOpened(final String courseCode) {
+        DatabaseReference recentlyOpenedRef =
                 mDatabase.child(FirebaseEndpoint.USERS)
                         .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
                         .child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
         recentlyOpenedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                List<String> recentlyOpened;
                 if(dataSnapshot.exists()) {
                         /* Gets a list of course code strings */
                     GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {
                     };
 
-                    List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
-                    if(!recentlyOpened.contains(courseCode)) {
-                        recentlyOpened.add(courseCode);
-                    }
-                    else {
-                        recentlyOpened.remove(courseCode);
-                        recentlyOpened.add(courseCode);
-                    }
-                    while(recentlyOpened.size() > Utils.RECENTLY_OPENE_LIMIT) {
-                        recentlyOpened.remove(0);
-                    }
-
-                    recentlyOpenedRef.setValue(recentlyOpened);
-
-
+                    recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
                 }
+                else {
+                    recentlyOpened = new ArrayList<>();
+                }
+                if(!recentlyOpened.contains(courseCode)) {
+                    recentlyOpened.add(courseCode);
+                }
+                else {
+                    recentlyOpened.remove(courseCode);
+                    recentlyOpened.add(courseCode);
+                }
+                while(recentlyOpened.size() > Utils.RECENTLY_OPENE_LIMIT) {
+                    recentlyOpened.remove(0);
+                }
+                recentlyOpenedList = recentlyOpened;
+
             }
 
             @Override
@@ -127,6 +132,18 @@ public class CourseActivity extends Activity {
 
             }
         });
+    }
+
+    /**
+     * save updated recently opened list to Firebase
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDatabase.child(FirebaseEndpoint.USERS)
+                .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                .child(FirebaseEndpoint.RECENTLY_OPENED_COURSES)
+                .setValue(recentlyOpenedList);
     }
 
     private void findViewsById() {
@@ -142,8 +159,6 @@ public class CourseActivity extends Activity {
         mListComments.setHasFixedSize(true);
         mCommentsManager = new LinearLayoutManager(this);
         mListComments.setLayoutManager(mCommentsManager);
-
-        mCommentsAdapter = new CommentAdapter(comments);
         mListComments.setAdapter(mCommentsAdapter);
 
         btnAddCommentOrRating = findViewById(R.id.fabCommentOrRating);
@@ -224,16 +239,15 @@ public class CourseActivity extends Activity {
         mCourseReference.child(FirebaseEndpoint.COMMENTS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //List<Comment> comments = new LinkedList<>();
+                List<Comment> comments = new LinkedList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String author = snapshot.child("author").getValue().toString();
                     String comment = snapshot.child("commentBody").getValue().toString();
                     boolean anonymity = (boolean) snapshot.child("anonymity").getValue();
                     comments.add(new Comment(author, comment, anonymity));
                 }
-//                mCommentsAdapter = new CommentAdapter(comments);
-//                mListComments.setAdapter(mCommentsAdapter);
-                mCommentsAdapter.notifyDataSetChanged();
+                mCommentsAdapter = new CommentAdapter(comments);
+                mListComments.setAdapter(mCommentsAdapter);
             }
 
             @Override

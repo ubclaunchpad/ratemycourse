@@ -119,6 +119,9 @@ public class HomeActivity extends Activity {
     }
 
 
+    /**
+     * todo remove this after implementing recommended and popular 
+     */
     private void initializeCourses() {
         Course c1 = new Course("CPSC 110", "Differential Calculus with Applications to Physical Sciences and Engineering");
         Course c2 = new Course("ONCO 649", "Doctoral Dissertation");
@@ -146,7 +149,9 @@ public class HomeActivity extends Activity {
         startActivity(new Intent(this, ProfileActivity.class));
     }
 
-
+    /**
+     * Retrieve recently opened list from Firebase and display it on UI
+     */
     private void getRecentlyOpenedFromDatabase() {
         listRecentlyOpened.clear();
         DatabaseReference recentlyOpenedRef =

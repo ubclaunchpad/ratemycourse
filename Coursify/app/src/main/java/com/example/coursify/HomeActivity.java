@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.dgreenhalgh.android.simpleitemdecoration.*;
 import com.dgreenhalgh.android.simpleitemdecoration.linear.DividerItemDecoration;
@@ -206,6 +207,10 @@ public class HomeActivity extends Activity {
                     List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
                     Collections.reverse(recentlyOpened);
                     getRecentlyOpenedHelper(recentlyOpened, 0);
+                }
+                else {
+                    TextView emptyRecentlyOpened = findViewById(R.id.emptyRecentlyOpened);
+                    emptyRecentlyOpened.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.facebook.FacebookSdk;
-import com.google.android.gms.common.UserRecoverableException;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +21,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.example.coursify.Utils.processEmail;
@@ -150,8 +148,8 @@ public class ProfileSettings extends AppCompatActivity {
         mChangePass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mIntent = new Intent(getApplicationContext(), changePassword.class);
-                Log.v(TAG, "Proceeding to changePassword");
+                Intent mIntent = new Intent(getApplicationContext(), ChangePassword.class);
+                Log.v(TAG, "Proceeding to ChangePassword");
                 startActivity(mIntent);
             }
         });

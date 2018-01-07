@@ -103,7 +103,6 @@ public class HomeActivity extends Activity {
         mListRecommended.addItemDecoration(new StartOffsetItemDecoration(30));
         mListRecommended.addItemDecoration(new EndOffsetItemDecoration(30));
 
-
         mListPopular.addItemDecoration(itemDivider);
         mListPopular.addItemDecoration(new StartOffsetItemDecoration(30));
         mListPopular.addItemDecoration(new EndOffsetItemDecoration(30));
@@ -133,21 +132,20 @@ public class HomeActivity extends Activity {
         Course c8 = new Course("LIBE 465", "The Profession of Planning");
         Course c9 = new Course("OBST 430", "The Profession of Planning");
         Course c10 = new Course("OBST 649", "The Profession of Planning");
+
         listRecentlyOpened = new ArrayList<>();
+
         listRecommended = new ArrayList<>();
         listRecommended.add(c1);
         listRecommended.add(c3);
         listRecommended.add(c2);
         listRecommended.add(c4);
         listRecommended.add(c5);
-
         listRecommended.add(c6);
         listRecommended.add(c7);
         listRecommended.add(c8);
         listRecommended.add(c9);
         listRecommended.add(c10);
-
-
     }
 
     private void initializeFirebase() {
@@ -160,7 +158,7 @@ public class HomeActivity extends Activity {
     }
 
     /**
-     *
+     * Helper function for retrieving all items in list in correct order
      * @param recentlyOpened a list that contains at least one item
      * @param coursePos
      */
@@ -192,8 +190,6 @@ public class HomeActivity extends Activity {
 
     /**
      * Retrieve recently opened list from Firebase and display it on UI
-     * NOTE: retrieving each course's information is asynchronous, but
-     * usually produces correct order in testing
      */
     private void getRecentlyOpenedFromDatabase() {
         listRecentlyOpened.clear();
@@ -210,27 +206,6 @@ public class HomeActivity extends Activity {
                     List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
                     Collections.reverse(recentlyOpened);
                     getRecentlyOpenedHelper(recentlyOpened, 0);
-                    /* Find the corresponding course description */
-                    //for(int i  = 0; i < recentlyOpened.size(); i++) {
-//                        final String courseCode = recentlyOpened.get(i);
-//                        // Assumes the course code exists
-//                        DatabaseReference courseRef = getCourseReferenceToDatabase(courseCode);
-//                        courseRef.child(FirebaseEndpoint.DESCRIPTION)
-//                                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                String description = dataSnapshot.getValue(String.class);
-//                                Course course = new Course(courseCode, description);
-//                                listRecentlyOpened.add(course);
-//                                mRecentlyOpenedAdapter.notifyDataSetChanged();
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-                    //}
                 }
             }
 
@@ -239,8 +214,6 @@ public class HomeActivity extends Activity {
 
             }
         });
-
-
     }
 
     public void showProfileSettings(View view){

@@ -123,7 +123,6 @@ public class CourseActivity extends Activity {
                     recentlyOpened.remove(0);
                 }
                 recentlyOpenedList = recentlyOpened;
-
             }
 
             @Override

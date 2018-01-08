@@ -55,7 +55,7 @@ import static android.provider.ContactsContract.Intents.Insert.EMAIL;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final String TAG = LoginActivity.class.getSimpleName();
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;

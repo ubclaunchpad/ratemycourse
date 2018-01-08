@@ -45,6 +45,7 @@
         <activity android:name=".CourseActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ResendEmailActivity"></activity>
         <activity android:name=".changePassword"></activity>
     </application>
 

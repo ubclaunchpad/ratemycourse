@@ -88,9 +88,9 @@ public class HomeActivity extends Activity {
         mListRecommended.setLayoutManager(mRecommendedManager);
         mListPopular.setLayoutManager(mPopularManager);
 
-        mRecentlyOpenedAdapter = new CourseAdapter(listRecentlyOpened);
-        mRecommendedAdapter = new CourseAdapter(listRecommended);
-        mPopularAdapter = new CourseAdapter(listRecommended);
+        mRecentlyOpenedAdapter = new CourseAdapter(listRecentlyOpened, getResources().getColor(R.color.colorRecentlyOpened));
+        mRecommendedAdapter = new CourseAdapter(listRecommended, getResources().getColor(R.color.colorRecommended));
+        mPopularAdapter = new CourseAdapter(listRecommended, getResources().getColor(R.color.colorPopular));
         mListRecentlyOpened.setAdapter(mRecentlyOpenedAdapter);
         mListRecommended.setAdapter(mRecommendedAdapter);
         mListPopular.setAdapter(mPopularAdapter);

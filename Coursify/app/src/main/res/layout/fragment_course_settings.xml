@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtCoursePreference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/quicksand_medium"
+        android:text="Preference:"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/course_preference"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@id/txtCoursePreference"
+        android:layout_below="@id/txtCoursePreference" />
+
+    <TextView
+        android:id="@+id/txtYourComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/txtCoursePreference"
+        android:layout_below="@id/course_preference"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/quicksand_medium"
+        android:text="Your comment:"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/div_comment"
+        android:layout_below="@id/txtYourComment"
+        android:layout_alignLeft="@id/txtCoursePreference"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtCommentBody"
+            android:layout_width="300dp"
+            android:layout_height="75dp"
+            android:layout_below="@id/txtCommenterName"
+            android:background="@drawable/rounded"
+            android:padding="10dp"
+            android:text="No comment."
+            android:textColor="@color/colorDarkGray" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txtYourRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/txtCoursePreference"
+        android:layout_below="@id/div_comment"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/quicksand_medium"
+        android:text="Your rating:"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtUsefulness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/txtCoursePreference"
+        android:layout_below="@id/txtYourRating"
+        android:fontFamily="@font/quicksand_medium"
+        android:paddingLeft="20dp"
+        android:text="Usefulness:"
+        android:textColor="@color/colorDarkGray"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/txtUsefulnessRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/txtUsefulness"
+        android:layout_toRightOf="@id/txtUsefulness"
+        android:fontFamily="@font/arimo"
+        android:paddingLeft="10dp"
+        android:text="No rating"
+        android:textColor="@color/colorGray"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/txtEasiness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/txtCoursePreference"
+        android:layout_below="@id/txtUsefulness"
+        android:fontFamily="@font/quicksand_medium"
+        android:paddingLeft="20dp"
+        android:text="Easiness:"
+        android:textColor="@color/colorDarkGray"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/txtEasinessRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/txtUsefulnessRating"
+        android:layout_alignTop="@id/txtEasiness"
+        android:layout_toRightOf="@id/txtEasiness"
+        android:fontFamily="@font/arimo"
+        android:paddingLeft="10dp"
+        android:text="No rating"
+        android:textColor="@color/colorGray"
+        android:textSize="14dp" />
+
+</RelativeLayout>

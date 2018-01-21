@@ -5,17 +5,21 @@
 
     <TextView
         android:id="@+id/txtCommenterName"
-        android:text="Some student"
-        android:padding="5dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/arimo"
+        android:padding="5dp"
+        android:text="Some student"
+        android:textColor="@color/colorGray" />
 
     <TextView
-        android:layout_width="300dp"
-        android:text="Not really a GPA booster, but fun course if credit D failing."
-        android:padding="10dp"
         android:id="@+id/txtCommentBody"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
         android:layout_below="@id/txtCommenterName"
         android:background="@drawable/rounded"
-        android:layout_height="75dp" />
+        android:fontFamily="@font/arimo"
+        android:padding="10dp"
+        android:text="Not really a GPA booster, but fun course if credit D failing."
+        android:textColor="@color/colorDarkGray" />
 </RelativeLayout>

@@ -25,6 +25,7 @@ import java.util.List;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> {
     private List<Course> mCourses;
+    private int textColor;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
@@ -42,14 +43,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         public void onClick(View v) {
             TextView txtCourseCode = (TextView) mLayout.findViewById(R.id.txtCourseCode);
             String courseCode = txtCourseCode.getText().toString();
-            Intent intent = new Intent(context, CourseActivity.class);
+            Intent intent = new Intent(context, CourseTabActivity.class);
             intent.putExtra("COURSE_CODE", courseCode);
             context.startActivity(intent);
         }
     }
 
-    public CourseAdapter(List<Course> dataset) {
+    public CourseAdapter(List<Course> dataset, int textColor) {
         mCourses = dataset;
+        this.textColor = textColor;
     }
 
     @Override
@@ -68,11 +70,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         Course currCourse = mCourses.get(position);
 
-        TextView txtCourseTitle = (TextView) holder.mLayout.findViewById(R.id.txtCourseTitle);
-        TextView txtCourseCode = (TextView) holder.mLayout.findViewById(R.id.txtCourseCode);
+        TextView txtCourseTitle = holder.mLayout.findViewById(R.id.txtCourseTitle);
+        TextView txtCourseCode = holder.mLayout.findViewById(R.id.txtCourseCode);
 
         txtCourseTitle.setText(currCourse.courseTitle);
         txtCourseCode.setText(currCourse.courseCode);
+        txtCourseTitle.setTextColor(textColor);
+        txtCourseCode.setTextColor(textColor);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

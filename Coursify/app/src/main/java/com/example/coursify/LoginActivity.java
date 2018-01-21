@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
                             DatabaseReference firebasereference, userReference;
                             firebasereference = FirebaseDatabase.getInstance().getReference();
                             userReference = firebasereference.child(FirebaseEndpoint.USERS);
-                            userReference.addValueEventListener(new ValueEventListener() {
+                            userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     boolean found = false;

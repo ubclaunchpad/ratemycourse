@@ -148,8 +148,8 @@ public class ProfileSettings extends AppCompatActivity {
         mChangePass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mIntent = new Intent(getApplicationContext(), ChangePassword.class);
-                Log.v(TAG, "Proceeding to ChangePassword");
+                Intent mIntent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
+                Log.v(TAG, "Proceeding to ChangePasswordActivity");
                 startActivity(mIntent);
             }
         });

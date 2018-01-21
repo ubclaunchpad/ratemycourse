@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.coursify.Utils.processEmail;
 
-public class ChangePassword extends AppCompatActivity {
+public class ChangePasswordActivity extends AppCompatActivity {
 
     Button submit;
     EditText oldPass;
@@ -86,7 +86,6 @@ public class ChangePassword extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
 

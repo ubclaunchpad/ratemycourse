@@ -53,6 +53,8 @@ public class HomeActivity extends Activity {
     private RecyclerView.Adapter mPopularAdapter;
     private RecyclerView.LayoutManager mPopularManager;
 
+    TextView emptyRecentlyOpened;
+
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     String email;
@@ -107,6 +109,8 @@ public class HomeActivity extends Activity {
         mListPopular.addItemDecoration(itemDivider);
         mListPopular.addItemDecoration(new StartOffsetItemDecoration(30));
         mListPopular.addItemDecoration(new EndOffsetItemDecoration(30));
+
+        emptyRecentlyOpened = findViewById(R.id.emptyRecentlyOpened);
 
         getRecentlyOpenedFromDatabase();
 
@@ -193,7 +197,10 @@ public class HomeActivity extends Activity {
      * Retrieve recently opened list from Firebase and display it on UI
      */
     private void getRecentlyOpenedFromDatabase() {
+        Log.v(TAG, "getting recently opened from database");
         listRecentlyOpened.clear();
+        mRecentlyOpenedAdapter.notifyDataSetChanged();
+
         DatabaseReference recentlyOpenedRef =
                 mDatabase.child(FirebaseEndpoint.USERS)
                         .child(Utils.processEmail(mAuth.getCurrentUser().getEmail()))
@@ -202,14 +209,17 @@ public class HomeActivity extends Activity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
+                    emptyRecentlyOpened.setVisibility(View.GONE);
                     /* Gets a list of course code strings */
                     GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
                     List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
+                    for(String course : recentlyOpened) {
+                        Log.v(TAG, course);
+                    }
                     Collections.reverse(recentlyOpened);
                     getRecentlyOpenedHelper(recentlyOpened, 0);
                 }
                 else {
-                    TextView emptyRecentlyOpened = findViewById(R.id.emptyRecentlyOpened);
                     emptyRecentlyOpened.setVisibility(View.VISIBLE);
                 }
             }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_comment"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/div_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comment"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTxtCommentBody"
+            android:layout_below="@id/txtComment"
+            android:layout_alignLeft="@id/txtComment"
+            android:layout_alignStart="@id/txtComment"
+            android:hint="Write something here"
+            android:layout_width="match_parent"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionDone"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/chkBoxAnon"
+            android:text="Anonymous"
+            android:layout_below="@id/editTxtCommentBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+</RelativeLayout>

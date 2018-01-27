@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         forgotPassBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent mIntent = new Intent(getApplicationContext(), ResendEmailActivity.class);
-                Log.v(TAG, "Proceeding to ResendEmailActivity");
+                Intent mIntent = new Intent(getApplicationContext(), EmailResendActivity.class);
+                Log.v(TAG, "Proceeding to EmailResendActivity");
                 startActivity(mIntent);
             }
         });

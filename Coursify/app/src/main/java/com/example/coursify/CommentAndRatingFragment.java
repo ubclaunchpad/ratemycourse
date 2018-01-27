@@ -63,8 +63,6 @@ public class CommentAndRatingFragment extends Fragment {
     private DatabaseReference mDatabase;
     private DatabaseReference mCourseReference;
 
-    private List<String> recentlyOpenedList;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -84,64 +82,12 @@ public class CommentAndRatingFragment extends Fragment {
 
         closeSubMenusFab();
 
-        getRecentlyOpened(courseCode);
-
         return view;
     }
 
-    /**
-     * Retrieve recently opened list from Firebase and update it locally
-     * @param courseCode
-     */
-    private void getRecentlyOpened(final String courseCode) {
-        DatabaseReference recentlyOpenedRef =
-                mDatabase.child(FirebaseEndpoint.USERS)
-                        .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
-                        .child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
-        recentlyOpenedRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> recentlyOpened;
-                if (dataSnapshot.exists()) {
-                        /* Gets a list of course code strings */
-                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {
-                    };
-
-                    recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
-                } else {
-                    recentlyOpened = new ArrayList<>();
-                }
-
-                if (!recentlyOpened.contains(courseCode)) {
-                    recentlyOpened.add(courseCode);
-                } else {
-                    recentlyOpened.remove(courseCode);
-                    recentlyOpened.add(courseCode);
-                }
-
-                while(recentlyOpened.size() > Utils.RECENTLY_OPENED_LIMIT) {
-                    recentlyOpened.remove(0);
-                }
-                recentlyOpenedList = recentlyOpened;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    /**
-     * save updated recently opened list to Firebase
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mDatabase.child(FirebaseEndpoint.USERS)
-                .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
-                .child(FirebaseEndpoint.RECENTLY_OPENED_COURSES)
-                .setValue(recentlyOpenedList);
     }
 
     private void findViewsById(View container) {

@@ -3,6 +3,7 @@ package com.example.coursify;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,10 +34,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         public View mLayout;
         private final Context context;
 
+        private DatabaseReference mDatabase;
+
+        private final String TAG = CourseAdapter.class.getSimpleName();
+
         public ViewHolder(View v) {
             super(v);
             this.context = v.getContext();
             mLayout = v;
+            mDatabase = FirebaseDatabase.getInstance().getReference();
             v.setOnClickListener(this);
         }
 
@@ -43,9 +50,59 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         public void onClick(View v) {
             TextView txtCourseCode = (TextView) mLayout.findViewById(R.id.txtCourseCode);
             String courseCode = txtCourseCode.getText().toString();
+            getRecentlyOpened(courseCode);
             Intent intent = new Intent(context, CourseTabActivity.class);
             intent.putExtra("COURSE_CODE", courseCode);
             context.startActivity(intent);
+        }
+
+
+        /**
+         * Retrieve recently opened list from Firebase and update it locally
+         * @param courseCode
+         */
+        private void getRecentlyOpened(final String courseCode) {
+            Log.v(TAG, "in getting recently opened");
+            DatabaseReference recentlyOpenedRef =
+                    mDatabase.child(FirebaseEndpoint.USERS)
+                            .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                            .child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
+            recentlyOpenedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<String> recentlyOpened;
+                    if (dataSnapshot.exists()) {
+                        /* Gets a list of course code strings */
+                        GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {
+                        };
+
+                        recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
+                    } else {
+                        recentlyOpened = new ArrayList<>();
+                    }
+
+                    if (!recentlyOpened.contains(courseCode)) {
+                        recentlyOpened.add(courseCode);
+                    } else {
+                        recentlyOpened.remove(courseCode);
+                        recentlyOpened.add(courseCode);
+                    }
+
+                    while(recentlyOpened.size() > Utils.RECENTLY_OPENED_LIMIT) {
+                        recentlyOpened.remove(0);
+                    }
+
+                    mDatabase.child(FirebaseEndpoint.USERS)
+                            .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                            .child(FirebaseEndpoint.RECENTLY_OPENED_COURSES)
+                            .setValue(recentlyOpened);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 

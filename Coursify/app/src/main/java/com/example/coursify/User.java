@@ -71,6 +71,4 @@ public class User {
     public String getFacebookID() {
         return facebookID;
     }
-
-
 }

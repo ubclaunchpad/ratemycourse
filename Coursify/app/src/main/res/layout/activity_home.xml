@@ -7,11 +7,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@drawable/home_background_selector"
         android:paddingBottom="20dp">
-        <Button
+
+        <ImageButton
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/ic_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btinShowProfilePage"
+            android:id="@+id/btnShowProfilePage"
             android:onClick="showProfilePage"/>
 
         <RelativeLayout
@@ -19,14 +23,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageButton
+                android:id="@+id/settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:backgroundTint="@android:color/transparent"
+                android:onClick="showProfileSettings"
+                android:src="@drawable/ic_settings"
+                android:text="Settings" />
+
             <TextView
                 android:id="@+id/txtRecentlyOpened"
-                android:text="@string/recently_opened"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="20dp"
-                android:textSize="18sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@id/settings"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="@string/recently_opened"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_below="@id/txtRecentlyOpened"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textSize="14sp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="You haven't opened anything yet"
+                android:id="@+id/emptyRecentlyOpened"/>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_below="@id/txtRecentlyOpened"
@@ -34,15 +65,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </android.support.v7.widget.RecyclerView>
-
-            <Button
-                android:id="@+id/settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:text="Settings"
-                android:onClick="showProfileSettings"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -53,15 +75,31 @@
 
             <TextView
                 android:id="@+id/txtRecommended"
-                android:text="@string/recommended"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="20dp"
-                android:textSize="18sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="@string/recommended"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/txtRecommendedBlurb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtRecommended"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="Here's some electives we think you might be interested in."
+                android:textColor="@color/colorWhite"
+                android:textSize="10dp" />
 
             <android.support.v7.widget.RecyclerView
-                android:layout_below="@id/txtRecommended"
+                android:layout_below="@id/txtRecommendedBlurb"
                 android:id="@+id/listRecommended"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -76,15 +114,29 @@
 
             <TextView
                 android:id="@+id/txtPopular"
-                android:text="@string/popular"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="20dp"
-                android:textSize="18sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="@string/popular"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/txtPopularBlurb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtPopular"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="Take a look at what courses your friends are taking."
+                android:textColor="@color/colorWhite"
+                android:textSize="10dp" />
 
             <android.support.v7.widget.RecyclerView
-                android:layout_below="@id/txtPopular"
+                android:layout_below="@id/txtPopularBlurb"
                 android:id="@+id/listPopular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

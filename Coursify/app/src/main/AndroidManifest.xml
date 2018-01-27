@@ -25,6 +25,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -42,11 +45,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".CourseActivity" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".ProfileActivity"></activity>
-        <activity android:name=".ResendEmailActivity"></activity>
-        <activity android:name=".changePassword"></activity>
+        <activity android:name=".CourseTabActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ChangePasswordActivity" />
     </application>
 
 </manifest>

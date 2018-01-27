@@ -17,4 +17,10 @@
     <string name="usefulness">USEFULNESS</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="alert_dialog_title">Please login to facebook</string>
+    <string-array name="course_preferences">
+        <item>No selection</item>
+        <item>Taken</item>
+        <item>Going to take</item>
+        <item>Interested</item>
+    </string-array>
 </resources>

@@ -1,34 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto">
-
-<RelativeLayout
-    android:id="@+id/div_courseName"
-    android:layout_width="match_parent"
-    android:background="@color/colorGray"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/txtCourseTitle"
-        android:text="Introduction to Wine Science"
-        android:textSize="20sp"
-        android:padding="5dp"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/txtCourseCode"
-        android:padding="5dp"
-        android:layout_below="@id/txtCourseTitle"
-        android:text="FNH 330"
-        android:textSize="20sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+android:layout_height="match_parent" >
 
 <RelativeLayout
     android:id="@+id/div_courseRating"
@@ -42,16 +15,20 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/txtEasiness"
-        android:text="@string/easiness"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="@string/easiness"
+        android:textColor="@color/colorTeal"
+        android:textSize="12dp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imgEasinessRating"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:maxWidth="250dp"
-        android:background="@color/colorDarkGray"
+        android:background="@color/colorTeal"
         android:layout_below="@id/txtEasiness"
         android:layout_alignLeft="@id/txtEasiness"
         android:layout_alignStart="@id/txtEasiness" />
@@ -67,26 +44,34 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/txtEasinessRating"
-        android:text="No rating"
-        android:layout_alignTop="@id/imgEasinessRatingBackground"
-        android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/imgEasinessRatingBackground"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="No rating"
+        android:textColor="@color/colorTeal"
+        android:textSize="12dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtUsefulness"
-        android:text="@string/usefulness"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/imgEasinessRatingBackground"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgEasinessRatingBackground"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="@string/usefulness"
+        android:textColor="@color/colorTeal"
+        android:textSize="12dp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imgUsefulnessRating"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:maxWidth="250dp"
-        android:background="@color/colorDarkGray"
+        android:background="@color/colorTeal"
         android:layout_below="@id/txtUsefulness"
         android:layout_alignLeft="@id/txtUsefulness"
         android:layout_alignStart="@id/txtUsefulness" />
@@ -102,11 +87,15 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/txtUsefulnessRating"
-        android:text="No rating"
-        android:layout_alignTop="@id/imgUsefulnessRatingBackground"
-        android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/imgUsefulnessRatingBackground"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="No rating"
+        android:textColor="@color/colorTeal"
+        android:textSize="12dp"
+        android:textStyle="bold" />
 </RelativeLayout>
 
 <android.support.v7.widget.RecyclerView

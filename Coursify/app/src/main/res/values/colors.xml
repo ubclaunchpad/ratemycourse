@@ -4,6 +4,16 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorGray">#EEEEEE</color>
-    <color name="colorDarkGray">#A9A9A9</color>
+
+
+    <color name="colorViolet">#7585EB</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorTeal">#73E1DF</color>
+    <color name="colorLightGray">#EFF3F6</color>
+    <color name="colorDarkGray">#5D5D5D</color>
+    <color name="colorGray">#95989A</color>
+
+    <color name="colorRecentlyOpened">#73E1DF</color>
+    <color name="colorRecommended">#95AFD2</color>
+    <color name="colorPopular">#7181E3</color>
 </resources>

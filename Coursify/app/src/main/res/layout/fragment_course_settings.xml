@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/txtCoursePreference"
-        android:layout_below="@id/txtYourRating"
+        android:layout_below="@id/txtEasiness"
         android:fontFamily="@font/quicksand_medium"
         android:paddingLeft="20dp"
         android:text="Usefulness:"
@@ -78,7 +78,7 @@
         android:id="@+id/txtUsefulnessRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/txtUsefulness"
+        android:layout_alignBottom="@id/txtUsefulness"
         android:layout_toRightOf="@id/txtUsefulness"
         android:fontFamily="@font/arimo"
         android:paddingLeft="10dp"
@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/txtCoursePreference"
-        android:layout_below="@id/txtUsefulness"
+        android:layout_below="@id/txtYourRating"
         android:fontFamily="@font/quicksand_medium"
         android:paddingLeft="20dp"
         android:text="Easiness:"
@@ -102,13 +102,31 @@
         android:id="@+id/txtEasinessRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/txtEasiness"
         android:layout_alignLeft="@id/txtUsefulnessRating"
-        android:layout_alignTop="@id/txtEasiness"
         android:layout_toRightOf="@id/txtEasiness"
         android:fontFamily="@font/arimo"
         android:paddingLeft="10dp"
         android:text="No rating"
         android:textColor="@color/colorGray"
         android:textSize="14dp" />
+
+    <ImageButton
+        android:id="@+id/btnEditRating"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/txtYourRating"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/ic_edit" />
+
+    <ImageButton
+        android:id="@+id/btnEditComment"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/txtYourComment"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/ic_edit" />
 
 </RelativeLayout>

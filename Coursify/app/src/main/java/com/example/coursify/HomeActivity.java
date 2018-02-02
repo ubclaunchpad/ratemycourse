@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dgreenhalgh.android.simpleitemdecoration.*;
 import com.dgreenhalgh.android.simpleitemdecoration.linear.DividerItemDecoration;
@@ -75,9 +76,9 @@ public class HomeActivity extends Activity {
         initializeFirebase();
         initializeCourses();
 
-        mListRecentlyOpened = (RecyclerView) findViewById(R.id.listRecentlyOpened);
-        mListRecommended = (RecyclerView) findViewById(R.id.listRecommended);
-        mListPopular = (RecyclerView) findViewById(R.id.listPopular);
+        mListRecentlyOpened = findViewById(R.id.listRecentlyOpened);
+        mListRecommended = findViewById(R.id.listRecommended);
+        mListPopular = findViewById(R.id.listPopular);
         mListRecommended.setHasFixedSize(true);
         mListRecentlyOpened.setHasFixedSize(true);
         mListPopular.setHasFixedSize(true);
@@ -168,7 +169,7 @@ public class HomeActivity extends Activity {
      * @param coursePos
      */
     private void getRecentlyOpenedHelper(final List<String> recentlyOpened, final int coursePos) {
-        if(coursePos == recentlyOpened.size()) {
+        if (coursePos == recentlyOpened.size()) {
             return;
         }
 

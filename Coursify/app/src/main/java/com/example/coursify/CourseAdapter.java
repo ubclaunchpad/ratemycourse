@@ -24,13 +24,11 @@ import java.util.List;
 /**
  * Created by sveloso on 2017-11-04.
  */
-
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> {
     private List<Course> mCourses;
     private int textColor;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        // each data item is just a string in this case
         public View mLayout;
         private final Context context;
 
@@ -48,7 +46,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            TextView txtCourseCode = (TextView) mLayout.findViewById(R.id.txtCourseCode);
+            TextView txtCourseCode = mLayout.findViewById(R.id.txtCourseCode);
             String courseCode = txtCourseCode.getText().toString();
             getRecentlyOpened(courseCode);
             Intent intent = new Intent(context, CourseTabActivity.class);

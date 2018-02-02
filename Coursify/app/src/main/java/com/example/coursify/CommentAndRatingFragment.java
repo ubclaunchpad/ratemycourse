@@ -34,7 +34,6 @@ import java.util.List;
 /**
  * Created by sveloso on 2018-01-20.
  */
-
 public class CommentAndRatingFragment extends Fragment {
 
     public static final int IMGVIEW_MAX_WIDTH = 250;
@@ -118,7 +117,7 @@ public class CommentAndRatingFragment extends Fragment {
         btnAddComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addComment();
+                startAddCommentWorkflow();
                 closeSubMenusFab();
             }
         });
@@ -126,7 +125,7 @@ public class CommentAndRatingFragment extends Fragment {
         btnAddRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addRating();
+                startAddRatingWorkflow();
                 closeSubMenusFab();
             }
         });
@@ -216,6 +215,32 @@ public class CommentAndRatingFragment extends Fragment {
         });
     }
 
+    private void startAddCommentWorkflow() {
+        // First, check if a comment by this user already exists
+        mCourseReference.child(FirebaseEndpoint.COMMENTS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean userAlreadyCommented = false;
+
+                for (DataSnapshot comment : dataSnapshot.getChildren()) {
+                    if (comment.child("author").getValue().toString().equals(currUserName)) {
+                        userAlreadyCommented = true;
+                        break;
+                    }
+                }
+
+                if (!userAlreadyCommented) {
+                    addComment();
+                } else {
+                    Toast.makeText(CommentAndRatingFragment.this.getActivity(), "You have already commented this course, edit your comment in Settings!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
     private void addComment() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add a comment");
@@ -254,6 +279,32 @@ public class CommentAndRatingFragment extends Fragment {
         DatabaseReference commentsRef = mCourseReference.child(FirebaseEndpoint.COMMENTS);
 
         commentsRef.push().setValue(comment);
+    }
+
+    private void startAddRatingWorkflow() {
+        // First, check if a rating by this user already exists
+        mCourseReference.child(FirebaseEndpoint.RATINGS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean userAlreadyRated = false;
+
+                for (DataSnapshot rating : dataSnapshot.getChildren()) {
+                    if (rating.child("author").getValue().toString().equals(currUserName)) {
+                        userAlreadyRated = true;
+                        break;
+                    }
+                }
+
+                if (!userAlreadyRated) {
+                    addRating();
+                } else {
+                    Toast.makeText(CommentAndRatingFragment.this.getActivity(), "You have already rated this course, edit your rating in Settings!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     private void addRating() {

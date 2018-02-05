@@ -34,7 +34,7 @@ public class ProfileSettings extends AppCompatActivity {
     private String mUserId;
     EditText mEmail, mName, mMajor, mGradDate, mInterest;
     String email, name, major, gradDate, interest;
-    Button mSubmit, mChangePass;
+    Button mSubmit, mChangePass, mSearchTemp;
     boolean found = false;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -52,6 +52,14 @@ public class ProfileSettings extends AppCompatActivity {
 
         mLoginButton.setReadPermissions("user_friends", "email");
         mCallBackManager = CallbackManager.Factory.create();
+
+        mSearchTemp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent mIntent = new Intent(getApplicationContext(), SearchActivity.class);
+                Log.v(TAG, "Proceeding to ChangePasswordActivity");
+                startActivity(mIntent);
+            }
+        });
 
         mLoginButton.registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -86,6 +94,7 @@ public class ProfileSettings extends AppCompatActivity {
         mInterest = (EditText) findViewById(R.id.interestInput);
         mSubmit = (Button)findViewById(R.id.submit);
         mChangePass = (Button)findViewById(R.id.changePass);
+        mSearchTemp = (Button)findViewById(R.id.searchId);
     }
 
     protected void setFacebookUserId(final String email, final String mUserId){

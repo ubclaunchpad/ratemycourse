@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 
 public class SearchCourseAdapter extends RecyclerView.Adapter {
-    ArrayList<String> searchedCourses;
+    ArrayList<String> searchedCourses, searchedCoursesDescript;
     View view;
     Context context;
     ViewHolder viewHolder;
@@ -32,7 +32,7 @@ public class SearchCourseAdapter extends RecyclerView.Adapter {
         int totalItem = getItemCount();
         int processedPosition = totalItem - 1 - position;
         viewHolder.courseId.setText(searchedCourses.get(processedPosition));
-        viewHolder.courseDescript.setText(searchedCourses.get(position));
+        viewHolder.courseDescript.setText(searchedCoursesDescript.get(processedPosition));
     }
 
     @Override
@@ -40,8 +40,9 @@ public class SearchCourseAdapter extends RecyclerView.Adapter {
         return searchedCourses.size();
     }
 
-    public SearchCourseAdapter(ArrayList<String> searchedCourses, Context context){
+    public SearchCourseAdapter(ArrayList<String> searchedCourses, ArrayList<String> searchedCoursesDescript, Context context){
         this.searchedCourses = searchedCourses;
+        this.searchedCoursesDescript = searchedCoursesDescript;
         this.context = context;
     }
 

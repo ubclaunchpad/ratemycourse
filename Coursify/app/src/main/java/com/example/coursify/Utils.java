@@ -44,4 +44,13 @@ public class Utils {
         DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));
         return yearRef.child(courseDept + courseId);
     }
+
+    public static ArrayList<String> processCourses(ArrayList<String> courses){
+        for(int j = courses.size()-1; j >= 0; j--){
+            if(courses.get(j) == null){
+                courses.remove(j);
+            }
+        }
+        return courses;
+    }
 }

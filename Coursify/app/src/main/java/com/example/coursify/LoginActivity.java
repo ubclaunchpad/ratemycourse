@@ -84,6 +84,30 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
             }
         });
+        Button mResendEmailButton = (Button) findViewById(R.id.resendEmail_button);
+        mResendEmailButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser user = auth.getCurrentUser();
+                if (user == null) {
+                    Log.v(TAG, "Proceeding to RegisterActivity");
+                }
+                if (user.isEmailVerified()) {
+                    Log.v(TAG, "email has already been verified");
+                    return;
+                }
+                user.sendEmailVerification()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "Email sent.");
+                                }
+                            }
+                        });
+            }
+        });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);

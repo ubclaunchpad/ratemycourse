@@ -10,6 +10,53 @@ import java.util.PriorityQueue;
 public class User {
     private String major;
     private String name;
+
+    public String getMajor() {
+        return major;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getInterest() { return interest; }
+
+    public String getGradDate() {
+        return gradDate;
+    }
+
+    public String getFacebookID() {
+        return facebookID;
+    }
+
+    public List<String> getFacebookFriends() {
+        return facebookFriends;
+    }
+
+    public PriorityQueue<String> getSearchHistory() {
+        return searchHistory;
+    }
+
+    public List<String> getCoursesTaken() {
+        return coursesTaken;
+    }
+
+    public List<String> getCoursesGoing() {
+        return coursesGoing;
+    }
+
+    public List<String> getCoursesInterested() {
+        return coursesInterested;
+    }
+
+    public List<String> getBookmarks() {
+        return bookmarks;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
     private String gradDate;
     private String facebookID;
     private List<String> facebookFriends;
@@ -20,7 +67,7 @@ public class User {
     private List<String> coursesGoing;
     private List<String> coursesInterested;
     private List<String> bookmarks;
-    public List<Note> notes;
+    private List<Note> notes;
 
     public User(String name, String major, String gradDate, String facebookID, List<String> facebookFriends, String interest, PriorityQueue<String> searchHistory,
                 List<String> coursesTaken, List<String> coursesGoing, List<String> bookmarks, List<Note> notes){
@@ -54,21 +101,5 @@ public class User {
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
-    }
-
-    public String getMajor() {
-        return major;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getGradDate() {
-        return gradDate;
-    }
-
-    public String getFacebookID() {
-        return facebookID;
     }
 }

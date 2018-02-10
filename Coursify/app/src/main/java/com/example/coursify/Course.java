@@ -10,6 +10,7 @@ public class Course {
 
     String courseTitle;
     String courseCode;
+    String descript;
     List<String> takenUsers;
     List<String> goingUsers;
     List<String> interestedUsers;

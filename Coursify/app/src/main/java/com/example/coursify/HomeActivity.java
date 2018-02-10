@@ -29,9 +29,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 /**
  * Created by sveloso on 2017-11-04.
@@ -55,11 +60,13 @@ public class HomeActivity extends Activity {
     private RecyclerView.LayoutManager mPopularManager;
 
     TextView emptyRecentlyOpened;
+    TextView emptyRecommended;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     String email;
 
+    ArrayList<String[]> recommendedCourses = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -123,7 +130,6 @@ public class HomeActivity extends Activity {
         getRecentlyOpenedFromDatabase();
     }
 
-
     /**
      * todo remove this after implementing recommended and popular
      */
@@ -140,18 +146,10 @@ public class HomeActivity extends Activity {
         Course c10 = new Course("OBST 649", "The Profession of Planning");
 
         listRecentlyOpened = new ArrayList<>();
+        getRecommendedFromDatabase();
 
         listRecommended = new ArrayList<>();
-        listRecommended.add(c1);
-        listRecommended.add(c3);
-        listRecommended.add(c2);
-        listRecommended.add(c4);
-        listRecommended.add(c5);
-        listRecommended.add(c6);
-        listRecommended.add(c7);
-        listRecommended.add(c8);
-        listRecommended.add(c9);
-        listRecommended.add(c10);
+
     }
 
     private void initializeFirebase() {
@@ -230,6 +228,101 @@ public class HomeActivity extends Activity {
 
             }
         });
+    }
+
+    private void getRecommendedFromDatabase() {
+        DatabaseReference userRef = mDatabase.child(FirebaseEndpoint.USERS).child(Utils.processEmail(email));
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    HashMap<String, String> currUser = (HashMap)dataSnapshot.getValue();
+                    Log.v(TAG, dataSnapshot.getKey() + "asdfadsf");
+
+                    String interest = currUser.get("interest");
+                    String major = currUser.get("major");
+                    String gradDate = currUser.get("gradDate");
+                    Log.v(TAG, "asdlaks;kajfd i was here");
+                    int iGradDate = Integer.parseInt(gradDate);
+                    Calendar now = Calendar.getInstance();
+                    int currYear = now.get(Calendar.YEAR);
+                    int uniYear = 4 - (iGradDate - currYear);
+
+                    if(uniYear < 0 || uniYear > 4) {
+                        emptyRecommended.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                    getInterestCourseCodesHelper(interest, major, uniYear);
+                }
+                else {
+                    //emptyRecentlyOpened.setVisibility(View.VISIBLE);
+                    Log.v(TAG, "invalid user wtf");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void getInterestCourseCodesHelper(String interest, final String major, final int uniYear){
+        String uniYearChild = "Year " + uniYear;
+        DatabaseReference interestRef = mDatabase.child(FirebaseEndpoint.COURSES).child(interest).child(uniYearChild);
+        interestRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String> listOfInterestingCourses = new ArrayList<String>();
+                if(dataSnapshot.exists()) {
+                    Log.v(TAG, "getInterestCourseCodesHelper");
+                    HashMap<String, HashMap<String, String>> majorCourseMap = (HashMap)dataSnapshot.getValue();
+                    for (String key : majorCourseMap.keySet()) {
+                        String descript = majorCourseMap.get(key).get("Description");
+                        String tuple[] = {key, descript};
+                        recommendedCourses.add(tuple);
+                    }
+                }
+                getMajorCourseCodesHelper(major, uniYear);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void getMajorCourseCodesHelper(String major, int uniYear){
+        String uniYearChild = "Year " + uniYear;
+        DatabaseReference interestRef = mDatabase.child(FirebaseEndpoint.COURSES).child(major).child(uniYearChild);
+        interestRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    Log.v(TAG, "getMajorCourseCodesHelper");
+                    HashMap<String, HashMap<String, String>> majorCourseMap = (HashMap)dataSnapshot.getValue();
+                    for (String key : majorCourseMap.keySet()) {
+                        String descript = majorCourseMap.get(key).get("Description");
+                        String tuple[] = {key, descript};
+                        recommendedCourses.add(tuple);
+                    }
+                }
+                getCoursesCallback();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void getCoursesCallback(){
+        Collections.shuffle(recommendedCourses);
+        int size = recommendedCourses.size() <= 5 ? recommendedCourses.size() : 5;
+        for(int i = 0; i < size; i++){
+            Course c = new Course(recommendedCourses.get(i)[0], recommendedCourses.get(i)[1]);
+            listRecommended.add(c);
+            mRecommendedAdapter.notifyDataSetChanged();
+        }
     }
 
     public void showProfileSettings(View view){

@@ -11,39 +11,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/register_button"
+        app:layout_constraintLeft_toLeftOf="@+id/register_button"
         app:layout_constraintRight_toRightOf="@+id/register_button"
+        tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/register_button" />
+        tools:layout_constraintRight_creator="1" />
 
     <Button
         android:id="@+id/register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="104dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="38dp"
         android:text="Rate My Course"
         android:textSize="30sp"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="38dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        tools:layout_constraintRight_creator="1" />
 
     <Button
         android:id="@+id/forgotPass"
@@ -57,4 +57,5 @@
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1" />
+
 </android.support.constraint.ConstraintLayout>

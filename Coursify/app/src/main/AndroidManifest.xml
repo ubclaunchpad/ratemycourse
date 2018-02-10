@@ -49,8 +49,8 @@
         <activity android:name=".CourseTabActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".EmailResendActivity"></activity>
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".EmailResendActivity" />
+        <activity android:name=".SearchActivity" />
     </application>
 
 </manifest>

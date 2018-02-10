@@ -14,10 +14,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import static com.example.coursify.Utils.processEmail;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
@@ -28,7 +24,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     String email;
 
     FirebaseUser user;
-    private static final String TAG = ProfileSettings.class.getSimpleName();
+    private static final String TAG = UserSettingsFragment.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = FirebaseAuth.getInstance().getCurrentUser();

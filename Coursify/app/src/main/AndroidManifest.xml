@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".ProfileSettings" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,12 +44,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".NavigationActivity" />
         <activity android:name=".CourseTabActivity" />
-        <activity android:name=".ProfileActivity" />
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".EmailResendActivity" />
-        <activity android:name=".SearchActivity" />
     </application>
 
 </manifest>

@@ -1,15 +1,12 @@
 package com.example.coursify;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if (user != null && user.isEmailVerified()) {
-            Log.v(TAG, "Proceeding to HomeActivity");
-            Intent mIntent = new Intent(getApplicationContext(), HomeActivity.class);
+            Log.v(TAG, "Proceeding to HomeFragment");
+            Intent mIntent = new Intent(getApplicationContext(), NavigationActivity.class);
             startActivity(mIntent);
         }
 

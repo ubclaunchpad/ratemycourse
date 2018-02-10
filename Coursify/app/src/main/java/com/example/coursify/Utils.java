@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -37,8 +38,14 @@ public class Utils {
      * @return
      */
     public static DatabaseReference getCourseReferenceToDatabase(String courseCode, DatabaseReference mDatabase) {
-        String courseDept = courseCode.split(" ")[0];
-        String courseId = courseCode.split(" ")[1];
+        String courseDept;
+        String courseId;
+        try {
+            courseDept = courseCode.split(" ")[0];
+            courseId = courseCode.split(" ")[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
 
         DatabaseReference subjectRef = mDatabase.child(FirebaseEndpoint.COURSES).child(courseDept);
         DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));

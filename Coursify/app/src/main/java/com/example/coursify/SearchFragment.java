@@ -1,12 +1,14 @@
 package com.example.coursify;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -18,13 +20,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchFragment extends Fragment {
     EditText courseInput;
     Button submit;
     String email, processedEmail;
-    private static final String TAG = SearchActivity.class.getSimpleName();
+    private static final String TAG = SearchFragment.class.getSimpleName();
     DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     DatabaseReference ref, refSearch;
 
@@ -33,14 +37,12 @@ public class SearchActivity extends AppCompatActivity {
 
     ArrayList<String> searchedCourses = new ArrayList<>();
     ArrayList<String> searchedCoursesDescript = new ArrayList<>();
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        submit = (Button)findViewById(R.id.submit);
-        recView = (RecyclerView)findViewById(R.id.listSearchCourses);
 
-        //authenticates user
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // authenticates user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             return;
@@ -51,48 +53,61 @@ public class SearchActivity extends AppCompatActivity {
         }
         email = user.getEmail();
         processedEmail = Utils.processEmail(email);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        submit = view.findViewById(R.id.submit);
+        courseInput = view.findViewById(R.id.searchField);
+        recView = view.findViewById(R.id.listSearchCourses);
 
         setFields(processedEmail);
 
-        //displaying courses:
+        // displaying courses:
         getRecentlySearchedAndSaveCourse("");
 
-        LinearLayoutManager LLM = new LinearLayoutManager(this);
+        LinearLayoutManager LLM = new LinearLayoutManager(getActivity());
         recView.setLayoutManager(LLM);
-        //searchCourseAdapter = new SearchCourseAdapter(searchedCourses, this);
-        //recView.setAdapter(searchCourseAdapter);
+        // searchCourseAdapter = new SearchCourseAdapter(searchedCourses, this);
+        // recView.setAdapter(searchCourseAdapter);
         // when clicking submit, we want to modify our recentlySearched field and jump to the course
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                courseInput = (EditText)findViewById(R.id.searchField);
                 String courseId = courseInput.getText().toString();
-                getRecentlySearchedAndSaveCourse(courseId);
+                getRecentlySearchedAndSaveCourse(courseId.toUpperCase());
             }
         });
+
+        return view;
     }
 
-    protected void setFields(String processedEmail){
+    protected void setFields(String processedEmail) {
         this.ref = database.child(FirebaseEndpoint.USERS).child(processedEmail);
         this.refSearch = ref.child(FirebaseEndpoint.RECENTLY_SEARCHED);
     }
 
     /*
-    If courseId is empty, that means we simply want to display all courses instead of searching for a course
-    Therefore we must:
-    1. get all the previously searched courses
-    2. get all the descriptions of the searched courses
-    3. display these courses
+        If courseId is empty, that means we simply want to display all courses instead of searching for a course
+        Therefore we must:
+        1. get all the previously searched courses
+        2. get all the descriptions of the searched courses
+        3. display these courses
 
-    This function gets an arraylist of all the previously searched courses, then sends to its callback
-    getSearchedDescript
+        This function gets an arraylist of all the previously searched courses, then sends to its callback
+        getSearchedDescript
      */
-    protected void getRecentlySearchedAndSaveCourse(final String courseId){
+    protected void getRecentlySearchedAndSaveCourse(final String courseId) {
 
         refSearch.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<String> res = Utils.processCourses((ArrayList<String>)dataSnapshot.getValue());
+                ArrayList<String> res = null;
+                if (dataSnapshot.getValue() != null) {
+                    res = Utils.processCourses((ArrayList<String>) dataSnapshot.getValue());
+                }
                 getSearchedDescript(courseId, res);
             }
             @Override
@@ -115,29 +130,32 @@ public class SearchActivity extends AppCompatActivity {
     public void getSearchedDescript(final String courseId, ArrayList<String> recentlySearched){
         Log.v(TAG, courseId);
 
-        if(recentlySearched == null){
-            recentlySearched = new ArrayList<String>();
+        if (recentlySearched == null){
+            recentlySearched = new ArrayList<>();
         }
-        if(courseId.length() > 0){
+        if (courseId.length() > 0){
             getSearchedDescriptCallback(courseId, recentlySearched);
             return;
         }
-        for(int i = 0; i < recentlySearched.size(); i++){
+        for (int i = 0; i < recentlySearched.size(); i++){
             String courseCode = recentlySearched.get(i);
-            Log.v(TAG, "here's coursecode" + courseCode);
+            Log.v(TAG, "here's coursecode " + courseCode);
             DatabaseReference courseRef = Utils.getCourseReferenceToDatabase(courseCode, database);
-            final ArrayList<String> finalRecentlySearched = recentlySearched;
-            courseRef.child(FirebaseEndpoint.DESCRIPTION).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    searchedCoursesDescript.add((String)dataSnapshot.getValue());
-                    getSearchedDescriptCallback(courseId, finalRecentlySearched);
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e(TAG, "onCancelled", databaseError.toException());
-                }
-            });
+            if (courseRef != null) {
+                final ArrayList<String> finalRecentlySearched = recentlySearched;
+                courseRef.child(FirebaseEndpoint.DESCRIPTION).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        searchedCoursesDescript.add((String) dataSnapshot.getValue());
+                        getSearchedDescriptCallback(courseId, finalRecentlySearched);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, "onCancelled", databaseError.toException());
+                    }
+                });
+            }
         }
     }
 
@@ -160,7 +178,7 @@ public class SearchActivity extends AppCompatActivity {
         }
         if(courseId.length() == 0){
             searchedCourses = recentlySearched;
-            searchCourseAdapter = new SearchCourseAdapter(searchedCourses, searchedCoursesDescript, this);
+            searchCourseAdapter = new SearchCourseAdapter(searchedCourses, searchedCoursesDescript, getActivity());
             recView.setAdapter(searchCourseAdapter);
             return;
         }
@@ -170,10 +188,11 @@ public class SearchActivity extends AppCompatActivity {
                 recentlySearched.remove(i);
             }
         }
+        //todo course id validator
         recentlySearched.add(courseId);
         refSearch.setValue(recentlySearched);
-        Intent intent = new Intent(getApplicationContext(), CourseTabActivity.class);
-        intent.putExtra("COURSE_CODE", courseId);
+        Intent intent = new Intent(getActivity(), CourseTabActivity.class);
+        intent.putExtra("COURSE_CODE", courseId.toUpperCase());
         startActivity(intent);
     }
 }

@@ -1,13 +1,17 @@
 package com.example.coursify;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.facebook.FacebookSdk;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,8 +29,8 @@ import java.util.HashMap;
 
 import static com.example.coursify.Utils.processEmail;
 
-public class ProfileSettings extends AppCompatActivity {
-    private static final String TAG = ProfileSettings.class.getSimpleName();
+public class UserSettingsFragment extends Fragment {
+    private static final String TAG = UserSettingsFragment.class.getSimpleName();
 
     private LoginButton mLoginButton;
     private CallbackManager mCallBackManager;
@@ -34,32 +38,42 @@ public class ProfileSettings extends AppCompatActivity {
     private String mUserId;
     EditText mEmail, mName, mMajor, mGradDate, mInterest;
     String email, name, major, gradDate, interest;
-    Button mSubmit, mChangePass, mSearchTemp;
+    Button mSubmit, mChangePass;
     boolean found = false;
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mCallBackManager.onActivityResult(requestCode, resultCode, data);
-    }
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        mCallBackManager.onActivityResult(requestCode, resultCode, data);
+//    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        FacebookSdk.sdkInitialize(getApplicationContext());
+    public void onCreate(Bundle savedInstanceState) {
+        FacebookSdk.sdkInitialize(getActivity());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_settings);
-        Bundle bundle = getIntent().getExtras();
-        email = bundle.getString("Email");
-        findViewsByIds();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            // User is not signed in
+            return;
+        }
+        email = user.getEmail();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_user_settings, container, false);
+
+        mLoginButton = view.findViewById(R.id.login_button);
+        mEmail = view.findViewById(R.id.emailInput);
+        mName = view.findViewById(R.id.nameInput);
+        mMajor = view.findViewById(R.id.majorInput);
+        mGradDate = view.findViewById(R.id.gradInput);
+        mInterest = view.findViewById(R.id.interestInput);
+        mSubmit = view.findViewById(R.id.submit);
+        mChangePass = view.findViewById(R.id.changePass);
 
         mLoginButton.setReadPermissions("user_friends", "email");
         mCallBackManager = CallbackManager.Factory.create();
-
-        mSearchTemp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent mIntent = new Intent(getApplicationContext(), SearchActivity.class);
-                Log.v(TAG, "Proceeding to ChangePasswordActivity");
-                startActivity(mIntent);
-            }
-        });
 
         mLoginButton.registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -84,17 +98,8 @@ public class ProfileSettings extends AppCompatActivity {
         });
 
         collectInformation(email, mUserId);
-    }
-    protected void findViewsByIds(){
-        mLoginButton = (LoginButton) findViewById(R.id.login_button);
-        mEmail = (EditText)findViewById(R.id.emailInput);
-        mName = (EditText)findViewById(R.id.nameInput);
-        mMajor = (EditText)findViewById(R.id.majorInput);
-        mGradDate = (EditText)findViewById(R.id.gradInput);
-        mInterest = (EditText) findViewById(R.id.interestInput);
-        mSubmit = (Button)findViewById(R.id.submit);
-        mChangePass = (Button)findViewById(R.id.changePass);
-        mSearchTemp = (Button)findViewById(R.id.searchId);
+
+        return view;
     }
 
     protected void setFacebookUserId(final String email, final String mUserId){
@@ -157,7 +162,7 @@ public class ProfileSettings extends AppCompatActivity {
         mChangePass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mIntent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
+                Intent mIntent = new Intent(getActivity(), ChangePasswordActivity.class);
                 Log.v(TAG, "Proceeding to ChangePasswordActivity");
                 startActivity(mIntent);
             }

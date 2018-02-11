@@ -1,24 +1,21 @@
 package com.example.coursify;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.dgreenhalgh.android.simpleitemdecoration.*;
 import com.dgreenhalgh.android.simpleitemdecoration.linear.DividerItemDecoration;
 import com.dgreenhalgh.android.simpleitemdecoration.linear.EndOffsetItemDecoration;
 import com.dgreenhalgh.android.simpleitemdecoration.linear.StartOffsetItemDecoration;
-import com.example.coursify.Course;
-import com.example.coursify.CourseAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,14 +28,15 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by sveloso on 2017-11-04.
  */
-public class HomeActivity extends Activity {
+public class HomeFragment extends Fragment {
 
-    private static final String TAG = HomeActivity.class.getSimpleName();
+    private static final String TAG = HomeFragment.class.getSimpleName();
     private List<Course> listRecentlyOpened;
     private List<Course> listRecommended;
 
@@ -61,7 +59,8 @@ public class HomeActivity extends Activity {
     String email;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -70,22 +69,24 @@ public class HomeActivity extends Activity {
         }
         email = user.getEmail();
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
         initializeFirebase();
         initializeCourses();
+    }
 
-        mListRecentlyOpened = findViewById(R.id.listRecentlyOpened);
-        mListRecommended = findViewById(R.id.listRecommended);
-        mListPopular = findViewById(R.id.listPopular);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        mListRecentlyOpened = view.findViewById(R.id.listRecentlyOpened);
+        mListRecommended = view.findViewById(R.id.listRecommended);
+        mListPopular = view.findViewById(R.id.listPopular);
         mListRecommended.setHasFixedSize(true);
         mListRecentlyOpened.setHasFixedSize(true);
         mListPopular.setHasFixedSize(true);
 
-        mRecentlyOpenedManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mRecommendedManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mPopularManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecentlyOpenedManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mRecommendedManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mPopularManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         mListRecentlyOpened.setLayoutManager(mRecentlyOpenedManager);
         mListRecommended.setLayoutManager(mRecommendedManager);
@@ -111,15 +112,17 @@ public class HomeActivity extends Activity {
         mListPopular.addItemDecoration(new StartOffsetItemDecoration(30));
         mListPopular.addItemDecoration(new EndOffsetItemDecoration(30));
 
-        emptyRecentlyOpened = findViewById(R.id.emptyRecentlyOpened);
+        emptyRecentlyOpened = view.findViewById(R.id.emptyRecentlyOpened);
 
         getRecentlyOpenedFromDatabase();
 
+
+        return view;
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    public void onResume() {
+        super.onResume();
         getRecentlyOpenedFromDatabase();
     }
 
@@ -160,7 +163,7 @@ public class HomeActivity extends Activity {
     }
 
     public void showProfilePage(View view) {
-        startActivity(new Intent(this, ProfileActivity.class));
+        // startActivity(new Intent(this, UserFriendsFragment.class));
     }
 
     /**
@@ -233,12 +236,11 @@ public class HomeActivity extends Activity {
     }
 
     public void showProfileSettings(View view){
-        Intent profSetting = new Intent(getApplicationContext(), ProfileSettings.class);
+        Intent profSetting = new Intent(getApplicationContext(), UserSettingsFragment.class);
         Bundle bundle = new Bundle();
         bundle.putString("Email", email);
         profSetting.putExtras(bundle);
         Log.v(TAG, "proceeding to profile settings activity");
         startActivity(profSetting);
-
     }
 }

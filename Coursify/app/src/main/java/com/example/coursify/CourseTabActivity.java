@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -70,8 +71,13 @@ public class CourseTabActivity extends AppCompatActivity {
 
     private void updateHeaderValues() {
         courseCode = getIntent().getStringExtra("COURSE_CODE");
-        courseDept = courseCode.split(" ")[0];
-        courseId = courseCode.split(" ")[1];
+        try {
+            courseDept = courseCode.split(" ")[0];
+            courseId = courseCode.split(" ")[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Toast.makeText(this, "Failed to find course with given course code.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mCourseReference = Utils.getCourseReferenceToDatabase(courseCode, mDatabase);
@@ -85,7 +91,12 @@ public class CourseTabActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 String s = snapshot.getValue().toString();
 
-                txtCourseTitle.setText(s);
+                if (s == null) {
+                    Toast.makeText(CourseTabActivity.this, "Failed to find course with given course code.", Toast.LENGTH_SHORT).show();
+                    CourseTabActivity.this.finish();
+                } else {
+                    txtCourseTitle.setText(s);
+                }
             }
 
             @Override

@@ -155,7 +155,7 @@ public class CourseTabActivity extends AppCompatActivity {
 
     private void updatePopularCourses(final int popularCount){
         Log.v(TAG, "I am at updatePopularCourses");
-        final DatabaseReference mPopularCourseRef = mDatabase.child("PopularCourses");
+        final DatabaseReference mPopularCourseRef = mDatabase.child(FirebaseEndpoint.POPULAR_COURSES);
         mPopularCourseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

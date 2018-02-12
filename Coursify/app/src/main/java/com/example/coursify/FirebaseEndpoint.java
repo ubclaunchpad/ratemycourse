@@ -29,4 +29,6 @@ public class FirebaseEndpoint {
     public static final String GOING_TO_TAKE = "goingToTake";
     public static final String INTERESTED = "interested";
     public static final String TAKEN = "taken";
+
+    public static final String POPULAR_COURSES = "PopularCourses";
 }

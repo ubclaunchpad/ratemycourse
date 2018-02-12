@@ -41,6 +41,7 @@ public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private List<Course> listRecentlyOpened;
     private List<Course> listRecommended;
+    private List<Course> listPopular;
 
     private RecyclerView mListRecentlyOpened;
     private RecyclerView.Adapter mRecentlyOpenedAdapter;
@@ -161,8 +162,10 @@ public class HomeFragment extends Fragment {
 
         listRecentlyOpened = new ArrayList<>();
         listRecommended = new ArrayList<>();
+        listPopular = new ArrayList<>();
         displayRecentlyOpenedCourses();
         getRecommendedFromDatabase();
+        displayPopularCourses();
 
     }
 
@@ -298,6 +301,30 @@ public class HomeFragment extends Fragment {
         mRecommendedAdapter = new CourseAdapter(displayList, getResources().getColor(R.color.colorRecentlyOpened));
         mListRecommended.setAdapter(mRecommendedAdapter);
 
+    }
+
+    private void displayPopularCourses(){
+        DatabaseReference popularCoursesRef = mDatabase.child(FirebaseEndpoint.POPULAR_COURSES);
+        popularCoursesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<HashMap<String, String>> popularCourses =
+                        dataSnapshot.getValue() == null ? new ArrayList<HashMap<String, String>>() : (ArrayList<HashMap<String, String>>)dataSnapshot.getValue();
+                for(int i = 0; i < popularCourses.size(); i++){
+                    HashMap<String, String> currPopCourse = popularCourses.get(i);
+                    String code = currPopCourse.get("courseCode");
+                    String descript = currPopCourse.get("courseTitle");
+                    Course currCourse = new Course(code, descript);
+                    listPopular.add(currCourse);
+                }
+                mPopularAdapter = new CourseAdapter(listPopular, getResources().getColor(R.color.colorRecentlyOpened));
+                mListPopular.setAdapter(mPopularAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     public void showProfileSettings(View view){

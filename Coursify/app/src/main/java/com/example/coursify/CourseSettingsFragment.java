@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import java.util.List;
  * Created by sveloso on 2018-01-20.
  */
 public class CourseSettingsFragment extends Fragment {
-
+    private static final String TAG = CourseSettingsFragment.class.getSimpleName();
     private Spinner spinnerCoursePreference;
     private TextView txtCommentBody;
     private TextView txtUsefulness;
@@ -48,6 +49,7 @@ public class CourseSettingsFragment extends Fragment {
     private ImageButton btnEditRating;
 
     private String courseCode;
+    private String courseTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +69,8 @@ public class CourseSettingsFragment extends Fragment {
 
         getCoursePreference();
         spinnerCoursePreference.setAdapter(adapter);
+
+        getCourseTitle();
 
         spinnerCoursePreference.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -127,6 +131,22 @@ public class CourseSettingsFragment extends Fragment {
         getUserNameThenUserComment();
 
         return view;
+    }
+
+    private void getCourseTitle(){
+        if(mCourseRef == null) {
+            Log.v(TAG, "mCourseRef is null");
+        }
+        mCourseRef.child(FirebaseEndpoint.DESCRIPTION).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                courseTitle = dataSnapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     // Finds the user's comment in database, then prompt user to edit it
@@ -395,6 +415,7 @@ public class CourseSettingsFragment extends Fragment {
                 removeCourseFromOldAndAddCourseToNewPreference (newPreference); // remove this course from that preference list
             } else {
                 addCourseToNewPreferenceSetting(newPreference); // if previous preference was simply "no preference", no need to remove and add straight away to new
+                Utils.updatePopularCount(4, courseCode, courseTitle);
             }
         }
     }

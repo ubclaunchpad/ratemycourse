@@ -45,12 +45,14 @@ public class Utils {
      * @return
      */
     public static DatabaseReference getCourseReferenceToDatabase(String courseCode, DatabaseReference mDatabase) {
+        courseCode = courseCodeFormatter(courseCode);
         String courseDept;
         String courseId;
         try {
             courseDept = courseCode.split(" ")[0];
             courseId = courseCode.split(" ")[1];
         } catch (ArrayIndexOutOfBoundsException e) {
+            Log.v(TAG, "wrong format");
             return null;
         }
 

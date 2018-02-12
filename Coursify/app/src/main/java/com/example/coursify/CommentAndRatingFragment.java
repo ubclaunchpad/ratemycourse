@@ -49,6 +49,7 @@ public class CommentAndRatingFragment extends Fragment {
     private String courseCode;
     private String courseDept;
     private String courseId;
+    private String courseTitle;
 
     private String currUserName;
 
@@ -76,6 +77,7 @@ public class CommentAndRatingFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mCourseReference = Utils.getCourseReferenceToDatabase(courseCode, mDatabase);
 
+        getCourseTitle();
         getCurrentUserName();
         populateUIFromDatabaseInfo();
 
@@ -127,6 +129,19 @@ public class CommentAndRatingFragment extends Fragment {
             public void onClick(View v) {
                 startAddRatingWorkflow();
                 closeSubMenusFab();
+            }
+        });
+    }
+
+    private void getCourseTitle(){
+        mCourseReference.child(FirebaseEndpoint.DESCRIPTION).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                courseTitle = dataSnapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
@@ -186,6 +201,7 @@ public class CommentAndRatingFragment extends Fragment {
                     Long longEasiness = (Long) snapshot.child("easiness").getValue();
                     Long longUsefulness = (Long) snapshot.child("usefulness").getValue();
 
+                    Utils.updatePopularCount((int) (longEasiness + longUsefulness), courseCode, courseTitle);
                     totalEasiness += longEasiness.doubleValue();
                     totalUsefulness += longUsefulness.doubleValue();
                     count++;
@@ -277,7 +293,7 @@ public class CommentAndRatingFragment extends Fragment {
     private void addCommentToDatabase (String commentBody, boolean anonymous) {
         Comment comment = new Comment(currUserName, commentBody, anonymous);
         DatabaseReference commentsRef = mCourseReference.child(FirebaseEndpoint.COMMENTS);
-
+        Utils.updatePopularCount(6, courseCode, courseTitle);
         commentsRef.push().setValue(comment);
     }
 

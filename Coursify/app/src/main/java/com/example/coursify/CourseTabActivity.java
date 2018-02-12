@@ -17,6 +17,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by sveloso on 2018-01-20.
  */
@@ -30,6 +33,7 @@ public class CourseTabActivity extends AppCompatActivity {
     private String courseCode;
     private String courseDept;
     private String courseId;
+    private String courseTitle;
 
     private DatabaseReference mDatabase;
     private DatabaseReference mCourseReference;
@@ -42,7 +46,7 @@ public class CourseTabActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_course_tabs);
-        updateHeaderValues();
+        updateHeaderValuesAndVisitsField();
 
         final TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Course"));
@@ -71,7 +75,7 @@ public class CourseTabActivity extends AppCompatActivity {
         getUserName();
     }
 
-    private void updateHeaderValues() {
+    private void updateHeaderValuesAndVisitsField() {
         courseCode = getIntent().getStringExtra("COURSE_CODE");
         try {
             courseDept = courseCode.split(" ")[0];
@@ -103,9 +107,29 @@ public class CourseTabActivity extends AppCompatActivity {
                     CourseTabActivity.this.finish();
                 } else {
                     txtCourseTitle.setText(s);
+                    courseTitle = s;
+                    incrementVisits(mCourseReference);
                 }
             }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void incrementVisits(final DatabaseReference mCourseReference){
+        Log.v(TAG, "I am at incrementVisits");
+        mCourseReference.child(FirebaseEndpoint.VISITS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                int visits = 0;
+                if(snapshot.exists()){
+                    visits = Integer.parseInt(snapshot.getValue().toString());
+                }
+                mCourseReference.child(FirebaseEndpoint.VISITS).setValue(visits+1);
+                Utils.updatePopularCount(1, courseCode, courseTitle);
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }

@@ -13,6 +13,8 @@ public class FirebaseEndpoint {
     public static final String RATING = "Rating"; //course rating
     public static final String TITLE = "Title"; //course title
     public static final String USERS = "Users";
+    public static final String VISITS = "Visits";
+    public static final String POPULARCOUNT = "PopularCount";
 
     public static final String RATINGS = "ratings"; // course ratings
     public static final String COMMENTS = "comments"; // course comments

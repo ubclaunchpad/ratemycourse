@@ -17,6 +17,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by sveloso on 2018-01-20.
  */
@@ -30,6 +33,7 @@ public class CourseTabActivity extends AppCompatActivity {
     private String courseCode;
     private String courseDept;
     private String courseId;
+    private String courseTitle;
 
     private DatabaseReference mDatabase;
     private DatabaseReference mCourseReference;
@@ -42,7 +46,7 @@ public class CourseTabActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_course_tabs);
-        updateHeaderValues();
+        updateHeaderValuesAndVisitsField();
 
         final TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Course"));
@@ -71,7 +75,7 @@ public class CourseTabActivity extends AppCompatActivity {
         getUserName();
     }
 
-    private void updateHeaderValues() {
+    private void updateHeaderValuesAndVisitsField() {
         courseCode = getIntent().getStringExtra("COURSE_CODE");
         try {
             courseDept = courseCode.split(" ")[0];
@@ -103,9 +107,103 @@ public class CourseTabActivity extends AppCompatActivity {
                     CourseTabActivity.this.finish();
                 } else {
                     txtCourseTitle.setText(s);
+                    courseTitle = s;
+                    incrementVisits(mCourseReference);
                 }
             }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void incrementVisits(final DatabaseReference mCourseReference){
+        Log.v(TAG, "I am at incrementVisits");
+        mCourseReference.child(FirebaseEndpoint.VISITS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                int visits = 0;
+                if(snapshot.exists()){
+                    visits = Integer.parseInt(snapshot.getValue().toString());
+                }
+                mCourseReference.child(FirebaseEndpoint.VISITS).setValue(visits+1);
+                updatePopularCount(mCourseReference, 1);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void updatePopularCount(final DatabaseReference mCourseReference, final int value){
+        mCourseReference.child(FirebaseEndpoint.POPULARCOUNT).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                int popularCount = 0;
+                if(snapshot.exists()){
+                    popularCount = Integer.parseInt(snapshot.getValue().toString());
+                }
+                mCourseReference.child(FirebaseEndpoint.POPULARCOUNT).setValue(popularCount+value);
+                updatePopularCourses(popularCount+value);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void updatePopularCourses(final int popularCount){
+        Log.v(TAG, "I am at updatePopularCourses");
+        final DatabaseReference mPopularCourseRef = mDatabase.child("PopularCourses");
+        mPopularCourseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<HashMap<String, String>> popularCourses = snapshot.getValue() == null ?
+                        new ArrayList<HashMap<String, String>>() :
+                        (ArrayList<HashMap<String, String>>) snapshot.getValue();
+                HashMap<String, String> newCourse;
+                newCourse = new HashMap<String, String>();
+                newCourse.put("courseCode", courseCode);
+                newCourse.put("courseTitle", courseTitle);
+                newCourse.put("popularCount", Integer.toString(popularCount));
+                if(popularCourses.size() == 0){
+                    popularCourses.add(newCourse);
+                }
+
+                int minIndex = -1;
+                int minPopularity = Integer.MAX_VALUE;
+                for(int i = 0; i < popularCourses.size(); i++){
+                    HashMap<String, String> currCourse = popularCourses.get(i);
+                    int currPopularCount = Integer.parseInt(currCourse.get("popularCount"));
+                    String currCourseId = currCourse.get("courseCode");
+                    // if we find that the newly added course is already in popular,
+                    // we simple update the field and return;
+                    Log.v(TAG, "currCourseCode + courseId = " + currCourseId + ", " + courseCode);
+                    if(currCourseId.equals(courseCode)){
+                        newCourse.put("popularCount", Integer.toString(popularCount));
+                        popularCourses.set(i, newCourse);
+                        mPopularCourseRef.setValue(popularCourses);
+                        return;
+                    }
+                    // finds the minimum index;
+                    if(currPopularCount < minPopularity){
+                        minPopularity = currPopularCount;
+                        minIndex = i;
+                    }
+                }
+
+                if(popularCount >= minPopularity && popularCourses.size() >= 5){
+                    popularCourses.remove(minIndex);
+                }
+                // if the current popular count is greater than min, then we insert it and remove
+                // the other one
+                if(popularCount >= minPopularity){
+                    popularCourses.add(newCourse);
+                }
+
+                mPopularCourseRef.setValue(popularCourses);
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }

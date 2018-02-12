@@ -126,8 +126,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //getRecentlyOpenedFromDatabase();
-        //displayCourses();
     }
 
 
@@ -135,38 +133,12 @@ public class HomeFragment extends Fragment {
      * todo remove this after implementing recommended and popular
      */
     private void initializeCourses() {
-        /*
-        Course c1 = new Course("CPSC 110", "Differential Calculus with Applications to Physical Sciences and Engineering");
-        Course c2 = new Course("ONCO 649", "Doctoral Dissertation");
-        Course c3 = new Course("CPSC 210", "CPSC 210 L1K (Laboratory)");
-        Course c4 = new Course("PLAN 425", "Urban Planning Issues and Concepts");
-        Course c5 = new Course("LARC 415", "The Profession of Planning");
-        Course c6 = new Course("LASO 204", "The Profession of Planning");
-        Course c7 = new Course("LATN 102", "The Profession of Planning");
-        Course c8 = new Course("LIBE 465", "The Profession of Planning");
-        Course c9 = new Course("OBST 430", "The Profession of Planning");
-        Course c10 = new Course("OBST 649", "The Profession of Planning");
-
-
-        listRecommended.add(c1);
-        listRecommended.add(c3);
-        listRecommended.add(c2);
-        listRecommended.add(c4);
-        listRecommended.add(c5);
-        listRecommended.add(c6);
-        listRecommended.add(c7);
-        listRecommended.add(c8);
-        listRecommended.add(c9);
-        listRecommended.add(c10);
-        */
-
         listRecentlyOpened = new ArrayList<>();
         listRecommended = new ArrayList<>();
         listPopular = new ArrayList<>();
         displayRecentlyOpenedCourses();
         getRecommendedFromDatabase();
         displayPopularCourses();
-
     }
 
     private void initializeFirebase() {

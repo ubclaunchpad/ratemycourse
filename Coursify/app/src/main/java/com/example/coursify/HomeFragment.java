@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -56,7 +57,7 @@ public class HomeFragment extends Fragment {
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    String email;
+    String email, processedEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class HomeFragment extends Fragment {
             return;
         }
         email = user.getEmail();
+        processedEmail = Utils.processEmail(email);
 
         initializeFirebase();
         initializeCourses();
@@ -113,9 +115,8 @@ public class HomeFragment extends Fragment {
         mListPopular.addItemDecoration(new EndOffsetItemDecoration(30));
 
         emptyRecentlyOpened = view.findViewById(R.id.emptyRecentlyOpened);
-
-        getRecentlyOpenedFromDatabase();
-
+        //displayCourses();
+        //getRecentlyOpenedFromDatabase();
 
         return view;
     }
@@ -123,7 +124,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getRecentlyOpenedFromDatabase();
+        //getRecentlyOpenedFromDatabase();
+        //displayCourses();
     }
 
 
@@ -143,6 +145,7 @@ public class HomeFragment extends Fragment {
         Course c10 = new Course("OBST 649", "The Profession of Planning");
 
         listRecentlyOpened = new ArrayList<>();
+        displayCourses();
 
         listRecommended = new ArrayList<>();
         listRecommended.add(c1);
@@ -166,71 +169,32 @@ public class HomeFragment extends Fragment {
         // startActivity(new Intent(this, UserFriendsFragment.class));
     }
 
-    /**
-     * Helper function for retrieving all items in list in correct order
-     * @param recentlyOpened a list that contains at least one item
-     * @param coursePos
-     */
-    private void getRecentlyOpenedHelper(final List<String> recentlyOpened, final int coursePos) {
-        if (coursePos == recentlyOpened.size()) {
-            return;
-        }
-
-        final String courseCode = recentlyOpened.get(coursePos);
-        // Assumes the course code exists
-        DatabaseReference courseRef = Utils.getCourseReferenceToDatabase(courseCode, mDatabase);
-        courseRef.child(FirebaseEndpoint.DESCRIPTION)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String description = dataSnapshot.getValue(String.class);
-                        Course course = new Course(courseCode, description);
-                        listRecentlyOpened.add(course);
-                        mRecentlyOpenedAdapter.notifyDataSetChanged();
-                        getRecentlyOpenedHelper(recentlyOpened, coursePos + 1);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-    }
-
-    /**
-     * Retrieve recently opened list from Firebase and display it on UI
-     */
-    private void getRecentlyOpenedFromDatabase() {
-        Log.v(TAG, "getting recently opened from database");
-        listRecentlyOpened.clear();
-        mRecentlyOpenedAdapter.notifyDataSetChanged();
-
-        DatabaseReference recentlyOpenedRef =
-                mDatabase.child(FirebaseEndpoint.USERS)
-                        .child(Utils.processEmail(mAuth.getCurrentUser().getEmail()))
-                        .child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
-        recentlyOpenedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void displayCourses(){
+        Log.v(TAG, "I am at displayCourses");
+        final DatabaseReference recentlySearchedRef = mDatabase.child(FirebaseEndpoint.USERS).child(processedEmail).child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
+        recentlySearchedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    emptyRecentlyOpened.setVisibility(View.GONE);
-                    /* Gets a list of course code strings */
-                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
-                    List<String> recentlyOpened = dataSnapshot.getValue(genericTypeIndicator);
-                    for(String course : recentlyOpened) {
-                        Log.v(TAG, course);
-                    }
-                    Collections.reverse(recentlyOpened);
-                    getRecentlyOpenedHelper(recentlyOpened, 0);
+                ArrayList<HashMap<String, String>> recentlyOpenedCourses =
+                        dataSnapshot.getValue() == null ? new ArrayList<HashMap<String, String>>() : (ArrayList<HashMap<String, String>>)dataSnapshot.getValue();
+                ArrayList<String> recentlyOpenedIds = new ArrayList<String>();
+                ArrayList<String> recentlyOpenedDescripts = new ArrayList<String>();
+                Collections.reverse(recentlyOpenedCourses);
+                for(int i = 0; i < recentlyOpenedCourses.size(); i++){
+                    HashMap<String, String> currCourse = recentlyOpenedCourses.get(i);
+                    String currCourseId = currCourse.get("courseCode");
+                    String currCourseDescript = currCourse.get("courseTitle");
+                    recentlyOpenedIds.add(currCourseId);
+                    recentlyOpenedDescripts.add(currCourseDescript);
+                    Course course = new Course(currCourseId, currCourseDescript);
+                    listRecentlyOpened.add(course);
                 }
-                else {
-                    emptyRecentlyOpened.setVisibility(View.VISIBLE);
-                }
+                Log.v(TAG, "size of recentlySearchedCourses is "+recentlyOpenedCourses.size());
+                mRecentlyOpenedAdapter = new CourseAdapter(listRecentlyOpened, getResources().getColor(R.color.colorRecentlyOpened));
+                mListRecentlyOpened.setAdapter(mRecentlyOpenedAdapter);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }

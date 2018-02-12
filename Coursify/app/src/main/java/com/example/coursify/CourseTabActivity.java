@@ -6,6 +6,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
  */
 
 public class CourseTabActivity extends AppCompatActivity {
+    private static final String TAG = CourseTabActivity.class.getSimpleName();
 
     private TextView txtCourseTitle;
     private TextView txtCourseCode;
@@ -81,6 +83,11 @@ public class CourseTabActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mCourseReference = Utils.getCourseReferenceToDatabase(courseCode, mDatabase);
+
+        if(mCourseReference == null){
+            Log.v(TAG, "this course does not exist");
+            return;
+        }
 
         txtCourseCode = findViewById(R.id.txtCourseCode);
         txtCourseTitle = findViewById(R.id.txtCourseTitle);

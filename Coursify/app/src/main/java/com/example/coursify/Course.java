@@ -21,8 +21,6 @@ public class Course {
     public Course (String code, String title) {
         courseTitle = title;
         courseCode = code;
-        easiness = -1;
-        usefulness = -1;
     }
 
 

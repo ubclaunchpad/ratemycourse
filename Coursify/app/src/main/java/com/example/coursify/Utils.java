@@ -1,6 +1,7 @@
 package com.example.coursify;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 
@@ -48,8 +49,45 @@ public class Utils {
         }
 
         DatabaseReference subjectRef = mDatabase.child(FirebaseEndpoint.COURSES).child(courseDept);
+        if(subjectRef == null){
+            Log.v(TAG, "subject does not exist!");
+            return null;
+        }
         DatabaseReference yearRef = subjectRef.child("Year " + courseId.charAt(0));
+        if(yearRef == null){
+            Log.v(TAG, "year does not exist!");
+            return null;
+        }
+        if(yearRef.child(courseDept + courseId) == null){
+            Log.v(TAG, "course does not exist!");
+            return null;
+        }
         return yearRef.child(courseDept + courseId);
+    }
+
+    public static String courseCodeFormatter(String courseCode){
+        String course = "", code = "";
+        if(courseCode.contains(" ")){
+            String arr[] = courseCode.split(" ");
+            if(arr.length != 2){
+                Log.v(TAG, "please enter valid course format");
+                return "";
+            }
+            course = arr[0];
+            code = arr[1];
+        }else{
+            for(int i = 0; i < courseCode.length(); i++){
+                String nums = "0123456789";
+                char c = courseCode.charAt(i);
+                if(nums.indexOf(c) >= 0){
+                    course = courseCode.substring(0, i);
+                    code = courseCode.substring(i);
+                    break;
+                }
+            }
+        }
+        Log.v(TAG, "formatted is " + course.toUpperCase() + " " + code);
+        return course.toUpperCase() + " " + code;
     }
 
     public static ArrayList<String> processCourses(ArrayList<String> courses){

@@ -293,7 +293,7 @@ public class CommentAndRatingFragment extends Fragment {
     private void addCommentToDatabase (String commentBody, boolean anonymous) {
         Comment comment = new Comment(currUserName, commentBody, anonymous);
         DatabaseReference commentsRef = mCourseReference.child(FirebaseEndpoint.COMMENTS);
-
+        Utils.updatePopularCount(6, courseCode, courseTitle);
         commentsRef.push().setValue(comment);
     }
 

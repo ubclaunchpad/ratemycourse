@@ -134,6 +134,7 @@ public class HomeFragment extends Fragment {
      * todo remove this after implementing recommended and popular
      */
     private void initializeCourses() {
+        /*
         Course c1 = new Course("CPSC 110", "Differential Calculus with Applications to Physical Sciences and Engineering");
         Course c2 = new Course("ONCO 649", "Doctoral Dissertation");
         Course c3 = new Course("CPSC 210", "CPSC 210 L1K (Laboratory)");
@@ -145,12 +146,7 @@ public class HomeFragment extends Fragment {
         Course c9 = new Course("OBST 430", "The Profession of Planning");
         Course c10 = new Course("OBST 649", "The Profession of Planning");
 
-        listRecentlyOpened = new ArrayList<>();
-        listRecommended = new ArrayList<>();
-        displayCourses();
-        getRecommendedFromDatabase();
 
-        /*
         listRecommended.add(c1);
         listRecommended.add(c3);
         listRecommended.add(c2);
@@ -162,6 +158,12 @@ public class HomeFragment extends Fragment {
         listRecommended.add(c9);
         listRecommended.add(c10);
         */
+
+        listRecentlyOpened = new ArrayList<>();
+        listRecommended = new ArrayList<>();
+        displayRecentlyOpenedCourses();
+        getRecommendedFromDatabase();
+
     }
 
     private void initializeFirebase() {
@@ -173,7 +175,7 @@ public class HomeFragment extends Fragment {
         // startActivity(new Intent(this, UserFriendsFragment.class));
     }
 
-    public void displayCourses(){
+    public void displayRecentlyOpenedCourses(){
         Log.v(TAG, "I am at displayCourses");
         final DatabaseReference recentlySearchedRef = mDatabase.child(FirebaseEndpoint.USERS).child(processedEmail).child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
         recentlySearchedRef.addListenerForSingleValueEvent(new ValueEventListener() {

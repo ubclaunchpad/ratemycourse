@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
 /**
  * Created by sveloso on 2018-02-10.
  */
@@ -24,9 +26,10 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
-        BottomNavigationView navigation = findViewById(R.id.navBar);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_home);
+        BottomNavigationViewEx bottomNavBar = findViewById(R.id.bottomNavBar);
+        bottomNavBar.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        bottomNavBar.setSelectedItemId(R.id.navigation_home);
+        bottomNavBar.setTextVisibility(false);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

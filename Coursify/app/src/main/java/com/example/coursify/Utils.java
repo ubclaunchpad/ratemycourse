@@ -1,7 +1,13 @@
 package com.example.coursify;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v7.view.menu.MenuView;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

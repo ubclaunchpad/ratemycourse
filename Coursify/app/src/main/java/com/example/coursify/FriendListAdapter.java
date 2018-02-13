@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * Created by LucyZhao on 2017/11/11.
  */
-
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
     private final List<User> userList;
     private static final String TAG = FriendListAdapter.class.getSimpleName();

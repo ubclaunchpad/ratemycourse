@@ -25,6 +25,9 @@ public class CourseTabAdapter extends FragmentPagerAdapter {
             case 1:
                 CourseSettingsFragment tab2 = new CourseSettingsFragment();
                 return tab2;
+            case 2:
+                CourseFriendsFragment tab3 = new CourseFriendsFragment();
+                return tab3;
             default:
                 return null;
         }

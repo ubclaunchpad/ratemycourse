@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dgreenhalgh.android.simpleitemdecoration.linear.DividerItemDecoration;
 import com.dgreenhalgh.android.simpleitemdecoration.linear.EndOffsetItemDecoration;
@@ -55,10 +57,13 @@ public class HomeFragment extends Fragment {
     private RecyclerView.Adapter mPopularAdapter;
     private RecyclerView.LayoutManager mPopularManager;
 
-    TextView emptyRecentlyOpened;
+    private RelativeLayout emptyRecentlyOpened;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+
+    private View mView;
+
     String email, processedEmail;
 
     @Override
@@ -79,11 +84,11 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        mView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mListRecentlyOpened = view.findViewById(R.id.listRecentlyOpened);
-        mListRecommended = view.findViewById(R.id.listRecommended);
-        mListPopular = view.findViewById(R.id.listPopular);
+        mListRecentlyOpened = mView.findViewById(R.id.listRecentlyOpened);
+        mListRecommended = mView.findViewById(R.id.listRecommended);
+        mListPopular = mView.findViewById(R.id.listPopular);
         mListRecommended.setHasFixedSize(true);
         mListRecentlyOpened.setHasFixedSize(true);
         mListPopular.setHasFixedSize(true);
@@ -116,22 +121,17 @@ public class HomeFragment extends Fragment {
         mListPopular.addItemDecoration(new StartOffsetItemDecoration(30));
         mListPopular.addItemDecoration(new EndOffsetItemDecoration(30));
 
-        emptyRecentlyOpened = view.findViewById(R.id.emptyRecentlyOpened);
-        //displayCourses();
-        //getRecentlyOpenedFromDatabase();
+        emptyRecentlyOpened = mView.findViewById(R.id.emptyRecentlyOpened);
 
-        return view;
+        return mView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        initializeCourses();
     }
 
-
-    /**
-     * todo remove this after implementing recommended and popular
-     */
     private void initializeCourses() {
         listRecentlyOpened = new ArrayList<>();
         listRecommended = new ArrayList<>();
@@ -146,10 +146,6 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public void showProfilePage(View view) {
-        // startActivity(new Intent(this, UserFriendsFragment.class));
-    }
-
     public void displayRecentlyOpenedCourses(){
         Log.v(TAG, "I am at displayCourses");
         final DatabaseReference recentlySearchedRef = mDatabase.child(FirebaseEndpoint.USERS).child(processedEmail).child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
@@ -161,7 +157,7 @@ public class HomeFragment extends Fragment {
                 ArrayList<String> recentlyOpenedIds = new ArrayList<String>();
                 ArrayList<String> recentlyOpenedDescripts = new ArrayList<String>();
                 Collections.reverse(recentlyOpenedCourses);
-                for(int i = 0; i < recentlyOpenedCourses.size(); i++){
+                for(int i = 0; i < recentlyOpenedCourses.size(); i++) {
                     HashMap<String, String> currCourse = recentlyOpenedCourses.get(i);
                     String currCourseId = currCourse.get("courseCode");
                     String currCourseDescript = currCourse.get("courseTitle");
@@ -169,7 +165,13 @@ public class HomeFragment extends Fragment {
                     recentlyOpenedDescripts.add(currCourseDescript);
                     Course course = new Course(currCourseId, currCourseDescript);
                     listRecentlyOpened.add(course);
+                    emptyRecentlyOpened.setVisibility(View.INVISIBLE);
                 }
+
+                if (listRecentlyOpened.size() == 0) {
+                    emptyRecentlyOpened.setVisibility(View.VISIBLE);
+                }
+
                 Log.v(TAG, "size of recentlySearchedCourses is "+recentlyOpenedCourses.size());
                 mRecentlyOpenedAdapter = new CourseAdapter(listRecentlyOpened, getResources().getColor(R.color.colorRecentlyOpened));
                 mListRecentlyOpened.setAdapter(mRecentlyOpenedAdapter);

@@ -48,23 +48,31 @@
                 android:textColor="#FFFFFF"
                 android:textSize="16dp" />
 
-            <TextView
-                android:layout_below="@id/txtRecentlyOpened"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:textSize="14sp"
-                android:fontFamily="@font/quicksand_medium"
-                android:text="You haven't opened anything yet"
-                android:id="@+id/emptyRecentlyOpened"/>
-
             <android.support.v7.widget.RecyclerView
                 android:layout_below="@id/txtRecentlyOpened"
                 android:id="@+id/listRecentlyOpened"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </android.support.v7.widget.RecyclerView>
+
+            <RelativeLayout
+                android:id="@+id/emptyRecentlyOpened"
+                android:layout_width="160dp"
+                android:visibility="visible"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/txtRecentlyOpened"
+                android:layout_height="160dp">
+
+                <TextView
+                    android:id="@+id/txtEmptyRecentlyOpened"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="No courses recently opened."
+                    android:textColor="@color/colorWhite"
+                    android:textSize="10dp" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -142,6 +150,5 @@
                 android:layout_height="wrap_content">
             </android.support.v7.widget.RecyclerView>
         </RelativeLayout>
-
     </RelativeLayout>
 </ScrollView>

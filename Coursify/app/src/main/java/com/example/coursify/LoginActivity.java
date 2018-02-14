@@ -163,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if(ds.getKey().toString().equals(processedEmail)) {
                                             Log.v(TAG, "proceeding to home page");
                                             found = true;
-                                            startActivity(new Intent(getApplicationContext(), HomeFragment.class));
+                                            startActivity(new Intent(getApplicationContext(), NavigationActivity.class));
                                         }
                                     }
                                     if(!found){

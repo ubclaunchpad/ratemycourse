@@ -51,6 +51,7 @@ public class CourseTabActivity extends AppCompatActivity {
         final TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Course"));
         tabLayout.addTab(tabLayout.newTab().setText("Settings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Friends"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.pager);

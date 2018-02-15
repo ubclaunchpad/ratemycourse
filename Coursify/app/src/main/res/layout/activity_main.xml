@@ -1,61 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_background"
     tools:context="com.example.coursify.MainActivity">
 
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        app:layout_constraintBottom_toTopOf="@+id/register_button"
-        app:layout_constraintLeft_toLeftOf="@+id/register_button"
-        app:layout_constraintRight_toRightOf="@+id/register_button"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
-
-    <Button
-        android:id="@+id/register_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="104dp"
-        android:text="Register"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
-
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/txtAppName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="325dp"
+        android:fontFamily="@font/quicksand_bold"
+        android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="38dp"
         android:text="Rate My Course"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/login_button"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_white_button"
+        android:layout_width="150dp"
+        android:fontFamily="@font/quicksand_medium"
+        android:textColor="@color/colorViolet"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtAppName"
+        android:textSize="12dp"
+        android:layout_marginBottom="10dp"
+        android:text="Login" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_below="@id/login_button"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_white_button"
+        android:layout_width="150dp"
+        android:fontFamily="@font/quicksand_medium"
+        android:textColor="@color/colorViolet"
+        android:layout_marginBottom="10dp"
+        android:textSize="12dp"
+        android:layout_height="wrap_content"
+        android:text="Register" />
 
     <Button
         android:id="@+id/forgotPass"
-        android:layout_width="wrap_content"
+        android:layout_below="@id/register_button"
+        android:layout_width="150dp"
+        android:textColor="@color/colorViolet"
+        android:fontFamily="@font/quicksand_medium"
+        android:background="@drawable/rounded_white_button"
+        android:layout_centerHorizontal="true"
+        android:textSize="12dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="35dp"
-        android:text="Forgot password"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+        android:text="Forgot password" />
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

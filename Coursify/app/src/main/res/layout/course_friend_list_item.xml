@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/imgCircle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="15dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/user_circle" />
+
+    <RelativeLayout
+        android:id="@+id/txtUserInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/imgCircle"
+        android:paddingStart="15dp">
+
+        <TextView
+            android:id="@+id/txtFriendName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_medium"
+            android:text="User 1"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/txtFriendPreference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtFriendName"
+            android:fontFamily="@font/quicksand"
+            android:text="Computer Science"
+            android:textSize="12dp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imgArrow"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/ic_navigate_next_black_24dp" />
+</RelativeLayout>

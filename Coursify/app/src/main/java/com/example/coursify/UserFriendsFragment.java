@@ -91,31 +91,31 @@ public class UserFriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_friends, container, false);
 
-        LoginButton mLoginButton;
-        mLoginButton = (LoginButton) view.findViewById(R.id.btnFBLogin);
-        mLoginButton.setReadPermissions("user_friends", "email");
-        mCallBackManager = CallbackManager.Factory.create();
-
-        mLoginButton.registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.v(TAG, "Successfully connected to FaceBook.");
-                mAccessToken = loginResult.getAccessToken();
-                mUserId = loginResult.getAccessToken().getUserId();
-                setFacebookUserId(email, mUserId);
-            }
-
-            @Override
-            public void onCancel() {
-                Log.v(TAG, "Cancelled login to FaceBook.");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.v(TAG, "Error logging in to FaceBook");
-                Log.v(TAG, error.getMessage());
-            }
-        });
+//        LoginButton mLoginButton;
+//        mLoginButton = (LoginButton) view.findViewById(R.id.btnFBLogin);
+//        mLoginButton.setReadPermissions("user_friends", "email");
+//        mCallBackManager = CallbackManager.Factory.create();
+//
+//        mLoginButton.registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                Log.v(TAG, "Successfully connected to FaceBook.");
+//                mAccessToken = loginResult.getAccessToken();
+//                mUserId = loginResult.getAccessToken().getUserId();
+//                setFacebookUserId(email, mUserId);
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                Log.v(TAG, "Cancelled login to FaceBook.");
+//            }
+//
+//            @Override
+//            public void onError(FacebookException error) {
+//                Log.v(TAG, "Error logging in to FaceBook");
+//                Log.v(TAG, error.getMessage());
+//            }
+//        });
 
         RecyclerView recyclerView;
         recyclerView = view.findViewById(R.id.friendsRecyclerView);

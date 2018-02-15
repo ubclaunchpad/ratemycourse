@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/home_background_selector"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.coursify.SearchFragment">
 
     <EditText
         android:id="@+id/searchField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="42dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/submit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorWhite"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="Search"
+        android:gravity="center_horizontal"
+        android:fontFamily="@font/quicksand_medium"
+        android:imeOptions="actionSearch"
+        android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/submit"
+    <TextView
+        android:id="@+id/txtRecentSearches"
+        android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/searchField"
-        android:text="Search"
-        app:layout_constraintBaseline_toBaselineOf="@+id/searchField"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/searchField" />
+        android:layout_below="@id/searchField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/quicksand_bold"
+        android:text="Recent searches"
+        android:textSize="18dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/listSearchCourses"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/searchField"
-        android:layout_below="@+id/searchField"
-        android:layout_marginTop="16dp">
+        android:layout_below="@+id/txtRecentSearches">
 
     </android.support.v7.widget.RecyclerView>
 

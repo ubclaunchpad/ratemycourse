@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * Created by LucyZhao on 2017/11/11.
  */
-
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
     private final List<User> userList;
     private static final String TAG = FriendListAdapter.class.getSimpleName();
@@ -25,7 +24,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View itemLayoutView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.user_list_item, parent, false);
+                .inflate(R.layout.friend_list_item, parent, false);
 
         return new ViewHolder(itemLayoutView);
     }

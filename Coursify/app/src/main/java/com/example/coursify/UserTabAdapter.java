@@ -23,9 +23,6 @@ public class UserTabAdapter extends FragmentPagerAdapter {
             case 0:
                 UserFriendsFragment tab1 = new UserFriendsFragment();
                 return tab1;
-            case 1:
-                UserSettingsFragment tab2 = new UserSettingsFragment();
-                return tab2;
             default:
                 return null;
         }

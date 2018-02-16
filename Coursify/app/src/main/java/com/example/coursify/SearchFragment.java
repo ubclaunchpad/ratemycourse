@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -64,6 +67,19 @@ public class SearchFragment extends Fragment {
 
         submit = view.findViewById(R.id.submit);
         courseInput = view.findViewById(R.id.searchField);
+        courseInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String processedCourseId = Utils.courseCodeFormatter(courseInput.getText().toString());
+                    onSubmit(processedCourseId);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
         recView = view.findViewById(R.id.listSearchCourses);
 
 
@@ -72,14 +88,14 @@ public class SearchFragment extends Fragment {
 
         displayCourses();
 
-        // Submit functionality
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String processedCourseId = Utils.courseCodeFormatter(courseInput.getText().toString());
-                onSubmit(processedCourseId);
-            }
-        });
+//        // Submit functionality
+//        submit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String processedCourseId = Utils.courseCodeFormatter(courseInput.getText().toString());
+//                onSubmit(processedCourseId);
+//            }
+//        });
 
         return view;
     }

@@ -10,13 +10,15 @@
         android:id="@+id/searchField"
         android:layout_width="match_parent"
         android:textColor="@color/colorWhite"
-        android:textColorHint="@color/colorWhite"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:hint="Search"
         android:gravity="center_horizontal"
         android:fontFamily="@font/quicksand_medium"
         android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:singleLine="true"
+        android:textColorHint="@drawable/transparent_hint_selector"
         android:layout_height="wrap_content"/>
 
     <TextView

@@ -124,7 +124,7 @@ public class UserFriendsFragment extends Fragment {
         ref = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        this.friendListAdapter = new FriendListAdapter(userList);
+        this.friendListAdapter = new FriendListAdapter(userList, getActivity());
         recyclerView.setAdapter(friendListAdapter);
 
         ref.child(FirebaseEndpoint.USERS)
@@ -170,7 +170,7 @@ public class UserFriendsFragment extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String email = dataSnapshot.getValue(String.class);
+                        final String email = dataSnapshot.getValue(String.class);
                         Log.v(TAG, "email is " + email);
                         if(email != null) {
                             ref.child(FirebaseEndpoint.USERS)
@@ -188,7 +188,7 @@ public class UserFriendsFragment extends Fragment {
                                                     friendName = snapshot.getValue(String.class);
                                                 }
                                             }
-                                            userList.add(new User(friendName, friendMajor));
+                                            userList.add(new User(friendName, friendMajor, email));
                                             Log.v(TAG, "the size is: " + userList.size());
                                             friendListAdapter.notifyItemInserted(userList.size() - 1);
                                         }

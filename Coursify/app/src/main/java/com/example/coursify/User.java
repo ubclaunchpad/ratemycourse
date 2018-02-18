@@ -12,6 +12,7 @@ public class User {
     private String name;
     private String gradDate;
     private String facebookID;
+    private String email;
     private List<String> facebookFriends;
     private String interest;
     //having a PriorityQueue is better for LRU
@@ -44,6 +45,12 @@ public class User {
         this.major = major;
     }
 
+    public User(String name, String major, String email) {
+        this.name = name;
+        this.major = major;
+        this.email = email;
+    }
+
     //From profile settings
     public User(String name, String major, String gradDate, String interest){
         this.name = name;
@@ -58,6 +65,10 @@ public class User {
 
     public String getMajor() {
         return major;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getName() {

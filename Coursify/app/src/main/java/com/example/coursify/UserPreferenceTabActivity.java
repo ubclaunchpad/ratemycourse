@@ -1,19 +1,16 @@
 package com.example.coursify;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,38 +18,54 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
- * Created by sveloso on 2018-02-10.
+ * Created by sveloso on 2018-01-20.
  */
-public class UserTabFragment extends Fragment {
-    private static final String TAG = UserTabFragment.class.getSimpleName();
 
-    private DatabaseReference mDatabaseRef;
-    private DatabaseReference mUserRef;
+public class UserPreferenceTabActivity extends AppCompatActivity {
+    private static final String TAG = UserPreferenceTabActivity.class.getSimpleName();
 
     private TextView txtUserName;
     private TextView txtMajor;
 
-    private Button profileBtn;
+    private DatabaseReference mDatabase;
+    private DatabaseReference mUserRef;
+
+    private String email;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_tabs, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        email = getIntent().getStringExtra("EMAIL");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_pref_tab);
+        txtUserName = findViewById(R.id.txtUserName);
+        txtMajor = findViewById(R.id.txtMajor);
 
-        txtUserName = view.findViewById(R.id.txtUserName);
-        txtMajor = view.findViewById(R.id.txtMajor);
-        profileBtn = view.findViewById(R.id.profileBtn);
+        //Set up Database Info & retrieve user info:
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        mUserRef = mDatabaseRef.child(FirebaseEndpoint.USERS)
-                .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        if(user == null){
+            return;
+        }
+        email = email == null ? user.getEmail() : email;
+        email = Utils.processEmail(email);
 
-        final TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Friends"));
+        Log.v(TAG, "the email in userPrefTab is + " + email);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mUserRef = mDatabase.child(FirebaseEndpoint.USERS).child(email);
+
+        getNameAndMajor();
+
+        //TabLayout
+        final TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Interested"));
+        tabLayout.addTab(tabLayout.newTab().setText("Will Take"));
+        tabLayout.addTab(tabLayout.newTab().setText("Taken"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        final ViewPager viewPager = view.findViewById(R.id.pager);
-        final PagerAdapter adapter = new UserTabAdapter
-                (getChildFragmentManager(), tabLayout.getTabCount());
+        //Pager
+        final ViewPager viewPager = findViewById(R.id.pager);
+        final PagerAdapter adapter = new UserPreferenceTabAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount(), email);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -68,20 +81,6 @@ public class UserTabFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {}
         });
         tabLayout.setTabTextColors(getResources().getColor(R.color.colorViolet), getResources().getColor(R.color.colorViolet));
-
-        getNameAndMajor();
-
-        profileBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent mIntent = new Intent(getActivity(), UserPreferenceTabActivity.class);
-                mIntent.putExtra("EMAIL", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                Log.v(TAG, "Proceeding to UserPreferenceActivity");
-                startActivity(mIntent);
-            }
-        });
-
-        return view;
     }
 
     private void getNameAndMajor() {

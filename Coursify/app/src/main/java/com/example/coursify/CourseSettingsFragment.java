@@ -324,14 +324,14 @@ public class CourseSettingsFragment extends Fragment {
         goingToTakeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> goingToTakeList;
+                List<Course> goingToTakeList;
                 if (dataSnapshot.exists()) { /* Gets a list of course code strings in user previous preference */
-                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                    GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
 
                     goingToTakeList = dataSnapshot.getValue(genericTypeIndicator);
 
-                    for (String goingToTakeCourse : goingToTakeList) {
-                        if (goingToTakeCourse.equals(courseCode)) {
+                    for (Course goingToTakeCourse : goingToTakeList) {
+                        if (goingToTakeCourse.courseCode.equals(courseCode)) {
                             preference = "goingToTake";
                             updateSpinnerSelection();
                             break;
@@ -350,14 +350,14 @@ public class CourseSettingsFragment extends Fragment {
         takenRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> takenList;
+                List<Course> takenList;
                 if (dataSnapshot.exists()) { /* Gets a list of course code strings in user previous preference */
-                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                    GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
 
                     takenList = dataSnapshot.getValue(genericTypeIndicator);
 
-                    for (String takenCourse : takenList) {
-                        if (takenCourse.equals(courseCode)) {
+                    for (Course takenCourse : takenList) {
+                        if (takenCourse.courseCode.equals(courseCode)) {
                             preference = "taken";
                             updateSpinnerSelection();
                             break;
@@ -376,14 +376,14 @@ public class CourseSettingsFragment extends Fragment {
         interestedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> interestedList;
+                List<Course> interestedList;
                 if (dataSnapshot.exists()) { /* Gets a list of course code strings in user previous preference */
-                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                    GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
 
                     interestedList = dataSnapshot.getValue(genericTypeIndicator);
 
-                    for (String interestedCourse : interestedList) {
-                        if (interestedCourse.equals(courseCode)) {
+                    for (Course interestedCourse : interestedList) {
+                        if (interestedCourse.courseCode.equals(courseCode)) {
                             preference = "interested";
                             updateSpinnerSelection();
                             break;
@@ -426,13 +426,19 @@ public class CourseSettingsFragment extends Fragment {
         previousPreferenceRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> previousPreferenceList;
+                List<Course> previousPreferenceList;
                 if (dataSnapshot.exists()) { /* Gets a list of course code strings in user previous preference */
-                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                    GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
 
                     previousPreferenceList = dataSnapshot.getValue(genericTypeIndicator);
 
-                    previousPreferenceList.remove(courseCode); // Remove this course from user previous preference
+                    for(int i = 0; i < previousPreferenceList.size(); i++){
+                        Course currCourse = previousPreferenceList.get(i);
+                        if(currCourse.courseCode.equals(courseCode)){
+                            previousPreferenceList.remove(i);
+                            break;
+                        }
+                    }
                     previousPreferenceRef.setValue(previousPreferenceList);
                 }
             }
@@ -448,13 +454,17 @@ public class CourseSettingsFragment extends Fragment {
         previousPreferenceRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> previousPreferenceList;
+                List<Course> previousPreferenceList;
                 if (dataSnapshot.exists()) { /* Gets a list of course code strings in user previous preference */
-                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
-
+                    GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
                     previousPreferenceList = dataSnapshot.getValue(genericTypeIndicator);
-
-                    previousPreferenceList.remove(courseCode); // Remove this course from user previous preference
+                    for(int i = 0; i < previousPreferenceList.size(); i++){
+                        Course currCourse = previousPreferenceList.get(i);
+                        if(currCourse.courseCode.equals(courseCode)){
+                            previousPreferenceList.remove(i);
+                            break;
+                        }
+                    }
                     previousPreferenceRef.setValue(previousPreferenceList);
 
                     if (!newPreference.equals("noPreference")) { // No need to add to preference list if no preference
@@ -474,9 +484,9 @@ public class CourseSettingsFragment extends Fragment {
         newPreferenceRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> newPreferenceList;
+                List<Course> newPreferenceList;
                 if (dataSnapshot.exists()) { /* Gets a list of course code strings in user previous preference */
-                    GenericTypeIndicator<List<String>> genericTypeIndicator = new GenericTypeIndicator<List<String>>() {};
+                    GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
 
                     newPreferenceList = dataSnapshot.getValue(genericTypeIndicator);
 
@@ -484,7 +494,7 @@ public class CourseSettingsFragment extends Fragment {
                     newPreferenceList = new ArrayList<>();
                 }
 
-                newPreferenceList.add(courseCode); // Add this course to the new preference
+                newPreferenceList.add(new Course(courseCode, courseTitle)); // Add this course to the new preference
                 newPreferenceRef.setValue(newPreferenceList);
             }
 

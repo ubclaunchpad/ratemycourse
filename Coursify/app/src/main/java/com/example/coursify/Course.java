@@ -23,5 +23,7 @@ public class Course {
         courseCode = code;
     }
 
+    public Course (){
 
+    }
 }

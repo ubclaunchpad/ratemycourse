@@ -9,7 +9,7 @@
     tools:context=".MainActivity">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/div_courseName"
+        android:id="@+id/div_userName"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@color/colorViolet"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/txtCourseTitle"
+                android:id="@+id/txtUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/quicksand_medium"
@@ -39,7 +39,7 @@
                 android:id="@+id/txtCourseCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtCourseTitle"
+                android:layout_below="@id/txtUserName"
                 android:fontFamily="@font/quicksand"
                 android:padding="0dp"
                 android:paddingBottom="5dp"
@@ -56,7 +56,7 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/div_courseName"
+        android:layout_below="@+id/div_userName"
         android:background="@color/colorWhite"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />

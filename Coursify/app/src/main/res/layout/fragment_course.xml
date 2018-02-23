@@ -6,7 +6,7 @@ android:layout_height="match_parent" >
 <RelativeLayout
     android:id="@+id/div_courseRating"
     android:layout_width="match_parent"
-    android:layout_below="@id/div_courseName"
+    android:layout_below="@id/div_userName"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="10dp"

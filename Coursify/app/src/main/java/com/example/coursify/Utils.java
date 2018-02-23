@@ -31,6 +31,9 @@ public class Utils {
 
     protected static String processEmail(String email){
         int i = email.indexOf('@');
+        if(i < 0){
+            return email;
+        }
         email = email.substring(0, i) + ";at;" + email.substring(i+1);
         ArrayList<Integer> indeces = new ArrayList<Integer>();
         for(int k = 0; k < email.length(); k++){

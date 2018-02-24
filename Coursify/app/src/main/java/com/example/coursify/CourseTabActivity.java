@@ -79,7 +79,7 @@ public class CourseTabActivity extends AppCompatActivity {
         });
         tabLayout.setTabTextColors(getResources().getColor(R.color.colorViolet), getResources().getColor(R.color.colorViolet));
 
-        final ToggleButton toggle = (ToggleButton) findViewById(R.id.bookmark);
+        final ToggleButton toggle = findViewById(R.id.bookmark);
         mUserRef = mDatabase.child(FirebaseEndpoint.USERS)
                 .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
         mBookmarkRef = mUserRef.child(FirebaseEndpoint.BOOKMARKS);

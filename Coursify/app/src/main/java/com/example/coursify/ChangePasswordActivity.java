@@ -52,10 +52,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     protected void findViewsByIds(){
-        submit = (Button)findViewById(R.id.submit);
-        oldPass = (EditText)findViewById(R.id.oldPassInput);
-        newPass = (EditText)findViewById(R.id.newPassInput);
-        newPassCheck = (EditText)findViewById(R.id.newPassInputCheck);
+        submit = findViewById(R.id.submit);
+        oldPass = findViewById(R.id.oldPassInput);
+        newPass = findViewById(R.id.newPassInput);
+        newPassCheck = findViewById(R.id.newPassInputCheck);
     }
 
     protected void validatePasswordsAndCreateResponse(){

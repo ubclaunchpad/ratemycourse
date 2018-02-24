@@ -6,6 +6,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ public class UserPreferenceTabActivity extends AppCompatActivity {
 
     private TextView txtUserName;
     private TextView txtMajor;
+    private ImageButton btnBack;
 
     private DatabaseReference mDatabase;
     private DatabaseReference mUserRef;
@@ -39,6 +42,13 @@ public class UserPreferenceTabActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_pref_tab);
         txtUserName = findViewById(R.id.txtUserName);
         txtMajor = findViewById(R.id.txtMajor);
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserPreferenceTabActivity.this.finish();
+            }
+        });
 
         //Set up Database Info & retrieve user info:
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

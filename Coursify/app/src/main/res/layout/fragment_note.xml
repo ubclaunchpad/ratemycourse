@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.coursify.NoteFragment"
+    android:id="@+id/fragment_note">
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="36dp"
+        android:layout_marginEnd="47dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@color/colorRecentlyOpened"
+        app:backgroundTint="@color/colorPrimaryDark" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listUserNotes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>

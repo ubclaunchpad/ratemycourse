@@ -6,7 +6,9 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.CompoundButton;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -31,6 +33,8 @@ public class CourseTabActivity extends AppCompatActivity {
 
     private TextView txtCourseTitle;
     private TextView txtCourseCode;
+
+    private ImageButton btnBack;
 
     private String courseCode;
     private String courseDept;
@@ -185,6 +189,13 @@ public class CourseTabActivity extends AppCompatActivity {
         txtCourseCode = findViewById(R.id.txtCourseCode);
         txtCourseTitle = findViewById(R.id.txtUserName);
         txtCourseCode.setText(courseCode);
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CourseTabActivity.this.finish();
+            }
+        });
 
         mCourseReference.child(FirebaseEndpoint.DESCRIPTION).addValueEventListener(new ValueEventListener() {
             @Override

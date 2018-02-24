@@ -18,6 +18,7 @@ public class FirebaseEndpoint {
 
     public static final String RATINGS = "ratings"; // course ratings
     public static final String COMMENTS = "comments"; // course comments
+    public static final String NOTES = "notes"; // user's notes
     public static final String FACEBOOK_FRIENDS = "facebookFriends";
     public static final String FACEBOOK_ID = "facebookID";
     public static final String GRAD_DATE = "gradDate";

@@ -9,14 +9,14 @@
 
     <TextView
         android:id="@+id/txtAppName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="325dp"
-        android:fontFamily="@font/quicksand_bold"
-        android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="38dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="310dp"
+        android:fontFamily="@font/quicksand_bold"
         android:text="Rate My Course"
+        android:textColor="@color/colorWhite"
         android:textSize="30sp" />
 
     <Button

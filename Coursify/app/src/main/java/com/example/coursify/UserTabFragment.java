@@ -47,8 +47,11 @@ public class UserTabFragment extends Fragment {
                 .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
 
         final TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Notes"));
         tabLayout.addTab(tabLayout.newTab().setText("Friends"));
+
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
 
         final ViewPager viewPager = view.findViewById(R.id.pager);
         final PagerAdapter adapter = new UserTabAdapter

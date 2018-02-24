@@ -21,6 +21,9 @@ public class UserTabAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
+                NoteFragment tab2 = new NoteFragment();
+                return tab2;
+            case 1:
                 UserFriendsFragment tab1 = new UserFriendsFragment();
                 return tab1;
             default:

@@ -57,11 +57,14 @@
 
             <ToggleButton
                 android:id="@+id/bookmark"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/toggleButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
                 android:layout_centerVertical="true"
-                android:text="ToggleButton" />
+                android:background="@drawable/ic_toggle_bg"
+                android:src="@drawable/ic_bookmark" />
 
         </RelativeLayout>
     </RelativeLayout>

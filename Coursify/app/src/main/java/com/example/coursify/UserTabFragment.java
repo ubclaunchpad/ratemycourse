@@ -1,6 +1,7 @@
 package com.example.coursify;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -32,7 +33,7 @@ public class UserTabFragment extends Fragment {
     private TextView txtUserName;
     private TextView txtMajor;
 
-    private Button profileBtn;
+    private TextView txtViewProfile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +41,8 @@ public class UserTabFragment extends Fragment {
 
         txtUserName = view.findViewById(R.id.txtUserName);
         txtMajor = view.findViewById(R.id.txtMajor);
-        profileBtn = view.findViewById(R.id.profileBtn);
+        txtViewProfile = view.findViewById(R.id.profileBtn);
+        txtViewProfile.setPaintFlags(txtViewProfile.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
         mUserRef = mDatabaseRef.child(FirebaseEndpoint.USERS)
@@ -71,7 +73,7 @@ public class UserTabFragment extends Fragment {
 
         getNameAndMajor();
 
-        profileBtn.setOnClickListener(new View.OnClickListener() {
+        txtViewProfile.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 Intent mIntent = new Intent(getActivity(), UserPreferenceTabActivity.class);

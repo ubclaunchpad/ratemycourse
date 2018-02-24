@@ -23,6 +23,7 @@
         <item>Going to take</item>
         <item>Interested</item>
     </string-array>
+    <string name="view_profile"><u>View profile</u></string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

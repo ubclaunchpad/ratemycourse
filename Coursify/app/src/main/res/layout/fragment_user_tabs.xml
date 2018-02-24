@@ -51,14 +51,17 @@
 
         </RelativeLayout>
 
-        <Button
+        <TextView
             android:id="@+id/profileBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/relativeLayout"
-            android:layout_marginEnd="15dp"
-            android:text="View Profile" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="34dp"
+            android:background="@color/colorViolet"
+            android:fontFamily="@font/quicksand_medium"
+            android:text="@string/view_profile"
+            android:textColor="@color/colorWhite" />
     </RelativeLayout>
 
     <android.support.design.widget.TabLayout

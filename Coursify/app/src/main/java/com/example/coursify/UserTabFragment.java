@@ -50,6 +50,7 @@ public class UserTabFragment extends Fragment {
 
         final TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Notes"));
+        tabLayout.addTab(tabLayout.newTab().setText("Bookmarks"));
         tabLayout.addTab(tabLayout.newTab().setText("Friends"));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

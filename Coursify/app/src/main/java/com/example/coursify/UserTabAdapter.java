@@ -24,6 +24,9 @@ public class UserTabAdapter extends FragmentPagerAdapter {
                 NoteFragment tab2 = new NoteFragment();
                 return tab2;
             case 1:
+                UserBookmarkFragment tab3 = new UserBookmarkFragment();
+                return tab3;
+            case 2:
                 UserFriendsFragment tab1 = new UserFriendsFragment();
                 return tab1;
             default:

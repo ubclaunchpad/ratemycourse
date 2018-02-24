@@ -11,13 +11,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sveloso on 2018-01-20.
@@ -38,7 +43,7 @@ public class CourseTabActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private DatabaseReference mCourseReference;
-    private DatabaseReference mUserRef;
+    private DatabaseReference mUserRef, mBookmarkRef;
 
     private String currUserName;
 
@@ -74,7 +79,93 @@ public class CourseTabActivity extends AppCompatActivity {
         });
         tabLayout.setTabTextColors(getResources().getColor(R.color.colorViolet), getResources().getColor(R.color.colorViolet));
 
+        final ToggleButton toggle = (ToggleButton) findViewById(R.id.bookmark);
+        mUserRef = mDatabase.child(FirebaseEndpoint.USERS)
+                .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        mBookmarkRef = mUserRef.child(FirebaseEndpoint.BOOKMARKS);
+
+        mBookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            List<Course> bookmarks = new ArrayList<Course>();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
+                bookmarks = dataSnapshot.getValue(genericTypeIndicator) == null ? bookmarks : dataSnapshot.getValue(genericTypeIndicator);
+                if(bookmarks == null){
+                    return;
+                }
+                for(Course c : bookmarks){
+                    if(c.courseCode.equals(courseCode)){
+                        toggle.setChecked(true);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    addCourseBookmark();
+                } else {
+                    removeCourseBookmark();
+                }
+            }
+        });
         getUserName();
+    }
+
+    private void addCourseBookmark(){
+        mUserRef = mDatabase.child(FirebaseEndpoint.USERS)
+                .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        mBookmarkRef = mUserRef.child(FirebaseEndpoint.BOOKMARKS);
+        mBookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            List<Course> bookmarks = new ArrayList<Course>();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
+                bookmarks = dataSnapshot.getValue(genericTypeIndicator) == null ? bookmarks : dataSnapshot.getValue(genericTypeIndicator);
+                if(bookmarks == null){
+                    bookmarks.add(new Course(courseCode, courseTitle));
+                    mBookmarkRef.setValue(bookmarks);
+                    return;
+                }
+                for(Course c : bookmarks){
+                    if(c.courseCode.equals(courseCode)){
+                        return;
+                    }
+                }
+                bookmarks.add(new Course(courseCode, courseTitle));
+                mBookmarkRef.setValue(bookmarks);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
+    private void removeCourseBookmark(){
+        mUserRef = mDatabase.child(FirebaseEndpoint.USERS)
+                .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        mBookmarkRef = mUserRef.child(FirebaseEndpoint.BOOKMARKS);
+        mBookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            List<Course> bookmarks = new ArrayList<Course>();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<Course>> genericTypeIndicator = new GenericTypeIndicator<List<Course>>() {};
+                bookmarks = dataSnapshot.getValue(genericTypeIndicator) == null ? bookmarks : dataSnapshot.getValue(genericTypeIndicator);
+                if(bookmarks == null){
+                    bookmarks.add(new Course(courseCode, courseTitle));
+                    mBookmarkRef.setValue(bookmarks);
+                    return;
+                }
+                for(int i = 0; i < bookmarks.size(); i++){
+                    if(bookmarks.get(i).courseCode.equals(courseCode)){
+                        bookmarks.remove(i);
+                        break;
+                    }
+                }
+                mBookmarkRef.setValue(bookmarks);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     private void updateHeaderValuesAndVisitsField() {

@@ -14,14 +14,10 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,23 +38,17 @@ import static com.example.coursify.Utils.processEmail;
 
 public class UserFriendsFragment extends Fragment {
     private static final String TAG = UserFriendsFragment.class.getSimpleName();
-    CallbackManager mCallBackManager;
 
-    private AccessToken mAccessToken;
-    private String mUserId;
     private String email;
 
-    List<User> userList = new ArrayList<>();
+    private RecyclerView recViewFriendsList;
+
+    List<User> friendsList = new ArrayList<>();
     FriendListAdapter friendListAdapter;
     DatabaseReference ref;
     private FirebaseAuth mAuth;
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
-
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        mCallBackManager.onActivityResult(requestCode, resultCode, data);
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,41 +81,11 @@ public class UserFriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_friends, container, false);
 
-//        LoginButton mLoginButton;
-//        mLoginButton = (LoginButton) view.findViewById(R.id.btnFBLogin);
-//        mLoginButton.setReadPermissions("user_friends", "email");
-//        mCallBackManager = CallbackManager.Factory.create();
-//
-//        mLoginButton.registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                Log.v(TAG, "Successfully connected to FaceBook.");
-//                mAccessToken = loginResult.getAccessToken();
-//                mUserId = loginResult.getAccessToken().getUserId();
-//                setFacebookUserId(email, mUserId);
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                Log.v(TAG, "Cancelled login to FaceBook.");
-//            }
-//
-//            @Override
-//            public void onError(FacebookException error) {
-//                Log.v(TAG, "Error logging in to FaceBook");
-//                Log.v(TAG, error.getMessage());
-//            }
-//        });
-
-        RecyclerView recyclerView;
-        recyclerView = view.findViewById(R.id.friendsRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recViewFriendsList = view.findViewById(R.id.friendsRecyclerView);
+        recViewFriendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         ref = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
-
-        this.friendListAdapter = new FriendListAdapter(userList, getActivity());
-        recyclerView.setAdapter(friendListAdapter);
 
         ref.child(FirebaseEndpoint.USERS)
                 .child(Utils.processEmail(mAuth.getCurrentUser().getEmail()))
@@ -188,23 +148,22 @@ public class UserFriendsFragment extends Fragment {
                                                     friendName = snapshot.getValue(String.class);
                                                 }
                                             }
-                                            userList.add(new User(friendName, friendMajor, email));
-                                            Log.v(TAG, "the size is: " + userList.size());
-                                            friendListAdapter.notifyItemInserted(userList.size() - 1);
+                                            friendsList.add(new User(friendName, friendMajor, email));
+                                            Log.v(TAG, "the size is: " + friendsList.size());
+                                            //friendListAdapter.notifyItemInserted(friendsList.size() - 1);
+                                            UserFriendsFragment.this.friendListAdapter = new FriendListAdapter(friendsList, getActivity());
+                                            recViewFriendsList.setAdapter(friendListAdapter);
                                         }
 
                                         @Override
                                         public void onCancelled(DatabaseError databaseError) {
-
                                         }
                                     });
                         }
-
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
     }
@@ -231,20 +190,21 @@ public class UserFriendsFragment extends Fragment {
                             try {
                                 JSONArray arrayOfUsersInFriendList = object.getJSONArray("data");
                                 Log.v(TAG, "User friend list length: " + arrayOfUsersInFriendList.length());
-                                List<String> fbFriends = new ArrayList<>();
-
+                                List<String> listFbFriendsUserIds = new ArrayList<>();
+                                friendsList = new ArrayList<>(); // Collection of Facebook friends info from Firebase
                                 for(int i = 0; i < arrayOfUsersInFriendList.length(); i++) {
                                     JSONObject user = arrayOfUsersInFriendList.getJSONObject(i);
                                     String userId = user.getString("id");
                                     Log.v(TAG, "user id: " + userId);
                                     Log.v(TAG, "user name is " + user.getString("name"));
-                                    getFriendInfo(userId);
-                                    fbFriends.add(userId);
+                                    getFriendInfo(userId); // Get friend info from Firebase using facebookID, will add them in friendsList
+                                    listFbFriendsUserIds.add(userId);
                                 }
+
                                 ref.child(FirebaseEndpoint.USERS)
                                         .child(Utils.processEmail(mAuth.getCurrentUser().getEmail()))
                                         .child(FirebaseEndpoint.FACEBOOK_FRIENDS)
-                                        .setValue(fbFriends);
+                                        .setValue(listFbFriendsUserIds);
 
                             } catch (JSONException e) {
                                 Log.v(TAG, e.toString());

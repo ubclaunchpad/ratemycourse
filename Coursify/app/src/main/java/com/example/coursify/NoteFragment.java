@@ -39,36 +39,12 @@ import java.util.List;
 public class NoteFragment extends Fragment {
     private FloatingActionButton addNoteButton;
     //private List<Note> allNotes;
-    private DatabaseReference mDatabase;
-    //private FirebaseUser currUser;
+    private DatabaseReference mDatabaseRef;
+    private DatabaseReference mUserRef;
 
     private RecyclerView mListNotes;
     private RecyclerView.Adapter mNotesAdapter;
     private RecyclerView.LayoutManager mNotesManager;
-
-//    private OnFragmentInteractionListener mListener;
-
-//    public NoteFragment() {
-//        // Required empty public constructor
-//    }
-
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment NoteFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static NoteFragment newInstance(String param1, String param2) {
-//        NoteFragment fragment = new NoteFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,8 +53,9 @@ public class NoteFragment extends Fragment {
         //allNotes = new ArrayList<>(); // !!!
         findViewsById(view);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        //currUser = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        mUserRef = mDatabaseRef.child(FirebaseEndpoint.USERS)
+                .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
 
         populateUIFromDatabaseInfo();
 
@@ -91,7 +68,7 @@ public class NoteFragment extends Fragment {
     }
 
     private void populateUIFromDatabaseInfo() {
-        mDatabase.child("Users").child(FirebaseEndpoint.NOTES).addValueEventListener(new ValueEventListener() {
+        mUserRef.child(FirebaseEndpoint.NOTES).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Note> notes = new ArrayList<>();
@@ -170,7 +147,7 @@ public class NoteFragment extends Fragment {
     private void addNoteToDataBase(String noteBody, boolean pinned) {
         // !!!
         Note note = new Note("COLOR", noteBody, pinned);
-        DatabaseReference notesRef = mDatabase.child("Users").child(FirebaseEndpoint.NOTES); // will this work ok?
+        DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES); // will this work ok?
         notesRef.push().setValue(note);
     }
 

@@ -124,22 +124,23 @@ public class CourseFriendsFragment extends Fragment {
 
                     String currName = (String) dataSnapshot.child(FirebaseEndpoint.NAME).getValue();
                     String email = (String) dataSnapshot.child(FirebaseEndpoint.EMAIL).getValue();
+                    String processedEmail = Utils.processEmail(email);
 
                     for(Course c : listGoingToTake){
                         if(c.courseCode.equals(courseCode)){
-                            courseFriends.add(new CourseFriend(currName, "Going To Take", email));
+                            courseFriends.add(new CourseFriend(currName, "Going To Take", processedEmail));
                         }
                     }
 
                     for(Course c : listInterested){
                         if(c.courseCode.equals(courseCode)){
-                            courseFriends.add(new CourseFriend(currName, "Going To Take", email));
+                            courseFriends.add(new CourseFriend(currName, "Going To Take", processedEmail));
                         }
                     }
 
                     for(Course c : listTaken){
                         if(c.courseCode.equals(courseCode)){
-                            courseFriends.add(new CourseFriend(currName, "Going To Take", email));
+                            courseFriends.add(new CourseFriend(currName, "Going To Take", processedEmail));
                         }
                     }
 

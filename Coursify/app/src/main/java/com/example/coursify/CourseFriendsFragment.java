@@ -8,12 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -95,32 +97,47 @@ public class CourseFriendsFragment extends Fragment {
     private void getFriendPreferences(final List<String> friendEmails) {
         courseFriends = new ArrayList<>();
         for (int i = 0; i < friendEmails.size(); i++) {
+            Toast.makeText(getActivity(), friendEmails.get(i), Toast.LENGTH_SHORT).show();
             final int currentCount = i;
             final DatabaseReference friendRef = mDatabaseRef.child(FirebaseEndpoint.USERS).child(friendEmails.get(i));
             friendRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    List<String> listGoingToTake = dataSnapshot.child(FirebaseEndpoint.GOING_TO_TAKE).getValue() == null ?
-                            new ArrayList<String>() :
-                            (ArrayList<String>) dataSnapshot.child(FirebaseEndpoint.GOING_TO_TAKE).getValue();
 
-                    List<String> listInterested = dataSnapshot.child(FirebaseEndpoint.INTERESTED).getValue() == null ?
-                            new ArrayList<String>() :
-                            (ArrayList<String>) dataSnapshot.child(FirebaseEndpoint.INTERESTED).getValue();
+                    GenericTypeIndicator<ArrayList<Course>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Course>>() {};
 
-                    List<String> listTaken = dataSnapshot.child(FirebaseEndpoint.TAKEN).getValue() == null ?
-                            new ArrayList<String>() :
-                            (ArrayList<String>) dataSnapshot.child(FirebaseEndpoint.TAKEN).getValue();
+                    List<Course> listGoingToTake = dataSnapshot.child(FirebaseEndpoint.GOING_TO_TAKE).getValue(genericTypeIndicator);
+
+                    List<Course> listInterested = dataSnapshot.child(FirebaseEndpoint.INTERESTED).getValue(genericTypeIndicator);
+
+                    List<Course> listTaken = dataSnapshot.child(FirebaseEndpoint.TAKEN).getValue(genericTypeIndicator);
 
                     String currName = (String) dataSnapshot.child(FirebaseEndpoint.NAME).getValue();
 
-                    if (listGoingToTake.contains(courseCode)) {
-                        courseFriends.add(new CourseFriend(currName, "Going To Take"));
-                    } else if (listInterested.contains(courseCode)) {
-                        courseFriends.add(new CourseFriend(currName, "Interested"));
-                    } else if (listTaken.contains(courseCode)){
-                        courseFriends.add(new CourseFriend(currName, "Taken"));
+                    String preference = "";
+
+                    for (Course c : listGoingToTake) {
+                        if (c.courseCode.equals(courseCode)) {
+                            preference = "Going To Take";
+                            break;
+                        }
                     }
+
+                    for (Course c : listInterested) {
+                        if (c.courseCode.equals(courseCode)) {
+                            preference = "Interested";
+                            break;
+                        }
+                    }
+
+                    for (Course c : listTaken) {
+                        if (c.courseCode.equals(courseCode)) {
+                            preference = "Taken";
+                            break;
+                        }
+                    }
+
+                    courseFriends.add(new CourseFriend(currName, preference));
 
                     if (currentCount == friendEmails.size() - 1) {
                         courseFriendAdapter = new CourseFriendAdapter(courseFriends);

@@ -27,6 +27,7 @@ public class FirebaseEndpoint {
     public static final String RECENTLY_OPENED_COURSES = "recentlyOpened";
     public static final String RECENTLY_SEARCHED = "recentlySearched";
     public static final String BOOKMARKS = "bookmarks";
+    public static final String EMAIL = "email";
 
     public static final String GOING_TO_TAKE = "goingToTake";
     public static final String INTERESTED = "interested";

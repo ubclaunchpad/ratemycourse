@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -98,7 +97,6 @@ public class CourseFriendsFragment extends Fragment {
     private void getFriendPreferences(final List<String> friendEmails) {
         courseFriends = new ArrayList<>();
         for (int i = 0; i < friendEmails.size(); i++) {
-            Toast.makeText(getActivity(), friendEmails.get(i), Toast.LENGTH_SHORT).show();
             final int currentCount = i;
             final DatabaseReference friendRef = mDatabaseRef.child(FirebaseEndpoint.USERS).child(friendEmails.get(i));
             friendRef.addListenerForSingleValueEvent(new ValueEventListener() {

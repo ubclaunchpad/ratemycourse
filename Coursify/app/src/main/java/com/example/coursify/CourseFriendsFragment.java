@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CourseFriendsFragment extends Fragment {
-
+    private static final String TAG = CourseFriendsFragment.class.getSimpleName();
     private RecyclerView listCourseFriends;
     private CourseFriendAdapter courseFriendAdapter;
     private DatabaseReference mDatabaseRef;
@@ -105,42 +106,48 @@ public class CourseFriendsFragment extends Fragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     GenericTypeIndicator<ArrayList<Course>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Course>>() {};
+                    List<Course> listGoingToTake = dataSnapshot.child(FirebaseEndpoint.GOING_TO_TAKE).getValue(genericTypeIndicator) == null ?
+                            new ArrayList<Course>() :
+                            (ArrayList<Course>) dataSnapshot.child(FirebaseEndpoint.GOING_TO_TAKE).getValue(genericTypeIndicator);
 
-                    List<Course> listGoingToTake = dataSnapshot.child(FirebaseEndpoint.GOING_TO_TAKE).getValue(genericTypeIndicator);
+                    Log.v(TAG, "listGoingToTake length is = " + listGoingToTake.size());
 
-                    List<Course> listInterested = dataSnapshot.child(FirebaseEndpoint.INTERESTED).getValue(genericTypeIndicator);
+                    List<Course> listInterested = dataSnapshot.child(FirebaseEndpoint.INTERESTED).getValue() == null ?
+                            new ArrayList<Course>() :
+                            (ArrayList<Course>) dataSnapshot.child(FirebaseEndpoint.INTERESTED).getValue(genericTypeIndicator);
 
-                    List<Course> listTaken = dataSnapshot.child(FirebaseEndpoint.TAKEN).getValue(genericTypeIndicator);
+                    Log.v(TAG, "listInterested length is = " + listInterested.size());
+
+                    List<Course> listTaken = dataSnapshot.child(FirebaseEndpoint.TAKEN).getValue() == null ?
+                            new ArrayList<Course>() :
+                            (ArrayList<Course>) dataSnapshot.child(FirebaseEndpoint.TAKEN).getValue(genericTypeIndicator);
+
+                    Log.v(TAG, "listTaken length is = " + listTaken.size());
 
                     String currName = (String) dataSnapshot.child(FirebaseEndpoint.NAME).getValue();
+                    String email = (String) dataSnapshot.child(FirebaseEndpoint.EMAIL).getValue();
+                    String processedEmail = Utils.processEmail(email);
 
-                    String preference = "";
-
-                    for (Course c : listGoingToTake) {
-                        if (c.courseCode.equals(courseCode)) {
-                            preference = "Going To Take";
-                            break;
+                    for(Course c : listGoingToTake){
+                        if(c.courseCode.equals(courseCode)){
+                            courseFriends.add(new CourseFriend(currName, "Going To Take", processedEmail));
                         }
                     }
 
-                    for (Course c : listInterested) {
-                        if (c.courseCode.equals(courseCode)) {
-                            preference = "Interested";
-                            break;
+                    for(Course c : listInterested){
+                        if(c.courseCode.equals(courseCode)){
+                            courseFriends.add(new CourseFriend(currName, "Interested", processedEmail));
                         }
                     }
 
-                    for (Course c : listTaken) {
-                        if (c.courseCode.equals(courseCode)) {
-                            preference = "Taken";
-                            break;
+                    for(Course c : listTaken){
+                        if(c.courseCode.equals(courseCode)){
+                            courseFriends.add(new CourseFriend(currName, "Taken", processedEmail));
                         }
                     }
-
-                    courseFriends.add(new CourseFriend(currName, preference));
 
                     if (currentCount == friendEmails.size() - 1) {
-                        courseFriendAdapter = new CourseFriendAdapter(courseFriends);
+                        courseFriendAdapter = new CourseFriendAdapter(courseFriends, getActivity());
                         listCourseFriends.setAdapter(courseFriendAdapter);
                     }
                 }

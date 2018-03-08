@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,12 +41,7 @@ public class UserSettingsFragment extends Fragment {
     String email, name, major, gradDate, interest;
     Button mSubmit, mChangePass;
     boolean found = false;
-
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        mCallBackManager.onActivityResult(requestCode, resultCode, data);
-//    }
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getActivity());
@@ -79,6 +75,7 @@ public class UserSettingsFragment extends Fragment {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.v(TAG, "Successfully connected to FaceBook.");
+                Toast.makeText(getActivity(), "Successfully connected to Facebook. ", Toast.LENGTH_SHORT).show();
                 mAccessToken = loginResult.getAccessToken();
                 mUserId = loginResult.getAccessToken().getUserId();
                 setFacebookUserId(email, mUserId);

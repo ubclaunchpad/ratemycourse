@@ -1,5 +1,7 @@
 package com.example.coursify;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -63,6 +65,8 @@ public class CommentAndRatingFragment extends Fragment {
 
     private DatabaseReference mDatabase;
     private DatabaseReference mCourseReference;
+
+    private Activity mParentActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -215,8 +219,8 @@ public class CommentAndRatingFragment extends Fragment {
                     // Find percent easiness out of 10 to set ImageView width as pixels
                     double percentEasiness = averageEasiness / 10;
                     double percentUsefulness = averageUsefulness / 10;
-                    imgEasinessRating.getLayoutParams().width = Utils.convertDpToPx (getActivity(), IMGVIEW_MAX_WIDTH * percentEasiness);
-                    imgUsefulnessRating.getLayoutParams().width = Utils.convertDpToPx (getActivity(), IMGVIEW_MAX_WIDTH * percentUsefulness);
+                    imgEasinessRating.getLayoutParams().width = Utils.convertDpToPx (mParentActivity, IMGVIEW_MAX_WIDTH * percentEasiness);
+                    imgUsefulnessRating.getLayoutParams().width = Utils.convertDpToPx (mParentActivity, IMGVIEW_MAX_WIDTH * percentUsefulness);
 
                     // Find percent easiness out of 100 to show course ratings
                     double easinessRating = (averageEasiness) * 10;
@@ -230,6 +234,15 @@ public class CommentAndRatingFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            mParentActivity = (Activity) context;
+        }
     }
 
     private void startAddCommentWorkflow() {

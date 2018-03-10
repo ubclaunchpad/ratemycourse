@@ -156,6 +156,7 @@ public class HomeFragment extends Fragment {
                         dataSnapshot.getValue() == null ? new ArrayList<HashMap<String, String>>() : (ArrayList<HashMap<String, String>>)dataSnapshot.getValue();
                 ArrayList<String> recentlyOpenedIds = new ArrayList<String>();
                 ArrayList<String> recentlyOpenedDescripts = new ArrayList<String>();
+                listRecentlyOpened = new ArrayList<>();
                 Collections.reverse(recentlyOpenedCourses);
                 for(int i = 0; i < recentlyOpenedCourses.size(); i++) {
                     HashMap<String, String> currCourse = recentlyOpenedCourses.get(i);
@@ -226,6 +227,7 @@ public class HomeFragment extends Fragment {
                 if(dataSnapshot.exists()) {
                     Log.v(TAG, "getInterestCourseCodesHelper");
                     HashMap<String, HashMap<String, String>> majorCourseMap = (HashMap)dataSnapshot.getValue();
+                    listRecommended = new ArrayList<>();
                     for (String key : majorCourseMap.keySet()) {
                         String descript = majorCourseMap.get(key).get("Description");
                         Course course = new Course(Utils.courseCodeFormatter(key), descript);
@@ -284,6 +286,7 @@ public class HomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<HashMap<String, String>> popularCourses =
                         dataSnapshot.getValue() == null ? new ArrayList<HashMap<String, String>>() : (ArrayList<HashMap<String, String>>)dataSnapshot.getValue();
+                listPopular = new ArrayList<>();
                 for(int i = 0; i < popularCourses.size(); i++){
                     HashMap<String, String> currPopCourse = popularCourses.get(i);
                     String code = currPopCourse.get("courseCode");

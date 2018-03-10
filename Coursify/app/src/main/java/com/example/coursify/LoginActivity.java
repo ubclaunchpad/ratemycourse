@@ -168,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                     if(!found){
                                         if (user.isEmailVerified()) {
-                                            Intent profSetting = new Intent(getApplicationContext(), UserSettingsFragment.class);
+                                            Intent profSetting = new Intent(getApplicationContext(), NewUserSettingsActivity.class);
                                             Bundle bundle = new Bundle();
                                             bundle.putString("Email", email);
                                             profSetting.putExtras(bundle);

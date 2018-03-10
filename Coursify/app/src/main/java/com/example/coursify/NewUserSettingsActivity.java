@@ -1,36 +1,38 @@
 package com.example.coursify;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
 import static com.example.coursify.Utils.processEmail;
 
-public class UserSettingsFragment extends Fragment {
+public class NewUserSettingsActivity extends AppCompatActivity {
+
     private static final String TAG = UserSettingsFragment.class.getSimpleName();
 
     private LoginButton mLoginButton;
@@ -41,11 +43,12 @@ public class UserSettingsFragment extends Fragment {
     String email, name, major, gradDate, interest;
     Button mSubmit, mChangePass;
     boolean found = false;
-    
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        FacebookSdk.sdkInitialize(getActivity());
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_new_user_settings);
+        FacebookSdk.sdkInitialize(this);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -53,20 +56,15 @@ public class UserSettingsFragment extends Fragment {
             return;
         }
         email = user.getEmail();
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_settings, container, false);
-
-        mLoginButton = view.findViewById(R.id.login_button);
-        mEmail = view.findViewById(R.id.emailInput);
-        mName = view.findViewById(R.id.nameInput);
-        mMajor = view.findViewById(R.id.majorInput);
-        mGradDate = view.findViewById(R.id.gradInput);
-        mInterest = view.findViewById(R.id.interestInput);
-        mSubmit = view.findViewById(R.id.submit);
-        mChangePass = view.findViewById(R.id.changePass);
+        mLoginButton = findViewById(R.id.login_button);
+        mEmail = findViewById(R.id.emailInput);
+        mName = findViewById(R.id.nameInput);
+        mMajor = findViewById(R.id.majorInput);
+        mGradDate = findViewById(R.id.gradInput);
+        mInterest = findViewById(R.id.interestInput);
+        mSubmit = findViewById(R.id.submit);
+        mChangePass = findViewById(R.id.changePass);
 
         mLoginButton.setReadPermissions("user_friends", "email");
         mCallBackManager = CallbackManager.Factory.create();
@@ -75,11 +73,11 @@ public class UserSettingsFragment extends Fragment {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.v(TAG, "Successfully connected to FaceBook.");
-                Toast.makeText(getActivity(), "Successfully connected to Facebook. ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Successfully connected to Facebook. ", Toast.LENGTH_SHORT).show();
                 mAccessToken = loginResult.getAccessToken();
                 mUserId = loginResult.getAccessToken().getUserId();
                 setFacebookUserId(email, mUserId);
-                collectInformation(email, mUserId);
+             //   collectInformation(email, mUserId);
             }
 
             @Override
@@ -94,10 +92,32 @@ public class UserSettingsFragment extends Fragment {
             }
         });
 
-        collectInformation(email, mUserId);
+        mSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                name = mName.getText().toString();
+                major = mMajor.getText().toString();
+                gradDate = mGradDate.getText().toString();
+                interest = mInterest.getText().toString();
+                Log.v(TAG, "my interest is:" + interest);
+                updateProfile(email, name, major, gradDate, interest, found);
+                Intent mIntent = new Intent(NewUserSettingsActivity.this, NavigationActivity.class);
+                startActivity(mIntent);
+            }
+        });
 
-        return view;
+        mChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mIntent = new Intent(NewUserSettingsActivity.this, ChangePasswordActivity.class);
+                Log.v(TAG, "Proceeding to ChangePasswordActivity");
+                startActivity(mIntent);
+            }
+        });
+
+      //  collectInformation(email, mUserId);
     }
+
 
     protected void setFacebookUserId(final String email, final String mUserId){
         Log.v(TAG, "and my facebook user id in set Facebook UserId is:" + mUserId);
@@ -108,6 +128,11 @@ public class UserSettingsFragment extends Fragment {
         fbUserReference.setValue(processedEmail);
         userFbIdReference = firebasereference.child(FirebaseEndpoint.USERS).child(processedEmail).child(FirebaseEndpoint.FACEBOOK_ID);
         userFbIdReference.setValue(mUserId);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mCallBackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     protected void collectInformation(final String email, final String mUserId){
@@ -141,27 +166,6 @@ public class UserSettingsFragment extends Fragment {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-        mSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            name = mName.getText().toString();
-            major = mMajor.getText().toString();
-            gradDate = mGradDate.getText().toString();
-            interest = mInterest.getText().toString();
-            Log.v(TAG, "my interest is:" + interest);
-            updateProfile(email, name, major, gradDate, interest, found);
-            }
-        });
-
-        mChangePass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent mIntent = new Intent(getActivity(), ChangePasswordActivity.class);
-                Log.v(TAG, "Proceeding to ChangePasswordActivity");
-                startActivity(mIntent);
             }
         });
     }

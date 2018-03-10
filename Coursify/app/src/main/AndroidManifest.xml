@@ -49,6 +49,7 @@
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".EmailResendActivity" />
         <activity android:name=".UserPreferenceTabActivity" />
+        <activity android:name=".NewUserSettingsActivity" />
     </application>
 
 </manifest>

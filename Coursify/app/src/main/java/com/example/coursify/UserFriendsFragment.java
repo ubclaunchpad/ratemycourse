@@ -175,7 +175,7 @@ public class UserFriendsFragment extends Fragment {
      * @param mFBUserId
      */
     private void getFBFriends(String mFBUserId) {
-        if(accessToken == null) {
+        if(accessToken == null || mFBUserId == null) {
             Toast.makeText(getActivity(), "please login to facebook", Toast.LENGTH_LONG).show();
         }
         else {
@@ -187,6 +187,7 @@ public class UserFriendsFragment extends Fragment {
                     new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
                             JSONObject object = response.getJSONObject();
+                            // TODO: Need to fix this
                             try {
                                 JSONArray arrayOfUsersInFriendList = object.getJSONArray("data");
                                 Log.v(TAG, "User friend list length: " + arrayOfUsersInFriendList.length());

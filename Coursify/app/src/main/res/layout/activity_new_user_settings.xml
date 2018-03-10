@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.coursify.NewUserSettingsActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/div_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorViolet"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="34dp">
+
+            <TextView
+                android:id="@+id/txtSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_medium"
+                android:padding="0dp"
+                android:paddingEnd="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:text="Settings"
+                android:textColor="@color/colorWhite"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@id/div_topbar"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txtEditProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="Edit Profile"
+                android:textColor="@color/colorViolet"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/txtEditProfile"
+                android:fontFamily="@font/quicksand_medium"
+                android:inputType="textPersonName"
+                android:text="NAME"
+                android:textColor="@color/colorDarkGray"
+                android:textSize="10dp" />
+
+            <EditText
+                android:id="@+id/nameInput"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/txtName"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/quicksand_medium" />
+
+            <TextView
+                android:id="@+id/txtEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/nameInput"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="EMAIL"
+                android:textColor="@color/colorDarkGray"
+                android:textSize="10dp" />
+
+            <EditText
+                android:id="@+id/emailInput"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/txtEmail"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/quicksand_medium" />
+
+            <TextView
+                android:id="@+id/txtMajor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/emailInput"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="MAJOR"
+                android:textColor="@color/colorDarkGray"
+                android:textSize="10dp" />
+
+            <EditText
+                android:id="@+id/majorInput"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/txtMajor"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/quicksand_medium" />
+
+            <TextView
+                android:id="@+id/txtGrad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/majorInput"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="EXPECTED GRADUATION"
+                android:textColor="@color/colorDarkGray"
+                android:textSize="10dp" />
+
+            <EditText
+                android:id="@+id/gradInput"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/txtGrad"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/quicksand_medium" />
+
+            <TextView
+                android:id="@+id/txtInterest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/gradInput"
+                android:fontFamily="@font/quicksand_medium"
+                android:text="INTEREST"
+                android:textColor="@color/colorDarkGray"
+                android:textSize="10dp" />
+
+            <EditText
+                android:id="@+id/interestInput"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/txtEditProfile"
+                android:layout_below="@id/txtInterest"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/quicksand_medium" />
+
+            <Button
+                android:id="@+id/submit"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/interestInput"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_button"
+                android:text="Submit" />
+
+            <Button
+                android:id="@+id/changePass"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/submit"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_button"
+                android:text="Change Password"
+                android:textColor="@color/colorWhite" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@id/changePass" />
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

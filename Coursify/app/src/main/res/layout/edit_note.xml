@@ -2,33 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/add_note">
+    android:id="@+id/edit_note">
 
     <TextView
-        android:id="@+id/notePromptHeader"
+        android:id="@+id/editNotePromptHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="New Note" />
+        android:text="Edit Note" />
 
     <EditText
-        android:id="@+id/noteContent"
+        android:id="@+id/editNoteContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/notePromptHeader"
+        android:layout_below="@+id/editNotePromptHeader"
         android:layout_marginTop="48dp"
         android:hint="Type here"
-        android:layout_toEndOf="@+id/notePromptHeader"
+        android:layout_toEndOf="@+id/editNotePromptHeader"
         android:ems="10"
         android:inputType="textPersonName" />
 
     <CheckBox
-        android:id="@+id/pinCheckBox"
+        android:id="@+id/editPinCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/noteContent"
+        android:layout_below="@+id/editNoteContent"
         android:layout_marginStart="19dp"
         android:layout_marginTop="70dp"
         android:text="Pin" />
@@ -37,8 +37,8 @@
         android:id="@+id/colourBtn"
         android:layout_width="75dp"
         android:layout_height="60dp"
-        android:layout_alignBottom="@+id/pinCheckBox"
-        android:layout_alignEnd="@+id/noteContent"
+        android:layout_alignBottom="@+id/editPinCheckBox"
+        android:layout_alignEnd="@+id/editNoteContent"
         android:layout_marginBottom="16dp"
         android:text= "Choose Colour" />
 

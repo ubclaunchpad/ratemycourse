@@ -3,15 +3,18 @@ package com.example.coursify;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,6 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +43,7 @@ import java.util.List;
  */
 public class NoteFragment extends Fragment {
     private FloatingActionButton addNoteButton;
-    //private List<Note> allNotes;
+
     private DatabaseReference mDatabaseRef;
     private DatabaseReference mUserRef;
 
@@ -46,11 +51,13 @@ public class NoteFragment extends Fragment {
     private RecyclerView.Adapter mNotesAdapter;
     private RecyclerView.LayoutManager mNotesManager;
 
+    private int mColour;
+    private Button mButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_note, container, false);
-        //allNotes = new ArrayList<>(); // !!!
         findViewsById(view);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
@@ -73,14 +80,15 @@ public class NoteFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Note> notes = new ArrayList<>();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    String color = snapshot.child("color").getValue().toString();
+                    //int color = (int) snapshot.child("color").getValue();
+                    int color = Integer.valueOf(snapshot.child("color").getValue().toString());
                     String noteBody = snapshot.child("content").getValue().toString();
                     boolean pinned = (boolean) snapshot.child("pinned").getValue();
                     Note note = new Note(color, noteBody, pinned);
                     notes.add(note);
                 }
 
-                mNotesAdapter = new NoteAdapter(notes);
+                mNotesAdapter = new NoteAdapter(notes, getContext());
                 mListNotes.setAdapter(mNotesAdapter);
 
             }
@@ -93,10 +101,11 @@ public class NoteFragment extends Fragment {
 
     private void findViewsById(View container) {
         mListNotes =container.findViewById(R.id.listUserNotes);
-        mListNotes.setHasFixedSize(true); // is it though? if size is not fixed, can note size vary depending on content?!!!
-        mNotesManager = new LinearLayoutManager(getActivity()); // should it be relative layout since note positions vary?
+        mListNotes.setHasFixedSize(false); // is it though? if size is not fixed, can note size vary depending on content?!!!
+        mNotesManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL); // should it be relative layout since note positions vary?
         mListNotes.setLayoutManager(mNotesManager);
         mListNotes.setAdapter(mNotesAdapter);
+
 
 
         addNoteButton = container.findViewById(R.id.fabNote);
@@ -106,6 +115,23 @@ public class NoteFragment extends Fragment {
                 openAddNotePrompt();
             }
         });
+
+    }
+
+    private void openColourPicker() {
+        AmbilWarnaDialog colourPicker = new AmbilWarnaDialog(getContext(), mColour, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+
+            }
+
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int colour) {
+                mColour = colour;
+            }
+        });
+
+        colourPicker.show();
     }
 
     // shows prompt for adding note. handles adding note to array list
@@ -116,8 +142,20 @@ public class NoteFragment extends Fragment {
 
         final EditText editTxtNoteBody = viewInflated.findViewById(R.id.noteContent);
         final CheckBox chkBoxPin = viewInflated.findViewById(R.id.pinCheckBox);
+        mButton = viewInflated.findViewById(R.id.colourBtn);
+        mColour = Color.LTGRAY;
+
 
         builder.setView(viewInflated);
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            //@Override
+            public void onClick(View v) {
+                openColourPicker();
+            }
+        });
+
+
         builder.setPositiveButton("Add note", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -128,7 +166,7 @@ public class NoteFragment extends Fragment {
                     dialog.cancel();
                     openAddNotePrompt();
                 } else {
-                    addNoteToDataBase(noteBody, chkBoxPin.isChecked()); // ADD COLOR AFTER (TO add_note AS WELL) imageview with on click?
+                    addNoteToDataBase(noteBody, chkBoxPin.isChecked());
                 }
             }
         });
@@ -143,68 +181,13 @@ public class NoteFragment extends Fragment {
     builder.show();
     }
 
+
     // adds note to database
     private void addNoteToDataBase(String noteBody, boolean pinned) {
         // !!!
-        Note note = new Note("COLOR", noteBody, pinned);
-        DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES); // will this work ok?
+        Note note = new Note(mColour, noteBody, pinned);
+        DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES);
         notesRef.push().setValue(note);
     }
 
-
-
-    // adds note to allNotes
-//    private void addNote(Note note) {
-//        allNotes.add(note);
-//    }
-//
-//    private void deleteNote(Note note) {
-//        allNotes.remove(note);
-//    }
-//
-//    // shows all notes from allNotes on notes screen
-//    private void buildAllNotes() {
-//
-//    }
-
-
-//
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
 }

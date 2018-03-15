@@ -61,6 +61,7 @@ public class UserSettingsFragment extends Fragment {
 
         mLoginButton = view.findViewById(R.id.login_button);
         mEmail = view.findViewById(R.id.emailInput);
+        mEmail.setEnabled(false);
         mName = view.findViewById(R.id.nameInput);
         mMajor = view.findViewById(R.id.majorInput);
         mGradDate = view.findViewById(R.id.gradInput);
@@ -112,7 +113,6 @@ public class UserSettingsFragment extends Fragment {
 
     protected void collectInformation(final String email, final String mUserId){
         mEmail.setText(email.trim());
-        mEmail.setFocusable(false);
 
         // shows user information in form if user has registered before
         DatabaseReference firebasereference, userReference;

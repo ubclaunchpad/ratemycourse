@@ -59,6 +59,8 @@ public class NewUserSettingsActivity extends AppCompatActivity {
 
         mLoginButton = findViewById(R.id.login_button);
         mEmail = findViewById(R.id.emailInput);
+        mEmail.setText(email);
+        mEmail.setEnabled(false);
         mName = findViewById(R.id.nameInput);
         mMajor = findViewById(R.id.majorInput);
         mGradDate = findViewById(R.id.gradInput);

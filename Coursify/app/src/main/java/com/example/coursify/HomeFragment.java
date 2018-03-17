@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -268,15 +269,19 @@ public class HomeFragment extends Fragment {
     }
 
     private void getRecommendedCoursesCallback(){
-        Collections.shuffle(listRecommended);
-        int size = listRecommended.size() <= 5 ? listRecommended.size() : 5;
-        ArrayList<Course> displayList = new ArrayList<>();
-        for(int i = 0; i < size; i++){
-            displayList.add(listRecommended.get(i));
+        HashSet<String> set = new HashSet<>();
+        List<Course> displayList = new ArrayList<>();
+        for(int i = 0; i < listRecommended.size(); i++){
+            Course c = listRecommended.get(i);
+            if(set.contains(c.courseCode)){
+                continue;
+            }
+            displayList.add(c);
         }
+        displayList = displayList.subList(0, Math.min(displayList.size(), 5));
+
         mRecommendedAdapter = new CourseAdapter(displayList, getResources().getColor(R.color.colorRecentlyOpened));
         mListRecommended.setAdapter(mRecommendedAdapter);
-
     }
 
     private void displayPopularCourses(){

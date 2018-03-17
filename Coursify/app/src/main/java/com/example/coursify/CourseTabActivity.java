@@ -209,7 +209,8 @@ public class CourseTabActivity extends AppCompatActivity {
                 } else {
                     txtCourseTitle.setText(s);
                     courseTitle = s;
-                    incrementVisits(mCourseReference);
+                    updateRecentlyOpened();
+                    Utils.updatePopularCount(1, courseCode, courseTitle);
                 }
             }
 
@@ -219,17 +220,28 @@ public class CourseTabActivity extends AppCompatActivity {
         });
     }
 
-    private void incrementVisits(final DatabaseReference mCourseReference){
-        Log.v(TAG, "I am at incrementVisits");
-        mCourseReference.child(FirebaseEndpoint.VISITS).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void updateRecentlyOpened(){
+        Log.v(TAG, "I am at updateRecentlyOpened");
+        mUserRef = mDatabase.child(FirebaseEndpoint.USERS)
+                .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        final DatabaseReference recentlyOpenedRef = mUserRef.child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
+        recentlyOpenedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                int visits = 0;
                 if(snapshot.exists()){
-                    visits = Integer.parseInt(snapshot.getValue().toString());
+                    GenericTypeIndicator<ArrayList<Course>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Course>>() {};
+                    List<Course> recentlyOpenedCourses = snapshot.getValue(genericTypeIndicator) == null ?
+                            new ArrayList<Course>() : snapshot.getValue(genericTypeIndicator);
+                    for(int i = 0; i < recentlyOpenedCourses.size(); i++){
+                        Course c = recentlyOpenedCourses.get(i);
+                        if(c.courseCode.equals(courseCode)){
+                            recentlyOpenedCourses.remove(i);
+                            break;
+                        }
+                    }
+                    recentlyOpenedCourses.add(new Course(courseCode, courseTitle));
+                    recentlyOpenedRef.setValue(recentlyOpenedCourses);
                 }
-                mCourseReference.child(FirebaseEndpoint.VISITS).setValue(visits+1);
-                Utils.updatePopularCount(1, courseCode, courseTitle);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

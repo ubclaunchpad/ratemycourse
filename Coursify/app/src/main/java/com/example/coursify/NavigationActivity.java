@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -21,7 +22,6 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 public class NavigationActivity extends AppCompatActivity {
 
     private CallbackManager mCallBackManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +77,11 @@ public class NavigationActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Toast.makeText(this, "Got fb result", Toast.LENGTH_SHORT).show();
         mCallBackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public CallbackManager getCallBackManager() {
+        return mCallBackManager;
     }
 }

@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,12 +35,13 @@ public class EmailResendActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(), "Email sent", Toast.LENGTH_LONG).show();
                                     Log.d(TAG, "Email sent.");
                                     Intent mIntent = new Intent(getApplicationContext(), MainActivity.class);
                                     Log.v(TAG, "Proceeding to MainActivity");
                                     startActivity(mIntent);
                                 }else{
-                                    Log.d(TAG, "Email failed to send");
+                                    Toast.makeText(getApplicationContext(), "Email failed to send", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });

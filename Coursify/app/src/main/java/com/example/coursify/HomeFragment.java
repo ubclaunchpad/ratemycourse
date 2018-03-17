@@ -200,11 +200,9 @@ public class HomeFragment extends Fragment {
                     Calendar now = Calendar.getInstance();
                     int currYear = now.get(Calendar.YEAR);
                     int uniYear = 4 - (iGradDate - currYear);
+                    uniYear = uniYear <= 0 ? 1 : uniYear;
+                    uniYear = uniYear >= 5 ? 4 : uniYear;
 
-                    if(uniYear < 0 || uniYear > 4) {
-                        //emptyRecommended.setVisibility(View.VISIBLE);
-                        return;
-                    }
                     getInterestCourseCodesHelper(interest, major, uniYear);
                 }
                 else {
@@ -277,6 +275,7 @@ public class HomeFragment extends Fragment {
                 continue;
             }
             displayList.add(c);
+            set.add(c.courseCode);
         }
         displayList = displayList.subList(0, Math.min(displayList.size(), 5));
 

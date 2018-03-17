@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -71,14 +72,14 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Log.d(TAG, "Password updated");
+                                        Toast.makeText(getApplicationContext(), "Password updated", Toast.LENGTH_LONG).show();
                                     } else {
-                                        Log.d(TAG, "Error password update failed");
+                                        Toast.makeText(getApplicationContext(), "Error updating password", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
                         } else {
-                            Log.d(TAG, "Error auth failed");
+                            Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_LONG).show();
                         }
                     }
                 });

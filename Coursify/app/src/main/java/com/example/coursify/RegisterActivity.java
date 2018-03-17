@@ -34,7 +34,8 @@ public class RegisterActivity extends AppCompatActivity {
                 if(password.equals(verifyPassword)){
                     createUser(email, password);
                 }else{
-                    Log.v(TAG, "Invalid password, please enter again");
+                    Toast.makeText(getApplicationContext(), "Invalid password, please enter again", Toast.LENGTH_LONG).show();
+
                 }
             }
         });
@@ -56,11 +57,11 @@ public class RegisterActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()) {
-                                                Log.d(TAG, "Email sent to " + user.getEmail());
+                                                Toast.makeText(getApplicationContext(), "Email sent to " + user.getEmail(), Toast.LENGTH_LONG).show();
                                                 Intent mIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                                 startActivity(mIntent);
                                             }else {
-                                                Log.d(TAG, "Email failed to send.");
+                                                Toast.makeText(getApplicationContext(), "Email failed to send", Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
@@ -68,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                            Toast.makeText(RegisterActivity.this, "User already exists",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

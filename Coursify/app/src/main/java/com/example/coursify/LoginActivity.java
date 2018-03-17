@@ -70,10 +70,10 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 FirebaseUser user = auth.getCurrentUser();
                 if (user == null) {
-                    Log.v(TAG, "Proceeding to RegisterActivity");
+                    Toast.makeText(getApplicationContext(), "Please register first", Toast.LENGTH_LONG).show();
                 }
                 if (user.isEmailVerified()) {
-                    Log.v(TAG, "email has already been verified");
+                    Toast.makeText(getApplicationContext(), "Email has already been verified", Toast.LENGTH_LONG).show();
                     return;
                 }
                 user.sendEmailVerification()
@@ -81,7 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Log.d(TAG, "Email sent.");
+                                    Toast.makeText(getApplicationContext(), "Email sent", Toast.LENGTH_LONG).show();
+
                                 }
                             }
                         });
@@ -176,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                                             mProgressView.setVisibility(View.GONE);
                                             startActivity(profSetting);
                                         }else {
-                                            Toast.makeText(getApplicationContext(), "please verify your email", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "Please verify your email", Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 }

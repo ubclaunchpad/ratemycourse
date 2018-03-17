@@ -2,6 +2,7 @@ package com.example.coursify;
 
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import java.util.List;
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> {
     private List<Course> mCourses;
     private int textColor;
+    private static final String TAG = CourseAdapter.class.getSimpleName();
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public View mLayout;
@@ -75,38 +77,17 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         public void saveAndJumpToCourse(final Course course){
             Log.v(TAG, "saveAndJumpToCourses + courseId + courseDescript = " + course.courseCode + ", " + course.courseTitle);
-            final DatabaseReference recentlySearchedRef = mDatabase.child(FirebaseEndpoint.USERS).child(processedEmail).child(FirebaseEndpoint.RECENTLY_OPENED_COURSES);
-            recentlySearchedRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ArrayList<HashMap<String, String>> recentlyOpenedCourses =
-                            dataSnapshot.getValue() == null ? new ArrayList<HashMap<String, String>>() : (ArrayList<HashMap<String, String>>)dataSnapshot.getValue();
-                    for(int i = 0; i < recentlyOpenedCourses.size(); i++){
-                        HashMap<String, String> currCourse = recentlyOpenedCourses.get(i);
-                        String currCourseId = currCourse.get("courseCode");
-                        if(currCourseId.equals(course.courseCode)){
-                            recentlyOpenedCourses.remove(i);
-                        }
-                    }
-                    HashMap<String, String> courseMap = new HashMap<String, String>();
-                    courseMap.put("courseCode", course.courseCode);
-                    courseMap.put("courseTitle", course.courseTitle);
-                    recentlyOpenedCourses.add(courseMap);
-                    recentlySearchedRef.setValue(recentlyOpenedCourses);
-
-                    Intent intent = new Intent(context, CourseTabActivity.class);
-                    intent.putExtra("COURSE_CODE", course.courseCode);
-                    context.startActivity(intent);
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+            Intent intent = new Intent(context, CourseTabActivity.class);
+            intent.putExtra("COURSE_CODE", course.courseCode);
+            context.startActivity(intent);
         }
     }
 
     public CourseAdapter(List<Course> dataset, int textColor) {
         mCourses = dataset;
+        for(Course c : dataset){
+            Log.v(TAG, c.courseCode);
+        }
         this.textColor = textColor;
     }
 

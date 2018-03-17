@@ -181,6 +181,7 @@ public class UserSettingsFragment extends Fragment {
             userReference.child("gradDate").setValue(gradDate);
             userReference.child("major").setValue(major);
             userReference.child("interest").setValue(interest);
+            Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_LONG).show();
             return;
         }
     }

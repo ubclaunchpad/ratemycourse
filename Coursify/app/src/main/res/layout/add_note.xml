@@ -1,45 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/colorLightBlue"
+    android:padding="10dp"
     android:layout_height="match_parent"
     android:id="@+id/add_note">
 
-    <TextView
-        android:id="@+id/notePromptHeader"
+    <RelativeLayout
+        android:padding="5dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="New Note" />
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/imgBtnWhite"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/rounded_white"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <ImageButton
+            android:id="@+id/imgBtnLightBlue"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/imgBtnWhite"
+            android:background="@drawable/rounded_lightblue"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <ImageButton
+            android:id="@+id/imgBtnPurple"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/imgBtnLightBlue"
+            android:background="@drawable/rounded_purple"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <ImageButton
+            android:id="@+id/imgBtnDarkBlue"
+            android:layout_toRightOf="@id/imgBtnPurple"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/rounded_darkblue"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <ToggleButton
+            android:id="@+id/toggleBtnPin"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            style="@style/toggleButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/ic_toggle_pin_bg"
+            android:src="@drawable/ic_pin" />
+
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/noteContent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/notePromptHeader"
         android:layout_marginTop="48dp"
+        android:maxLines="5"
         android:hint="Type here"
-        android:layout_toEndOf="@+id/notePromptHeader"
-        android:ems="10"
-        android:inputType="textPersonName" />
-
-    <CheckBox
-        android:id="@+id/pinCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/noteContent"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="70dp"
-        android:text="Pin" />
-
-    <Button
-        android:id="@+id/colourBtn"
-        android:layout_width="75dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/pinCheckBox"
-        android:layout_alignEnd="@+id/noteContent"
-        android:layout_marginBottom="16dp"
-        android:text= "Choose Colour" />
-
+        android:inputType="textCapSentences|textMultiLine" />
 </RelativeLayout>

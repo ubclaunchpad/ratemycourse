@@ -71,6 +71,7 @@ public class UserSettingsFragment extends Fragment {
 
         mLoginButton.setReadPermissions("user_friends", "email");
         mCallBackManager = CallbackManager.Factory.create();
+        mCallBackManager = ((NavigationActivity) getActivity()).getCallBackManager();
 
         mLoginButton.registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -108,6 +109,7 @@ public class UserSettingsFragment extends Fragment {
         fbUserReference = firebasereference.child(FirebaseEndpoint.FACEBOOK_USERS).child(mUserId);
         fbUserReference.setValue(processedEmail);
         userFbIdReference = firebasereference.child(FirebaseEndpoint.USERS).child(processedEmail).child(FirebaseEndpoint.FACEBOOK_ID);
+        Toast.makeText(getActivity(), "my user id is: " + mUserId, Toast.LENGTH_SHORT).show();
         userFbIdReference.setValue(mUserId);
     }
 

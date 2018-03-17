@@ -19,6 +19,22 @@
         <item name="android:textOff"></item>
     </style>
 
+    <style name="WhiteNote" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+
+    <style name="LightBlueNote" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/colorLightBlue</item>
+    </style>
+
+    <style name="PurpleNote" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/colorPurple</item>
+    </style>
+
+    <style name="DarkBlueNote" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/colorDarkBlue</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

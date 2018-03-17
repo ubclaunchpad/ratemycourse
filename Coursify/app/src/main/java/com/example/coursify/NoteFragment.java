@@ -1,26 +1,25 @@
 package com.example.coursify;
 
-import android.app.AlertDialog;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.net.Uri;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,6 +52,8 @@ public class NoteFragment extends Fragment {
 
     private int mColour;
     private Button mButton;
+
+    private Dialog currNoteDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,16 +107,13 @@ public class NoteFragment extends Fragment {
         mListNotes.setLayoutManager(mNotesManager);
         mListNotes.setAdapter(mNotesAdapter);
 
-
-
         addNoteButton = container.findViewById(R.id.fabNote);
         addNoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openAddNotePrompt();
+                showAddNoteDialog("", new ColorDrawable(getResources().getColor(R.color.colorWhite)), false);
             }
         });
-
     }
 
     private void openColourPicker() {
@@ -134,60 +132,91 @@ public class NoteFragment extends Fragment {
         colourPicker.show();
     }
 
-    // shows prompt for adding note. handles adding note to array list
-    private void openAddNotePrompt() {
+    // Shows prompt for adding note. Handles adding note to array list.
+    private void showAddNoteDialog (String noteBody, Drawable background, boolean pinned) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add a note");
-        View viewInflated = LayoutInflater.from(getActivity()).inflate(R.layout.add_note, (ViewGroup) getActivity().findViewById(R.id.add_note), false);
+        final View viewInflated = LayoutInflater.from(getActivity()).inflate(R.layout.add_note, (ViewGroup) getActivity().findViewById(R.id.add_note), false);
 
-        final EditText editTxtNoteBody = viewInflated.findViewById(R.id.noteContent);
-        final CheckBox chkBoxPin = viewInflated.findViewById(R.id.pinCheckBox);
-        mButton = viewInflated.findViewById(R.id.colourBtn);
-        mColour = Color.LTGRAY;
+        final EditText editTxtNote = viewInflated.findViewById(R.id.noteContent);
+        editTxtNote.setText(noteBody);
+        viewInflated.setBackground(background);
 
-
-        builder.setView(viewInflated);
-
-        mButton.setOnClickListener(new View.OnClickListener() {
-            //@Override
-            public void onClick(View v) {
-                openColourPicker();
+        final ToggleButton toggleBtnPin = viewInflated.findViewById(R.id.toggleBtnPin);
+        toggleBtnPin.setChecked(pinned);
+        final ImageButton ibWhite = viewInflated.findViewById(R.id.imgBtnWhite);
+        ibWhite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currNoteDialog.cancel();
+                showAddNoteDialog(editTxtNote.getText().toString(),
+                                    new ColorDrawable(getResources().getColor(R.color.colorWhite)),
+                                    toggleBtnPin.isChecked());
+            }
+        });
+        final ImageButton ibLightBlue = viewInflated.findViewById(R.id.imgBtnLightBlue);
+        ibLightBlue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currNoteDialog.cancel();
+                showAddNoteDialog(editTxtNote.getText().toString(),
+                                    new ColorDrawable(getResources().getColor(R.color.colorLightBlue)),
+                                    toggleBtnPin.isChecked());
+            }
+        });
+        final ImageButton ibPurple = viewInflated.findViewById(R.id.imgBtnPurple);
+        ibPurple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currNoteDialog.cancel();
+                showAddNoteDialog(editTxtNote.getText().toString(),
+                                    new ColorDrawable(getResources().getColor(R.color.colorPurple)),
+                                    toggleBtnPin.isChecked());
+            }
+        });
+        final ImageButton ibDarkBlue = viewInflated.findViewById(R.id.imgBtnDarkBlue);
+        ibDarkBlue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currNoteDialog.cancel();
+                showAddNoteDialog(editTxtNote.getText().toString(),
+                                    new ColorDrawable(getResources().getColor(R.color.colorDarkBlue)),
+                                    toggleBtnPin.isChecked());
             }
         });
 
-
-        builder.setPositiveButton("Add note", new DialogInterface.OnClickListener() {
+        builder.setView(viewInflated);
+        builder.setPositiveButton("Post", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String noteBody = editTxtNoteBody.getText().toString();
+                String noteBody = editTxtNote.getText().toString();
+                boolean pinned = toggleBtnPin.isChecked();
+                ColorDrawable bg = (ColorDrawable) viewInflated.getBackground();
 
-                if(noteBody.equals("")) {
-                    Toast.makeText(getActivity(), "Please type a note.", Toast.LENGTH_SHORT).show();
+                if (noteBody.equals("")) {
+                    Toast.makeText(getActivity(), "Please enter a valid note before submitting.", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
-                    openAddNotePrompt();
+                    showAddNoteDialog(noteBody, viewInflated.getBackground(), pinned);
                 } else {
-                    addNoteToDataBase(noteBody, chkBoxPin.isChecked());
+                    addNoteToDataBase(noteBody, toggleBtnPin.isChecked(), bg.getColor());
                 }
             }
         });
 
-    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.cancel();
-        }
-    });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
-    builder.show();
+        currNoteDialog = builder.create();
+        currNoteDialog.show();
     }
 
-
-    // adds note to database
-    private void addNoteToDataBase(String noteBody, boolean pinned) {
-        // !!!
-        Note note = new Note(mColour, noteBody, pinned);
+    // Add note to database
+    private void addNoteToDataBase(String noteBody, boolean pinned, int color) {
+        Note note = new Note(color, noteBody, pinned);
         DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES);
         notesRef.push().setValue(note);
     }
-
 }

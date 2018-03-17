@@ -16,4 +16,8 @@
     <color name="colorRecentlyOpened">#73E1DF</color>
     <color name="colorRecommended">#95AFD2</color>
     <color name="colorPopular">#7181E3</color>
+
+    <color name="colorLightBlue">#CDEFEE</color>
+    <color name="colorPurple">#D9DCEE</color>
+    <color name="colorDarkBlue">#C9E4F3</color>
 </resources>

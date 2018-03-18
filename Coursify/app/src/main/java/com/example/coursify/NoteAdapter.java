@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,7 +84,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         TextView txtNoteBody = holder.mLayout.findViewById(R.id.txtNoteBody);
 
         if(currNote.pinned) {
-            // add an imageview or something on top of text view to indicate it is pinned !!!
+            ImageView pin = holder.mLayout.findViewById(R.id.pinIV);
+            pin.setVisibility(View.VISIBLE);
         }
 
         txtNoteBody.setText(currNote.content);
@@ -93,6 +95,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
 
     }
+
 
     @Override
     public int getItemCount() {

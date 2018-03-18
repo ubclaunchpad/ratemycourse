@@ -1,6 +1,7 @@
 package com.example.coursify;
 
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -133,8 +134,7 @@ public class NoteFragment extends Fragment {
                     if(snapshot.child("content").getValue().toString().equals(note.content)) {
                         String key = snapshot.getKey();
                         editMode = true;
-                        // !!! change color to note's current color
-                        showAddNoteDialog(note.content, new ColorDrawable(getResources().getColor(R.color.colorWhite)), note.pinned, key);
+                        showAddNoteDialog(note.content, new ColorDrawable(note.getColour()), note.pinned, key);
                         break;
 
                     }
@@ -244,8 +244,10 @@ public class NoteFragment extends Fragment {
                 } else {
                     if(!editMode) {
                         addNoteToDataBase(noteBody, toggleBtnPin.isChecked(), bg.getColor());
+                        refreshFragment();
                     } else {
                         editNoteInDataBase(noteBody, toggleBtnPin.isChecked(), bg.getColor(), key);
+                        refreshFragment();
                         editMode = false;
                     }
                 }
@@ -289,6 +291,7 @@ public class NoteFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteNoteFromDataBase(key);
+                refreshFragment();
             }
         });
 
@@ -305,5 +308,9 @@ public class NoteFragment extends Fragment {
     private void deleteNoteFromDataBase(String key) {
         DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES).child(key);
         notesRef.removeValue();
+    }
+
+    private void refreshFragment() {
+        mListNotes.getAdapter().notifyDataSetChanged(); // not working
     }
 }

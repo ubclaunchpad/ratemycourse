@@ -129,7 +129,7 @@ public class NoteFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(snapshot.child("time").getValue().toString().equals(note.time)) {
+                    if(snapshot.child("content").getValue().toString().equals(note.content)) {
                         String key = snapshot.getKey();
                         editMode = true;
                         showAddNoteDialog(note.content, new ColorDrawable(note.getColour()), note.pinned, key);

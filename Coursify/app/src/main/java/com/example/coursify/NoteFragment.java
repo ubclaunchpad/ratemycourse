@@ -54,6 +54,7 @@ public class NoteFragment extends Fragment {
     private Button mButton;
 
     private Dialog currNoteDialog;
+    private boolean editMode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class NoteFragment extends Fragment {
                 .child(Utils.processEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail()));
 
         populateUIFromDatabaseInfo();
+        editMode = false; // starts off as false
 
         return view;
     }
@@ -81,7 +83,6 @@ public class NoteFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Note> notes = new ArrayList<>();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    //int color = (int) snapshot.child("color").getValue();
                     int color = Integer.valueOf(snapshot.child("color").getValue().toString());
                     String noteBody = snapshot.child("content").getValue().toString();
                     boolean pinned = (boolean) snapshot.child("pinned").getValue();
@@ -89,7 +90,12 @@ public class NoteFragment extends Fragment {
                     notes.add(note);
                 }
 
-                mNotesAdapter = new NoteAdapter(notes, getContext());
+                mNotesAdapter = new NoteAdapter(notes, new NoteAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Note note) {
+                        editNote(note);
+                    }
+                });
                 mListNotes.setAdapter(mNotesAdapter);
 
             }
@@ -102,8 +108,8 @@ public class NoteFragment extends Fragment {
 
     private void findViewsById(View container) {
         mListNotes =container.findViewById(R.id.listUserNotes);
-        mListNotes.setHasFixedSize(false); // is it though? if size is not fixed, can note size vary depending on content?!!!
-        mNotesManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL); // should it be relative layout since note positions vary?
+        mListNotes.setHasFixedSize(false);
+        mNotesManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         mListNotes.setLayoutManager(mNotesManager);
         mListNotes.setAdapter(mNotesAdapter);
 
@@ -111,29 +117,40 @@ public class NoteFragment extends Fragment {
         addNoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddNoteDialog("", new ColorDrawable(getResources().getColor(R.color.colorWhite)), false);
+                showAddNoteDialog("", new ColorDrawable(getResources().getColor(R.color.colorWhite)), false, "null");
             }
         });
     }
 
-    private void openColourPicker() {
-        AmbilWarnaDialog colourPicker = new AmbilWarnaDialog(getContext(), mColour, new AmbilWarnaDialog.OnAmbilWarnaListener() {
-            @Override
-            public void onCancel(AmbilWarnaDialog dialog) {
+    // prepares info for showAddNoteDialog in editMode
+    private void editNote(final Note note) {
+        DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES);
 
+        notesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if(snapshot.child("content").getValue().toString().equals(note.content)) {
+                        String key = snapshot.getKey();
+                        editMode = true;
+                        // !!! change color to note's current color
+                        showAddNoteDialog(note.content, new ColorDrawable(getResources().getColor(R.color.colorWhite)), note.pinned, key);
+                        break;
+
+                    }
+                }
             }
 
             @Override
-            public void onOk(AmbilWarnaDialog dialog, int colour) {
-                mColour = colour;
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
-
-        colourPicker.show();
     }
+
 
     // Shows prompt for adding note. Handles adding note to array list.
-    private void showAddNoteDialog (String noteBody, Drawable background, boolean pinned) {
+    private void showAddNoteDialog (String noteBody, Drawable background, boolean pinned, final String key) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View viewInflated = LayoutInflater.from(getActivity()).inflate(R.layout.add_note, (ViewGroup) getActivity().findViewById(R.id.add_note), false);
 
@@ -143,6 +160,7 @@ public class NoteFragment extends Fragment {
 
         final ToggleButton toggleBtnPin = viewInflated.findViewById(R.id.toggleBtnPin);
         toggleBtnPin.setChecked(pinned);
+
         final ImageButton ibWhite = viewInflated.findViewById(R.id.imgBtnWhite);
         ibWhite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,9 +168,10 @@ public class NoteFragment extends Fragment {
                 currNoteDialog.cancel();
                 showAddNoteDialog(editTxtNote.getText().toString(),
                                     new ColorDrawable(getResources().getColor(R.color.colorWhite)),
-                                    toggleBtnPin.isChecked());
+                                    toggleBtnPin.isChecked(), key);
             }
         });
+
         final ImageButton ibLightBlue = viewInflated.findViewById(R.id.imgBtnLightBlue);
         ibLightBlue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,9 +179,10 @@ public class NoteFragment extends Fragment {
                 currNoteDialog.cancel();
                 showAddNoteDialog(editTxtNote.getText().toString(),
                                     new ColorDrawable(getResources().getColor(R.color.colorLightBlue)),
-                                    toggleBtnPin.isChecked());
+                                    toggleBtnPin.isChecked(), key);
             }
         });
+
         final ImageButton ibPurple = viewInflated.findViewById(R.id.imgBtnPurple);
         ibPurple.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,9 +190,10 @@ public class NoteFragment extends Fragment {
                 currNoteDialog.cancel();
                 showAddNoteDialog(editTxtNote.getText().toString(),
                                     new ColorDrawable(getResources().getColor(R.color.colorPurple)),
-                                    toggleBtnPin.isChecked());
+                                    toggleBtnPin.isChecked(), key);
             }
         });
+
         final ImageButton ibDarkBlue = viewInflated.findViewById(R.id.imgBtnDarkBlue);
         ibDarkBlue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,12 +201,20 @@ public class NoteFragment extends Fragment {
                 currNoteDialog.cancel();
                 showAddNoteDialog(editTxtNote.getText().toString(),
                                     new ColorDrawable(getResources().getColor(R.color.colorDarkBlue)),
-                                    toggleBtnPin.isChecked());
+                                    toggleBtnPin.isChecked(), key);
             }
         });
 
         builder.setView(viewInflated);
-        builder.setPositiveButton("Post", new DialogInterface.OnClickListener() {
+
+        String action;
+        if(editMode) {
+            action = "Edit";
+        } else {
+            action = "Post";
+        }
+
+        builder.setPositiveButton(action, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String noteBody = editTxtNote.getText().toString();
@@ -195,9 +224,14 @@ public class NoteFragment extends Fragment {
                 if (noteBody.equals("")) {
                     Toast.makeText(getActivity(), "Please enter a valid note before submitting.", Toast.LENGTH_SHORT).show();
                     dialog.cancel();
-                    showAddNoteDialog(noteBody, viewInflated.getBackground(), pinned);
+                    showAddNoteDialog(noteBody, viewInflated.getBackground(), pinned, key);
                 } else {
-                    addNoteToDataBase(noteBody, toggleBtnPin.isChecked(), bg.getColor());
+                    if(!editMode) {
+                        addNoteToDataBase(noteBody, toggleBtnPin.isChecked(), bg.getColor());
+                    } else {
+                        editNoteInDataBase(noteBody, toggleBtnPin.isChecked(), bg.getColor(), key);
+                        editMode = false;
+                    }
                 }
             }
         });
@@ -218,5 +252,13 @@ public class NoteFragment extends Fragment {
         Note note = new Note(color, noteBody, pinned);
         DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES);
         notesRef.push().setValue(note);
+    }
+
+    private void editNoteInDataBase(String noteBody, boolean pinned, int color, String key) {
+        DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES);
+
+        notesRef.child(key).child("content").setValue(noteBody);
+        notesRef.child(key).child("pinned").setValue(pinned);
+        notesRef.child(key).child("color").setValue(color);
     }
 }

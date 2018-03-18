@@ -161,6 +161,22 @@ public class NoteFragment extends Fragment {
         final ToggleButton toggleBtnPin = viewInflated.findViewById(R.id.toggleBtnPin);
         toggleBtnPin.setChecked(pinned);
 
+        final ImageButton deleteIB = viewInflated.findViewById(R.id.deleteIB);
+        if(editMode) {
+            deleteIB.setVisibility(View.VISIBLE);
+            deleteIB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openDeletePrompt(key);
+
+                    // closes addnote/edit note prompt
+                    if(currNoteDialog != null) {
+                        currNoteDialog.dismiss();
+                    }
+                }
+            });
+        }
+
         final ImageButton ibWhite = viewInflated.findViewById(R.id.imgBtnWhite);
         ibWhite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,5 +276,34 @@ public class NoteFragment extends Fragment {
         notesRef.child(key).child("content").setValue(noteBody);
         notesRef.child(key).child("pinned").setValue(pinned);
         notesRef.child(key).child("color").setValue(color);
+    }
+
+    private void openDeletePrompt(final String key) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete Note?");
+        View viewInflated = LayoutInflater.from(getActivity()).inflate(R.layout.delete_note, (ViewGroup) getActivity().findViewById(R.id.delete_note), false);
+
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteNoteFromDataBase(key);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void deleteNoteFromDataBase(String key) {
+        DatabaseReference notesRef = mUserRef.child(FirebaseEndpoint.NOTES).child(key);
+        notesRef.removeValue();
     }
 }

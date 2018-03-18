@@ -51,8 +51,6 @@ public class NoteFragment extends Fragment {
     private RecyclerView.Adapter mNotesAdapter;
     private RecyclerView.LayoutManager mNotesManager;
 
-    private int mColour;
-    private Button mButton;
 
     private Dialog currNoteDialog;
     private boolean editMode;
@@ -131,7 +129,7 @@ public class NoteFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(snapshot.child("content").getValue().toString().equals(note.content)) {
+                    if(snapshot.child("time").getValue().toString().equals(note.time)) {
                         String key = snapshot.getKey();
                         editMode = true;
                         showAddNoteDialog(note.content, new ColorDrawable(note.getColour()), note.pinned, key);

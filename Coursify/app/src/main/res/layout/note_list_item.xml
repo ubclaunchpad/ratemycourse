@@ -15,6 +15,7 @@
         android:layout_marginTop="5dp"
         android:background="#f4425f"
         android:fontFamily="@font/arimo"
+        android:minWidth="140dp"
         android:padding="10dp"
         android:text="this is a placeholder to test a pinned note asldkfjlkvjslkvjsadlkfjlaskdfj"
         android:textColor="@color/colorDarkGray" />

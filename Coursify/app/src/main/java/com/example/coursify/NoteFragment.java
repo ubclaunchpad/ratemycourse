@@ -7,8 +7,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -51,14 +53,15 @@ public class NoteFragment extends Fragment {
     private RecyclerView.Adapter mNotesAdapter;
     private RecyclerView.LayoutManager mNotesManager;
 
-
     private Dialog currNoteDialog;
     private boolean editMode;
+
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_note, container, false);
+        view = inflater.inflate(R.layout.fragment_note, container, false);
         findViewsById(view);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
@@ -108,7 +111,9 @@ public class NoteFragment extends Fragment {
     private void findViewsById(View container) {
         mListNotes =container.findViewById(R.id.listUserNotes);
         mListNotes.setHasFixedSize(false);
-        mNotesManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        // mNotesManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        mNotesManager = new GridLayoutManager(getActivity(), 3);
+
         mListNotes.setLayoutManager(mNotesManager);
         mListNotes.setAdapter(mNotesAdapter);
 
@@ -314,6 +319,6 @@ public class NoteFragment extends Fragment {
     private void refreshFragment() {
         mListNotes.getAdapter().notifyDataSetChanged(); // not working
         mListNotes.invalidate();
-        getFragmentManager().beginTransaction().hide(this).show(this).commitNow();
+        //getFragmentManager().beginTransaction().hide(this).show(this).commitNow();
     }
 }

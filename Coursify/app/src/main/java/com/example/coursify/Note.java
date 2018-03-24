@@ -1,5 +1,7 @@
 package com.example.coursify;
 
+import android.support.annotation.NonNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -7,7 +9,7 @@ import java.util.Date;
  * Created by Annie Zhou on 11/19/2017.
  */
 
-class Note {
+class Note implements Comparable<Note>{
     int color;
     String content;
     String time;
@@ -37,5 +39,10 @@ class Note {
 
     public int getColour() {
         return color;
+    }
+
+    @Override
+    public int compareTo(@NonNull Note o) {
+        return -Boolean.compare(pinned, o.pinned);
     }
 }

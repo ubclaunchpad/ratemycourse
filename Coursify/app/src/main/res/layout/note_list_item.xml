@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
@@ -13,7 +15,17 @@
         android:layout_marginTop="5dp"
         android:background="#f4425f"
         android:fontFamily="@font/arimo"
-        android:textColor="@color/colorDarkGray"
+        android:minWidth="140dp"
         android:padding="10dp"
-        android:text="i like cheese" />
+        android:text="this is a placeholder to test a pinned note asldkfjlkvjslkvjsadlkfjlaskdfj"
+        android:textColor="@color/colorDarkGray" />
+
+    <ImageView
+        android:id="@+id/pinIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/txtNoteBody"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_pinned" />
 </RelativeLayout>

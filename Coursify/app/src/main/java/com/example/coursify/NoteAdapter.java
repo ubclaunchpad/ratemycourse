@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -60,6 +62,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     public NoteAdapter(List<Note> dataset, OnItemClickListener listener) {
         mNotes = dataset;
+        Collections.sort(mNotes);
         this.listener = listener;
     }
 
@@ -91,9 +94,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         txtNoteBody.setText(currNote.content);
 
         txtNoteBody.setBackgroundColor(currNote.getColour());
-
-
-
+        holder.mLayout.invalidate();
     }
 
 

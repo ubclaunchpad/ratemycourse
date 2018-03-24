@@ -171,6 +171,8 @@ public class NoteFragment extends Fragment {
                     if(currNoteDialog != null) {
                         currNoteDialog.dismiss();
                     }
+
+                    editMode = false; // close edit mode
                 }
             });
         }
@@ -252,6 +254,7 @@ public class NoteFragment extends Fragment {
             }
         });
 
+
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -310,5 +313,7 @@ public class NoteFragment extends Fragment {
 
     private void refreshFragment() {
         mListNotes.getAdapter().notifyDataSetChanged(); // not working
+        mListNotes.invalidate();
+        getFragmentManager().beginTransaction().hide(this).show(this).commitNow();
     }
 }

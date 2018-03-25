@@ -7,7 +7,7 @@ package com.example.coursify;
 // Strings are ordered alphabetically; capital letters come first
 
 public class FirebaseEndpoint {
-    public static final String COURSES = "Courses";
+    public static final String COURSES = "NewCourses";
     public static final String DESCRIPTION = "Description"; //course description
     public static final String FACEBOOK_USERS = "FacebookUsers";
     public static final String RATING = "Rating"; //course rating

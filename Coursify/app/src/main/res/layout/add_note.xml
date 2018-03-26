@@ -48,6 +48,15 @@
             android:layout_width="30dp"
             android:layout_height="30dp" />
 
+        <ImageButton
+            android:id="@+id/deleteIB"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp"
+            android:visibility="invisible"
+            android:layout_toLeftOf="@id/toggleBtnPin"
+            android:background="@drawable/ic_delete" />
+
         <ToggleButton
             android:id="@+id/toggleBtnPin"
             android:layout_alignParentTop="true"
@@ -68,13 +77,4 @@
         android:maxLines="5"
         android:hint="Type here"
         android:inputType="textCapSentences|textMultiLine" />
-
-    <ImageButton
-        android:id="@+id/deleteIB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/noteContent"
-        android:visibility="invisible"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
 </RelativeLayout>

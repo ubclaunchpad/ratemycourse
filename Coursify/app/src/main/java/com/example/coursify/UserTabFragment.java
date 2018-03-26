@@ -79,7 +79,6 @@ public class UserTabFragment extends Fragment {
 
         txtViewProfile.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 Intent mIntent = new Intent(getActivity(), UserPreferenceTabActivity.class);
                 mIntent.putExtra("EMAIL", FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 Log.v(TAG, "Proceeding to UserPreferenceActivity");

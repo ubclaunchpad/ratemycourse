@@ -13,7 +13,6 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:background="#f4425f"
         android:fontFamily="@font/arimo"
         android:minWidth="140dp"
         android:padding="10dp"
@@ -22,8 +21,10 @@
 
     <ImageView
         android:id="@+id/pinIV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/txtNoteBody"
         android:visibility="invisible"

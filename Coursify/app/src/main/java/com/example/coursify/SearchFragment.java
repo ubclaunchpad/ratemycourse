@@ -140,6 +140,9 @@ public class SearchFragment extends Fragment {
                 courseMap.put("courseCode", course.courseCode);
                 courseMap.put("courseTitle", course.courseTitle);
                 recentlySearchedCourses.add(courseMap);
+                if(recentlySearchedCourses.size() > 10){
+                    recentlySearchedCourses.remove(0);
+                }
                 recentlySearchedRef.setValue(recentlySearchedCourses);
 
                 Intent intent = new Intent(getActivity(), CourseTabActivity.class);

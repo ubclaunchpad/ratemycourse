@@ -112,7 +112,7 @@ public class NoteFragment extends Fragment {
         mListNotes =container.findViewById(R.id.listUserNotes);
         mListNotes.setHasFixedSize(false);
         // mNotesManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        mNotesManager = new GridLayoutManager(getActivity(), 3);
+        mNotesManager = new GridLayoutManager(getActivity(), 2);
 
         mListNotes.setLayoutManager(mNotesManager);
         mListNotes.setAdapter(mNotesAdapter);

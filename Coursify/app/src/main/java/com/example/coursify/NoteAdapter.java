@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,9 +43,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     // taken from CommentAdapter
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public RelativeLayout mLayout;
+        public CardView mLayout;
 
-        public ViewHolder(RelativeLayout v) {
+        public ViewHolder(CardView v) {
             super(v);
             mLayout = v;
         }
@@ -56,7 +57,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
                     listener.onItemClick(note);
                 }
             });
-
         }
     }
 
@@ -68,18 +68,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     @Override
     public NoteAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        // create a new view
-        RelativeLayout v = (RelativeLayout) LayoutInflater.from(parent.getContext()).
+        // Create a new view
+        CardView v = (CardView) LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.note_list_item, parent, false);
-
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
-
-    // replaces contents of a view (invoked by layout manager)
+    // Replaces contents of a view (invoked by layout manager)
     @Override
     public void onBindViewHolder(NoteAdapter.ViewHolder holder, int position) {
         Note currNote = mNotes.get(position);
@@ -93,7 +90,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
         txtNoteBody.setText(currNote.content);
 
-        txtNoteBody.setBackgroundColor(currNote.getColour());
+        holder.mLayout.setBackgroundColor(currNote.getColour());
+        //txtNoteBody.setBackgroundColor(currNote.getColour());
         holder.mLayout.invalidate();
     }
 

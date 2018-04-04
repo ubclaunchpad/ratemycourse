@@ -109,13 +109,12 @@ public class NoteFragment extends Fragment {
     }
 
     private void findViewsById(View container) {
-        mListNotes =container.findViewById(R.id.listUserNotes);
-        mListNotes.setHasFixedSize(false);
-        // mNotesManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        mNotesManager = new GridLayoutManager(getActivity(), 2);
-
-        mListNotes.setLayoutManager(mNotesManager);
+        mListNotes = container.findViewById(R.id.listUserNotes);
         mListNotes.setAdapter(mNotesAdapter);
+        mListNotes.setHasFixedSize(false);
+        mNotesManager = new GridLayoutManager(getActivity(), 2);
+        mNotesManager.setAutoMeasureEnabled(false);
+        mListNotes.setLayoutManager(mNotesManager);
 
         addNoteButton = container.findViewById(R.id.fabNote);
         addNoteButton.setOnClickListener(new View.OnClickListener() {

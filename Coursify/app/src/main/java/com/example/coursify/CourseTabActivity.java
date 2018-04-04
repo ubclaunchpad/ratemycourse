@@ -188,7 +188,7 @@ public class CourseTabActivity extends AppCompatActivity {
         }
 
         txtCourseCode = findViewById(R.id.txtCourseCode);
-        txtCourseTitle = findViewById(R.id.txtUserName);
+        txtCourseTitle = findViewById(R.id.txtCourseDescription);
         txtCourseCode.setText(courseCode);
         btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -201,6 +201,7 @@ public class CourseTabActivity extends AppCompatActivity {
         mCourseReference.child(FirebaseEndpoint.DESCRIPTION).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                //TODO: ERROR HANDLE
                 String s = snapshot.getValue().toString();
 
                 if (s == null) {
@@ -228,20 +229,22 @@ public class CourseTabActivity extends AppCompatActivity {
         recentlyOpenedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    GenericTypeIndicator<ArrayList<Course>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Course>>() {};
-                    List<Course> recentlyOpenedCourses = snapshot.getValue(genericTypeIndicator) == null ?
-                            new ArrayList<Course>() : snapshot.getValue(genericTypeIndicator);
-                    for(int i = 0; i < recentlyOpenedCourses.size(); i++){
-                        Course c = recentlyOpenedCourses.get(i);
-                        if(c.courseCode.equals(courseCode)){
-                            recentlyOpenedCourses.remove(i);
-                            break;
-                        }
+                GenericTypeIndicator<ArrayList<Course>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Course>>() {};
+                List<Course> recentlyOpenedCourses = snapshot.getValue(genericTypeIndicator) == null ?
+                        new ArrayList<Course>() : snapshot.getValue(genericTypeIndicator);
+                for(int i = 0; i < recentlyOpenedCourses.size(); i++){
+                    Course c = recentlyOpenedCourses.get(i);
+                    if(c.courseCode.equals(courseCode)){
+                        recentlyOpenedCourses.remove(i);
+                        break;
                     }
-                    recentlyOpenedCourses.add(new Course(courseCode, courseTitle));
-                    recentlyOpenedRef.setValue(recentlyOpenedCourses);
                 }
+                recentlyOpenedCourses.add(new Course(courseCode, courseTitle));
+                Log.v(TAG,"I am here trying to update recentlyopened");
+                if(recentlyOpenedCourses.size() > 5){
+                    recentlyOpenedCourses.remove(0);
+                }
+                recentlyOpenedRef.setValue(recentlyOpenedCourses);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
